@@ -186,8 +186,16 @@
 
     .visual-guide-button { width: 100%; margin-top: 22px; padding: 16px 18px; border: 2px solid var(--accent); border-radius: 14px; color: var(--accent-dark); background: #f8faf6; cursor: pointer; font-size: 18px; font-weight: 900; }
     .visual-guide-button:disabled, .bar-button:disabled, .receipt-button:disabled { cursor: not-allowed; opacity: .45; }
-    .frame-requirement { margin: 16px 0 0; padding: 15px 17px; border: 2px solid #c78e7b; border-radius: 13px; color: #71392e; background: #fff1eb; font-size: 17px; font-weight: 850; }
+    .frame-requirement { width: 100%; margin: 16px 0 0; padding: 15px 17px; border: 2px solid #c78e7b; border-radius: 13px; color: #71392e; background: #fff1eb; cursor: pointer; font: inherit; font-size: 17px; font-weight: 850; text-align: center; }
+    .frame-requirement:hover { background: #ffe9df; }
+    .frame-requirement:focus-visible { outline: 3px solid rgba(199,142,123,.28); outline-offset: 3px; }
+    .frame-requirement:disabled { cursor: default; opacity: 1; }
     .frame-requirement.complete { border-color: #89a18a; color: #34573b; background: #eef6eb; }
+    .frame-gate-grid { grid-template-columns: 1fr !important; }
+    .frame-gate-button { grid-column: 1 / -1; width: 100%; min-height: 78px; padding: 17px 20px; border: 2px solid #b99d84; border-radius: 15px; color: #654d3a; background: #fff8f2; cursor: pointer; font-size: 19px; font-weight: 900; line-height: 1.45; }
+    .frame-gate-button span { display: block; margin-top: 3px; color: #8a7564; font-size: 14px; font-weight: 750; }
+    .frame-gate-button:hover { border-color: #8b7561; background: #f8eee5; }
+    .frame-gate-button:focus-visible { outline: 3px solid rgba(139,117,97,.3); outline-offset: 3px; }
     .quote-blocker { padding: 18px; border: 2px dashed #c78e7b; border-radius: 14px; color: #71392e; background: #fff7f2; font-size: 18px; font-weight: 850; text-align: center; }
     .consultation-guide { margin: 17px 0; padding: 15px; border-radius: 12px; color: var(--accent-dark); background: #edf2e9; font-size: 16px; font-weight: 800; }
     .availability-note { margin: 14px 0 0; padding: 14px 16px; border: 2px solid #c78e7b; border-radius: 13px; color: #71392e; background: #fff1eb; font-size: 17px; font-weight: 800; }
@@ -421,9 +429,13 @@
     .custom-fabric-close:hover { color: white; background: #8b7561; }
     .custom-fabric-close:focus-visible { outline: 3px solid rgba(139,117,97,.34); outline-offset: 3px; }
 
-    .quick-nav { position: fixed; z-index: 75; right: 18px; bottom: calc(var(--bar-height) + 18px); width: 162px; max-height: calc(100vh - var(--bar-height) - 36px); overflow-y: auto; padding: 11px; border: 1px solid #d8cbbb; border-radius: 17px; background: rgba(255,255,255,.97); box-shadow: 0 14px 38px rgba(61,48,38,.18); backdrop-filter: blur(12px); }
-    .quick-nav-title { display: block; padding: 4px 5px 10px; color: #5d4a3a; font-size: 15px; font-weight: 900; text-align: center; }
-    .quick-nav-menu { display: grid; grid-template-columns: 1fr; gap: 6px; }
+    .quick-nav { position: fixed; z-index: 75; right: 18px; bottom: calc(var(--bar-height) + 18px); }
+    .quick-nav.open { display: flex; flex-direction: column; width: 162px; max-height: calc(100vh - var(--bar-height) - 36px); overflow-y: auto; padding: 10px 10px 0; border: 1px solid #d8cbbb; border-radius: 17px; background: rgba(255,255,255,.97); box-shadow: 0 14px 38px rgba(61,48,38,.18); backdrop-filter: blur(12px); }
+    .quick-nav-toggle { display: grid; place-items: center; min-width: 142px; min-height: 52px; padding: 10px 15px; border: 1px solid #c9b9a8; border-radius: 999px; color: #5d4a3a; background: rgba(255,255,255,.97); box-shadow: 0 9px 28px rgba(61,48,38,.16); cursor: pointer; font-size: 15px; font-weight: 900; }
+    .quick-nav.open .quick-nav-toggle { order: 2; width: 100%; min-width: 0; min-height: 43px; margin-top: 8px; border-radius: 11px; color: white; border-color: #8b7561; background: #8b7561; box-shadow: none; }
+    .quick-nav-toggle:focus-visible { outline: 3px solid rgba(139,117,97,.34); outline-offset: 3px; }
+    .quick-nav-menu { display: none; grid-template-columns: 1fr; gap: 6px; margin-top: 8px; }
+    .quick-nav.open .quick-nav-menu { order: 1; display: grid; margin-top: 0; }
     .quick-nav-menu button { min-height: 42px; padding: 8px 7px; border: 1px solid #e2d8ce; border-radius: 10px; color: #594a3e; background: #fffaf6; cursor: pointer; font-size: 14px; font-weight: 900; }
     .quick-nav-menu button:hover { border-color: var(--accent); background: #f4ece4; }
     .quick-nav-menu button:focus-visible { outline: 3px solid rgba(139,117,97,.34); outline-offset: 2px; }
@@ -491,8 +503,10 @@
       .choice-intro-number { width: 52px; height: 52px; font-size: 25px; }
       .choice-start-label { grid-column: 1 / -1; width: 100%; }
       .fabric-family-grid { grid-template-columns: 1fr; }
-      .quick-nav { right: 8px; bottom: calc(var(--bar-height) + 10px); width: 128px; max-height: calc(100vh - var(--bar-height) - 20px); padding: 8px; border-radius: 14px; }
-      .quick-nav-title { padding: 3px 2px 7px; font-size: 13px; }
+      .quick-nav { right: 8px; bottom: calc(var(--bar-height) + 10px); }
+      .quick-nav.open { width: 136px; max-height: calc(100vh - var(--bar-height) - 20px); padding: 7px 7px 0; border-radius: 14px; }
+      .quick-nav-toggle { min-width: 128px; min-height: 48px; padding: 8px 11px; font-size: 14px; }
+      .quick-nav.open .quick-nav-toggle { min-height: 40px; font-size: 13px; }
       .quick-nav-menu { gap: 5px; }
       .quick-nav-menu button { min-height: 39px; padding: 6px 4px; font-size: 12px; }
       .progress-panel { top: 72px; }
@@ -640,7 +654,7 @@
           <button class="custom-fabric-close" id="customFabricCloseButton" type="button">↑ 다른 패브릭 색상 접기</button>
         </div>
       </details>
-      <p class="frame-requirement" id="frameRequirement">마베드 또는 슈브를 먼저 선택해 주세요.</p>
+      <button class="frame-requirement" id="frameRequirement" type="button">마베드 또는 슈브를 먼저 선택해 주세요.</button>
       <div class="next-row"><button class="next-button" type="button" data-next="step-mattress">다음 · 매트리스</button></div>
     </section>
 
@@ -722,9 +736,9 @@
     </div>
   </div>
   <div class="toast" id="toast" role="status" aria-live="polite"></div>
-  <aside class="quick-nav" id="quickNav" aria-label="항상 펼쳐진 옵션 바로가기">
-    <strong class="quick-nav-title">옵션 바로가기</strong>
-    <nav class="quick-nav-menu" aria-label="옵션 단계 바로가기">
+  <aside class="quick-nav" id="quickNav" aria-label="옵션 바로가기">
+    <button class="quick-nav-toggle" id="quickNavToggle" type="button" aria-expanded="false" aria-controls="quickNavMenu">☰ 옵션 바로가기</button>
+    <nav class="quick-nav-menu" id="quickNavMenu" aria-label="옵션 단계 바로가기">
       <button type="button" data-jump="step-product">01 제품</button>
       <button type="button" data-jump="bed-guide">02 가이드</button>
       <button type="button" data-jump="step-frame">03 프레임</button>
@@ -1124,6 +1138,17 @@
       const root = $(id); root.innerHTML = ''; root.className = `option-grid ${className}`.trim();
       choices.forEach(choice => root.appendChild(optionCard(choice, current, onSelect)));
     }
+    function renderFrameGate(id) {
+      const root = $(id);
+      root.innerHTML = '';
+      root.className = 'option-grid frame-gate-grid';
+      const button = document.createElement('button');
+      button.type = 'button';
+      button.className = 'frame-gate-button';
+      button.innerHTML = '프레임 사양을 먼저 선택하세요<span>MY BED 03 · 프레임 선택으로 이동</span>';
+      button.addEventListener('click', () => $('step-frame').scrollIntoView({ behavior: 'smooth', block: 'start' }));
+      root.appendChild(button);
+    }
     function renderCompact(id, choices, current, onSelect) {
       const root = $(id); root.innerHTML = '';
       choices.forEach(choice => {
@@ -1201,6 +1226,7 @@
         $('finishSelectionVisual').innerHTML = '';
         $('frameRequirement').textContent = '마베드 또는 슈브를 먼저 선택해 주세요.';
         $('frameRequirement').classList.remove('complete');
+        $('frameRequirement').disabled = false;
         return;
       }
 
@@ -1256,10 +1282,12 @@
         ? `프레임 선택 완료 · ${MODEL_LABEL[state.model]} ${state.size} / ${state.finish} · ${money(configuredFrame.salePrice)}`
         : '사이즈와 컬러·패브릭을 모두 선택해 주세요.';
       $('frameRequirement').classList.toggle('complete', ready);
+      $('frameRequirement').disabled = ready;
     }
 
     function renderHeads() {
       const ready = isFrameComplete();
+      if (!ready) { renderFrameGate('headChoices'); return; }
       const choices = [
         { value: 'head', label: '헤드만', summary: '기대어 앉기 편한 안정적인 헤드 구성', price: headConfigItem('head')?.salePrice || 0, priceText: ready ? plusMoney(headConfigItem('head')?.salePrice || 0) : '프레임 선택 후 가능', detailKey: 'head:head', disabled: !ready, showSelectButton: true },
         { value: 'one', label: '헤드 + 협탁 한쪽', summary: '한쪽 위치를 표시하며 설치 방향은 상담 시 결정', price: headConfigItem('one')?.salePrice || 0, priceText: ready ? plusMoney(headConfigItem('one')?.salePrice || 0) : '프레임 선택 후 가능', detailKey: 'head:one', disabled: !ready, showSelectButton: true },
@@ -1270,6 +1298,8 @@
 
     function renderTables() {
       const ready = isFrameComplete();
+      const note = $('tableAvailabilityNote');
+      if (!ready) { renderFrameGate('tableChoices'); note.hidden = true; note.textContent = ''; return; }
       const rows = tableItems();
       const manual = rows.find(item => !isAutomaticTable(item));
       const automatic = rows.find(item => isAutomaticTable(item));
@@ -1283,13 +1313,13 @@
         { value: 'auto', label: '자동 테이블', tag: '편의형 추천', summary: automaticUsable ? '하부 자동 레일로 버튼 이동' : unavailableSummary, price: automatic?.salePrice || 0, priceText: automaticUsable ? plusMoney(automatic.salePrice) : ready ? '설치 불가' : '프레임 선택 후 가능', detailKey: 'table:auto', disabled: !automaticUsable, showSelectButton: true },
       ];
       renderOptionGrid('tableChoices', choices, state.table, value => choose('table', state.table === value ? null : value));
-      const note = $('tableAvailabilityNote');
       note.hidden = !ready || !ssCoupleUnavailable;
       note.textContent = ssCoupleUnavailable ? 'SS+SS는 전체 폭이 넓어 테이블이 너무 길어지므로 수동·자동 테이블을 설치하지 않습니다.' : '';
     }
 
     function renderLights() {
       const ready = isFrameComplete();
+      if (!ready) { renderFrameGate('lightChoices'); return; }
       renderOptionGrid('lightChoices', [
         { value: 1, label: '무드등 한쪽', summary: '프레임 하부 좌우 중 한 곳에 설치 · 현장에서 기사님과 위치 협의', price: moodItem(1)?.salePrice || 0, priceText: ready ? plusMoney(moodItem(1)?.salePrice || 0) : '프레임 선택 후 가능', detailKey: 'light:one', disabled: !ready, showSelectButton: true },
         { value: 2, label: '무드등 양쪽', summary: '프레임 하부 좌우에 모두 설치', price: moodItem(2)?.salePrice || 0, priceText: ready ? plusMoney(moodItem(2)?.salePrice || 0) : '프레임 선택 후 가능', detailKey: 'light:two', disabled: !ready, showSelectButton: true },
@@ -1298,6 +1328,7 @@
 
     function renderMattresses() {
       const ready = isFrameComplete();
+      if (!ready) { state.mattress = null; renderFrameGate('mattressChoices'); return; }
       const map = mattressItems();
       const choices = [
         { value: 'MH', label: '하루끝 스프링', tag: '균형', summary: '탄력과 지지감의 균형 · 미디움하드', price: map.get('MH')?.salePrice || 0, priceText: ready ? plusMoney(map.get('MH')?.salePrice || 0) : '프레임 선택 후 가능', detailKey: 'mattress:MH', disabled: !ready || !map.get('MH'), showSelectButton: true },
@@ -1310,6 +1341,7 @@
 
     function renderDelivery() {
       const ready = isFrameComplete();
+      if (!ready) { renderFrameGate('deliveryChoices'); return; }
       const rows = bySection('delivery');
       renderOptionGrid('deliveryChoices', [
         { value: 'metro', label: '수도권', summary: '', price: 0, priceText: ready ? '' : '프레임 선택 후 가능', disabled: !ready, showSelectButton: true },
@@ -1714,9 +1746,24 @@
     $('sheetBackdrop').addEventListener('click', event => { if (event.target === $('sheetBackdrop')) closeSheet(); });
     $('sheetAction').addEventListener('click', () => { const handler = sheetActionHandler; closeSheet(); if (handler) handler(); });
     document.addEventListener('keydown', event => { if (event.key === 'Escape' && $('sheetBackdrop').classList.contains('open')) closeSheet(); });
+    const setQuickNavOpen = open => {
+      $('quickNav').classList.toggle('open', open);
+      $('quickNavToggle').setAttribute('aria-expanded', open ? 'true' : 'false');
+      $('quickNavToggle').textContent = open ? '× 바로가기 닫기' : '☰ 옵션 바로가기';
+    };
+    $('quickNavToggle').addEventListener('click', () => setQuickNavOpen(!$('quickNav').classList.contains('open')));
     document.querySelectorAll('[data-jump]').forEach(button => button.addEventListener('click', () => {
       $(button.dataset.jump).scrollIntoView({ behavior: 'smooth', block: 'start' });
+      setQuickNavOpen(false);
     }));
+    document.addEventListener('click', event => {
+      if ($('quickNav').classList.contains('open') && !$('quickNav').contains(event.target)) setQuickNavOpen(false);
+    });
+    document.addEventListener('keydown', event => { if (event.key === 'Escape') setQuickNavOpen(false); });
+    $('frameRequirement').addEventListener('click', () => {
+      const target = state.model ? $('step-frame') : $('step-product');
+      target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    });
     $('customFabricCloseButton').addEventListener('click', () => {
       const panel = $('customFabricPanel');
       panel.open = false;
