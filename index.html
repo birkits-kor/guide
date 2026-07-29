@@ -182,6 +182,10 @@
     .next-row { display: flex; justify-content: flex-end; margin-top: 19px; }
     .next-button { min-height: 52px; padding: 12px 18px; border: 0; border-radius: 11px; color: white; background: var(--accent); cursor: pointer; font-size: 17px; font-weight: 850; }
     .next-button.full-width { width: 100%; }
+    .skip-row { margin-top: 14px; }
+    .skip-button { width: 100%; min-height: 52px; padding: 12px 18px; border: 1px solid #d8cbbb; border-radius: 11px; color: #66513f; background: #fffaf6; cursor: pointer; font-size: 17px; font-weight: 850; }
+    .skip-button:hover { border-color: #9a826d; background: #faf5f0; }
+    .skip-button:focus-visible { outline: 3px solid rgba(139,117,97,.3); outline-offset: 3px; }
     .selection-guide { margin-top: 17px; padding: 13px 15px; border: 1px solid var(--line); border-radius: 13px; background: #f4f0e9; }
     .selection-guide summary { cursor: pointer; font-size: 17px; font-weight: 850; }
     .selection-guide p { margin: 10px 0 0; color: var(--muted); font-size: 16px; }
@@ -509,6 +513,8 @@
       .quick-nav { right: 8px; bottom: calc(var(--bar-height) + 10px); }
       .quick-nav.open { width: 136px; max-height: calc(100vh - var(--bar-height) - 20px); padding: 7px 7px 0; border-radius: 14px; }
       .quick-nav-toggle { min-width: 128px; min-height: 48px; padding: 8px 11px; font-size: 14px; }
+      .quick-nav:not(.open) .quick-nav-toggle { width: 48px; min-width: 48px; padding: 0; border-radius: 50%; font-size: 0; }
+      .quick-nav:not(.open) .quick-nav-toggle::before { content: "☰"; font-size: 22px; line-height: 1; }
       .quick-nav.open .quick-nav-toggle { min-height: 40px; font-size: 13px; }
       .quick-nav-menu { gap: 5px; }
       .quick-nav-menu button { min-height: 39px; padding: 6px 4px; font-size: 12px; }
@@ -562,6 +568,7 @@
       #sizeChoices, #finishChoices, #customFabricChoices { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 9px; }
       #sizeChoices .compact-choice, #finishChoices .compact-choice, #customFabricChoices .compact-choice { width: 100%; min-width: 0; }
       .next-button { min-height: 60px; font-size: 20px; }
+      .skip-button { min-height: 58px; font-size: 18px; }
       .option-grid[data-carousel="true"] .option-explainer .component-photo.catalog.compact { height: min(58vw, 245px); }
       .option-grid[data-carousel="true"] .option-explainer .component-photo.mattress { height: auto; aspect-ratio: 16 / 9; }
       .option-grid[data-carousel="true"] .option-explainer { padding-top: 13px; }
@@ -622,14 +629,6 @@
         <h1>침대가 달라지면,<br>하루의 끝이 달라집니다.</h1>
       </div>
     </section>
-
-    <button class="choice-intro" type="button" data-next="step-product" aria-labelledby="choiceIntroTitle">
-      <div class="choice-intro-inner">
-        <span class="choice-intro-number">시작</span>
-        <span class="choice-intro-copy"><span class="eyebrow">이제 직접 고르는 곳</span><span class="choice-intro-title" id="choiceIntroTitle">내 침대를 하나씩 선택해 보세요.</span></span>
-        <span class="choice-start-label">침대 선택 시작</span>
-      </div>
-    </button>
 
     <div class="progress-panel" aria-live="polite">
       <div class="progress-copy"><strong id="progressText">1 / 8 · 침대 선택</strong></div>
@@ -698,22 +697,26 @@
     <section class="step-section" id="step-mattress" data-step="4">
       <div class="step-head"><div><span class="step-number">MY BED 04 · 매트리스 선택</span><h2>몸이 닿는 느낌을 골라보세요.</h2><p class="step-help">균형 잡힌 스프링, 탄탄한 하드, 푹신한 미디움 중 편안한 사용감을 선택해 주세요.</p></div></div>
       <div class="option-grid" id="mattressChoices" data-carousel="true"></div>
+      <div class="skip-row"><button class="skip-button" type="button" data-skip-key="mattress" data-skip-next="step-head">선택하지 않고 다음으로</button></div>
     </section>
 
     <section class="step-section" id="step-head" data-step="5">
       <div class="step-head"><div><span class="step-number">MY BED 05 · 헤드·협탁 선택</span><h2>기대고, 가까이 두는 편안함</h2><p class="step-help">헤드는 편안하게 기대도록 돕고, 협탁은 자주 쓰는 물건을 손이 닿는 곳에 둡니다.</p></div></div>
       <div class="option-grid" id="headChoices" data-carousel="true"></div>
+      <div class="skip-row"><button class="skip-button" type="button" data-skip-key="headConfig" data-skip-next="step-table">선택하지 않고 다음으로</button></div>
     </section>
 
     <section class="step-section" id="step-table" data-step="6">
       <div class="step-head"><div><span class="step-number">MY BED 06 · 테이블 선택</span><h2>침대 위 시간을 더 편하게</h2><p class="step-help">식사·독서·노트북 사용에 맞춰 수동형과 자동형 중 선택해 주세요.</p></div></div>
       <div class="option-grid three" id="tableChoices" data-carousel="true"></div>
       <p class="availability-note" id="tableAvailabilityNote" hidden></p>
+      <div class="skip-row"><button class="skip-button" type="button" data-skip-key="table" data-skip-next="step-light">선택하지 않고 다음으로</button></div>
     </section>
 
     <section class="step-section" id="step-light" data-step="7">
       <div class="step-head"><div><span class="step-number">MY BED 07 · 무드등 선택</span><h2>밤에도 발밑을 부드럽게</h2><p class="step-help">인체감지 조명이 움직임을 알아차리고 프레임 아래 바닥을 밝혀줍니다.</p></div></div>
       <div class="option-grid three" id="lightChoices" data-carousel="true"></div>
+      <div class="skip-row"><button class="skip-button" type="button" data-skip-key="moodLights" data-skip-next="step-delivery">선택하지 않고 다음으로</button></div>
     </section>
 
     <section class="step-section" id="step-delivery" data-step="8">
@@ -991,6 +994,7 @@
     let activeGuideStage = 0;
     let activeGuideModel = 'mabed';
     let quotePreviewUrl = null;
+    let autoAdvanceTimer = null;
 
     const $ = id => document.getElementById(id);
     const items = () => Array.isArray(catalog.items) ? catalog.items : [];
@@ -1025,6 +1029,7 @@
     }
 
     function choose(key, value, autoAdvance = true) {
+      if (autoAdvanceTimer) { clearTimeout(autoAdvanceTimer); autoAdvanceTimer = null; }
       state[key] = value;
       hasCopiedQuote = false;
       if (key === 'model') {
@@ -1039,7 +1044,7 @@
       if (key === 'size' && value === 'SS+SS 커플') state.table = null;
       saveState(); render();
       const nextStep = autoAdvance ? choiceNextStep(key, value) : null;
-      if (nextStep) scrollToStep(nextStep);
+      if (nextStep) autoAdvanceTimer = window.setTimeout(() => { autoAdvanceTimer = null; scrollToStep(nextStep); }, 550);
     }
     function choosePreviewFrame(model, finish) {
       const retainedSize = state.size;
@@ -1049,7 +1054,10 @@
       state.headConfig = null; state.table = null; state.moodLights = null; state.mattress = null; state.delivery = null;
       hasCopiedQuote = false;
       saveState(); render();
-      if (isFrameComplete()) scrollToStep('step-mattress');
+      if (isFrameComplete()) {
+        if (autoAdvanceTimer) clearTimeout(autoAdvanceTimer);
+        autoAdvanceTimer = window.setTimeout(() => { autoAdvanceTimer = null; scrollToStep('step-mattress'); }, 550);
+      }
     }
 
     function frameItem() {
@@ -1808,20 +1816,20 @@
           const file = typeof File === 'function' ? new File([blob], filename, { type: 'image/png' }) : null;
           let canShareFile = false;
           try { canShareFile = Boolean(file && navigator.share && navigator.canShare && navigator.canShare({ files: [file] })); } catch (_) {}
+          const saveHelp = canShareFile
+            ? '카카오톡에서는 아래 이미지를 길게 눌러 <strong>사진 저장</strong>을 선택해 주세요. 또는 아래 버튼으로 휴대폰의 공유·저장 메뉴를 이용하세요.'
+            : '카카오톡에서는 아래 이미지를 길게 눌러 <strong>사진 저장</strong>을 선택해 주세요.';
           openSheet({
             title: '견적 이미지가 완성됐어요',
-            body: `<p class="image-save-help">카카오톡에서는 아래 이미지를 길게 눌러 <strong>사진 저장</strong>을 선택해 주세요. 저장 메뉴가 나오지 않으면 아래 버튼을 눌러 휴대폰의 공유·저장 메뉴를 이용하세요.</p><img class="quote-image-preview" src="${url}" alt="완성된 버킷츠 침대 견적 이미지">`,
-            actionLabel: canShareFile ? '공유·저장하기' : '이미지를 새 화면으로 열기',
+            body: `<p class="image-save-help">${saveHelp}</p><img class="quote-image-preview" src="${url}" alt="완성된 버킷츠 침대 견적 이미지">`,
+            actionLabel: '공유·저장하기',
+            hideAction: !canShareFile,
             onAction: async () => {
-              if (canShareFile) {
-                try {
-                  await navigator.share({ files: [file], title: '버킷츠 침대 견적' });
-                  return;
-                } catch (error) {
-                  if (error?.name === 'AbortError') return;
-                }
+              try {
+                await navigator.share({ files: [file], title: '버킷츠 침대 견적' });
+              } catch (error) {
+                if (error?.name !== 'AbortError') showToast('공유 메뉴를 열지 못했습니다. 이미지를 길게 눌러 저장해 주세요.');
               }
-              window.open(url, '_blank', 'noopener,noreferrer');
             },
           });
           showToast('이미지를 길게 눌러 저장해 주세요.');
@@ -1895,6 +1903,12 @@
     }
 
     document.querySelectorAll('[data-next]').forEach(button => button.addEventListener('click', () => scrollToStep(button.dataset.next)));
+    document.querySelectorAll('[data-skip-next]').forEach(button => button.addEventListener('click', () => {
+      const key = button.dataset.skipKey;
+      if (key && state[key] != null) choose(key, null, false);
+      if (autoAdvanceTimer) { clearTimeout(autoAdvanceTimer); autoAdvanceTimer = null; }
+      scrollToStep(button.dataset.skipNext);
+    }));
     document.querySelectorAll('[data-guide-model]').forEach(button => button.addEventListener('click', () => {
       activeGuideModel = button.dataset.guideModel === 'shuve' ? 'shuve' : 'mabed';
       activeGuideStage = 0;
@@ -1941,6 +1955,7 @@
     const setQuickNavOpen = open => {
       $('quickNav').classList.toggle('open', open);
       $('quickNavToggle').setAttribute('aria-expanded', open ? 'true' : 'false');
+      $('quickNavToggle').setAttribute('aria-label', open ? '옵션 바로가기 닫기' : '옵션 바로가기 열기');
       $('quickNavToggle').textContent = open ? '× 바로가기 닫기' : '☰ 옵션 바로가기';
     };
     $('quickNavToggle').addEventListener('click', () => setQuickNavOpen(!$('quickNav').classList.contains('open')));
@@ -1980,7 +1995,7 @@
     $('imageSaveButton').addEventListener('click', saveQuoteImage);
     const customerFieldIds = ['customerName', 'customerPhone', 'customerPostcode', 'customerAddress', 'customerAddressDetail', 'deliveryRequest'];
     customerFieldIds.forEach(id => $(id).addEventListener('input', () => { hasCopiedQuote = false; $('talkButton').disabled = true; }));
-    $('resetButton').addEventListener('click', () => { state = { ...DEFAULT_STATE }; hasCopiedQuote = false; customerFieldIds.forEach(id => { $(id).value = ''; }); saveState(); render(); window.scrollTo({ top: 0, behavior: 'smooth' }); showToast('선택을 초기화했습니다.'); });
+    $('resetButton').addEventListener('click', () => { if (autoAdvanceTimer) { clearTimeout(autoAdvanceTimer); autoAdvanceTimer = null; } state = { ...DEFAULT_STATE }; hasCopiedQuote = false; customerFieldIds.forEach(id => { $(id).value = ''; }); saveState(); render(); window.scrollTo({ top: 0, behavior: 'smooth' }); showToast('선택을 초기화했습니다.'); });
     $('receiptDate').textContent = new Date().toLocaleDateString('ko-KR');
 
     render(); setupProgressObserver(); loadLiveCatalog();
