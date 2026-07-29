@@ -705,10 +705,10 @@
         <div class="field full"><label for="deliveryRequest">배송 요청사항 (선택)</label><textarea id="deliveryRequest" placeholder="설치 희망일, 공동현관 출입 방법 등 전달할 내용을 적어 주세요"></textarea></div>
       </div>
       <p class="receipt-note">원본 가격표의 판매가를 합산한 예상 견적입니다. 설치 환경, 프로모션 및 현장 조건에 따라 최종 금액이 달라질 수 있으므로 주문 전 상담 확인이 필요합니다.</p>
-      <p class="consultation-guide">① 견적 복사를 누른 뒤 ② 톡톡 상담을 열어 내용을 붙여 넣어 주세요. 전화 상담도 바로 연결할 수 있습니다.</p>
+      <p class="consultation-guide">① 견적 복사를 누른 뒤 ② 카톡 상담을 열어 내용을 붙여 넣어 주세요. 전화 상담도 바로 연결할 수 있습니다.</p>
       <div class="receipt-actions">
         <button class="receipt-button" id="copyButton" type="button">견적 복사</button>
-        <button class="receipt-button primary" id="talkButton" type="button" disabled>톡톡 상담</button>
+        <button class="receipt-button primary" id="talkButton" type="button" disabled>카톡 상담</button>
         <a class="receipt-button phone" id="phoneButton" href="tel:050713017653" aria-label="0507-1301-7653으로 전화 상담"><span>전화 상담<small>0507-1301-7653</small></span></a>
         <button class="receipt-button" id="imageSaveButton" type="button">이미지 저장</button>
         <button class="receipt-button" id="resetButton" type="button">처음부터 다시</button>
@@ -1651,7 +1651,7 @@
       await writeClipboard(text);
       hasCopiedQuote = true;
       $('talkButton').disabled = false;
-      showToast('견적을 복사했습니다. 이제 톡톡 상담을 눌러 주세요.');
+      showToast('견적을 복사했습니다. 이제 카톡 상담을 눌러 주세요.');
     }
     async function copyAccount() {
       await writeClipboard('신한 597-04-532966 하영웅(버킷츠)');
@@ -1724,7 +1724,7 @@
     }
     function openTalk() {
       if (!hasCopiedQuote) { showToast('먼저 견적 복사(텍스트)를 눌러 주세요.'); return; }
-      window.open('https://talk.naver.com/WCE5B4', '_blank', 'noopener,noreferrer');
+      window.open('https://open.kakao.com/o/sV8F0c4c', '_blank', 'noopener,noreferrer');
     }
     function showToast(message) { const toast = $('toast'); toast.textContent = message; toast.classList.add('show'); clearTimeout(showToast.timer); showToast.timer = setTimeout(() => toast.classList.remove('show'), 1900); }
 
