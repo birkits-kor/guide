@@ -328,6 +328,8 @@
     .sheet-body ul { margin: 8px 0 14px; padding-left: 20px; }
     .sheet-body li { margin: 5px 0; }
     .image-save-help { padding: 13px 15px; border-radius: 12px; color: #5f4e40; background: #f7f0e8; font-weight: 800; line-height: 1.6; }
+    .image-download-link { display: grid; place-items: center; width: 100%; min-height: 60px; margin: 13px 0; padding: 14px 18px; border-radius: 12px; color: white; background: var(--accent); font-size: 19px; font-weight: 900; text-align: center; text-decoration: none; }
+    .image-download-link:focus-visible { outline: 3px solid rgba(139,117,97,.34); outline-offset: 3px; }
     .quote-image-preview { display: block; width: 100%; max-height: 56vh; margin: 13px auto 4px; border: 1px solid var(--line); border-radius: 12px; object-fit: contain; background: white; -webkit-touch-callout: default; user-select: auto; }
     .keyword-row { display: flex; gap: 7px; flex-wrap: wrap; margin: 12px 0 16px; }
     .keyword { padding: 7px 11px; border-radius: 999px; color: #635d54; background: #eee9e1; font-size: 15px; font-weight: 750; }
@@ -514,7 +516,7 @@
       .quick-nav.open { width: 136px; max-height: calc(100vh - var(--bar-height) - 20px); padding: 7px 7px 0; border-radius: 14px; }
       .quick-nav-toggle { min-width: 128px; min-height: 48px; padding: 8px 11px; font-size: 14px; }
       .quick-nav:not(.open) .quick-nav-toggle { width: 48px; min-width: 48px; padding: 0; border-radius: 50%; font-size: 0; }
-      .quick-nav:not(.open) .quick-nav-toggle::before { content: "☰"; font-size: 22px; line-height: 1; }
+      .quick-nav:not(.open) .quick-nav-toggle::before { content: ""; width: 20px; height: 2px; border-radius: 999px; background: currentColor; box-shadow: 0 -6px 0 currentColor, 0 6px 0 currentColor; }
       .quick-nav.open .quick-nav-toggle { min-height: 40px; font-size: 13px; }
       .quick-nav-menu { gap: 5px; }
       .quick-nav-menu button { min-height: 39px; padding: 6px 4px; font-size: 12px; }
@@ -993,7 +995,6 @@
     let hasCopiedQuote = false;
     let activeGuideStage = 0;
     let activeGuideModel = 'mabed';
-    let quotePreviewUrl = null;
     let autoAdvanceTimer = null;
 
     const $ = id => document.getElementById(id);
@@ -1806,34 +1807,38 @@
         });
         const blob = await new Promise(resolve => canvas.toBlob(resolve, 'image/png'));
         if (!blob) throw new Error('PNG 생성 실패');
-        const url = URL.createObjectURL(blob);
         const date = new Date().toISOString().slice(0, 10);
         const filename = `버킷츠-${MODEL_LABEL[state.model]}-${state.size}-견적-${date}.png`;
         const mobileOrInApp = /Android|iPhone|iPad|iPod|KAKAOTALK/i.test(navigator.userAgent);
         if (mobileOrInApp) {
-          if (quotePreviewUrl) URL.revokeObjectURL(quotePreviewUrl);
-          quotePreviewUrl = url;
+          const dataUrl = canvas.toDataURL('image/png');
           const file = typeof File === 'function' ? new File([blob], filename, { type: 'image/png' }) : null;
           let canShareFile = false;
           try { canShareFile = Boolean(file && navigator.share && navigator.canShare && navigator.canShare({ files: [file] })); } catch (_) {}
           const saveHelp = canShareFile
-            ? '카카오톡에서는 아래 이미지를 길게 눌러 <strong>사진 저장</strong>을 선택해 주세요. 또는 아래 버튼으로 휴대폰의 공유·저장 메뉴를 이용하세요.'
-            : '카카오톡에서는 아래 이미지를 길게 눌러 <strong>사진 저장</strong>을 선택해 주세요.';
+            ? '아래 <strong>PNG 이미지 다운로드</strong> 버튼을 누르세요. 공유가 필요하면 맨 아래 공유 버튼도 사용할 수 있습니다.'
+            : '아래 <strong>PNG 이미지 다운로드</strong> 버튼을 누르세요. 저장된 파일은 휴대폰의 알림창이나 다운로드 폴더에서 확인할 수 있습니다.';
           openSheet({
             title: '견적 이미지가 완성됐어요',
-            body: `<p class="image-save-help">${saveHelp}</p><img class="quote-image-preview" src="${url}" alt="완성된 버킷츠 침대 견적 이미지">`,
+            body: `<p class="image-save-help">${saveHelp}</p><a class="image-download-link" id="quoteImageDownloadLink" href="#" download>PNG 이미지 다운로드</a><img class="quote-image-preview" id="quoteImagePreview" alt="완성된 버킷츠 침대 견적 이미지">`,
             actionLabel: '공유·저장하기',
             hideAction: !canShareFile,
             onAction: async () => {
               try {
                 await navigator.share({ files: [file], title: '버킷츠 침대 견적' });
               } catch (error) {
-                if (error?.name !== 'AbortError') showToast('공유 메뉴를 열지 못했습니다. 이미지를 길게 눌러 저장해 주세요.');
+                if (error?.name !== 'AbortError') showToast('공유 메뉴를 열지 못했습니다. PNG 다운로드 버튼을 이용해 주세요.');
               }
             },
           });
-          showToast('이미지를 길게 눌러 저장해 주세요.');
+          const downloadLink = $('quoteImageDownloadLink');
+          downloadLink.href = dataUrl;
+          downloadLink.download = filename;
+          downloadLink.addEventListener('click', () => showToast('다운로드를 요청했습니다. 알림창이나 다운로드 폴더를 확인해 주세요.'));
+          $('quoteImagePreview').src = dataUrl;
+          showToast('PNG 이미지 다운로드 버튼을 눌러 저장하세요.');
         } else {
+          const url = URL.createObjectURL(blob);
           const link = document.createElement('a');
           link.href = url;
           link.download = filename;
