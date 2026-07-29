@@ -127,6 +127,7 @@
     .option-card-action { display: grid; place-items: center; width: 100%; min-height: 52px; margin-top: 17px; padding: 11px 15px; border: 2px solid #8b7561; border-radius: 12px; color: #6b5543; background: white; font-size: 18px; font-weight: 900; }
     .option-card.selected .option-card-action { border-color: var(--accent); color: white; background: var(--accent); }
     .option-select:focus-visible, .next-button:focus-visible, .bar-button:focus-visible, .receipt-button:focus-visible, .sheet-close:focus-visible, .sheet-action:focus-visible, .guide-arrow:focus-visible { outline: 3px solid rgba(77,89,77,.25); outline-offset: 2px; }
+    .carousel-controls { display: none; }
 
     .product-grid .option-select { min-height: 190px; padding-top: 28px; }
     .product-image { display: block; width: 100%; aspect-ratio: 4 / 3; border-bottom: 1px solid var(--line); background: #f7f4ef; object-fit: cover; }
@@ -363,10 +364,13 @@
     .bed-guide-heading { max-width: 790px; }
     .bed-guide-heading h2 { font-size: clamp(31px, 4.8vw, 48px); line-height: 1.18; }
     .bed-guide-heading > p:last-child { margin: 13px 0 0; color: var(--muted); font-size: 18px; }
+    .guide-model-tabs { display: inline-flex; gap: 7px; margin-top: 20px; padding: 5px; border: 1px solid var(--line); border-radius: 15px; background: white; }
+    .guide-model-tab { min-width: 112px; min-height: 48px; padding: 10px 18px; border: 0; border-radius: 11px; color: #6d6258; background: transparent; cursor: pointer; font-size: 18px; font-weight: 900; }
+    .guide-model-tab.selected { color: white; background: #8b7561; box-shadow: 0 5px 15px rgba(103,80,60,.14); }
     .guide-stage-buttons { display: flex; gap: 8px; margin: 25px 0 20px; padding-bottom: 4px; overflow-x: auto; scroll-behavior: smooth; scrollbar-width: thin; }
     .guide-stage-button { flex: 0 0 auto; min-height: 48px; padding: 11px 15px; border: 1px solid var(--line); border-radius: 999px; color: #6d6258; background: white; cursor: pointer; font-size: 15px; font-weight: 850; }
     .guide-stage-button.selected { border-color: #9b816b; color: white; background: #8b7561; box-shadow: 0 7px 18px rgba(103,80,60,.16); }
-    .guide-layout { display: grid; grid-template-columns: minmax(0,1.28fr) minmax(300px,.72fr); gap: 24px; align-items: stretch; }
+    .guide-layout { display: grid; grid-template-columns: minmax(0,1.28fr) minmax(300px,.72fr); gap: 24px; align-items: stretch; touch-action: pan-y; }
     .guide-visual-panel { position: relative; display: grid; place-items: center; height: 390px; min-height: 390px; overflow: hidden; border: 1px solid #eee7df; border-radius: 22px; background: white; touch-action: pan-y; user-select: none; cursor: grab; }
     .guide-visual-panel:active { cursor: grabbing; }
     .guide-slide-track { position: absolute; inset: 0; display: flex; width: 100%; height: 100%; will-change: transform; transition: transform .42s cubic-bezier(.22,.75,.28,1); }
@@ -518,13 +522,30 @@
       .step-help { font-size: 19px; line-height: 1.7; }
       .subhead { font-size: 21px; }
       .option-grid, .option-grid.three, .product-grid { grid-template-columns: 1fr; }
+      .option-grid[data-carousel="true"] {
+        display: flex;
+        gap: 12px;
+        margin-inline: -2px;
+        padding: 2px 42px 8px 2px;
+        overflow-x: auto;
+        scroll-snap-type: x mandatory;
+        scroll-behavior: smooth;
+        overscroll-behavior-inline: contain;
+        scrollbar-width: none;
+      }
+      .option-grid[data-carousel="true"]::-webkit-scrollbar { display: none; }
+      .option-grid[data-carousel="true"] > .option-card { flex: 0 0 calc(100% - 34px); scroll-snap-align: start; scroll-snap-stop: always; }
+      .option-grid[data-carousel="true"] > .option-card:hover { transform: none; }
+      .carousel-controls { display: grid; grid-template-columns: 54px 1fr 54px; align-items: center; gap: 8px; margin-top: 10px; }
+      .carousel-arrow { min-height: 48px; border: 1px solid #cbbdaf; border-radius: 12px; color: #5d4c3f; background: white; cursor: pointer; font-size: 28px; font-weight: 900; line-height: 1; }
+      .carousel-status { color: var(--muted); font-size: 16px; font-weight: 850; text-align: center; }
       .option-select { min-height: 138px; }
       .option-name { font-size: 23px; }
       .option-summary { font-size: 19px; }
       .option-price { font-size: 20px; }
       .option-tag { font-size: 16px; }
       .option-card-action { min-height: 58px; font-size: 20px; }
-      #mattressChoices .option-select { min-height: 310px; }
+      #mattressChoices .option-select { min-height: 235px; }
       .product-grid .option-select { min-height: 170px; }
       .product-type { font-size: 19px; }
       .option-explainer { margin: 0 15px 17px; font-size: 19px; }
@@ -532,7 +553,9 @@
       .component-caption span { font-size: 15px; }
       .compact-choice { min-height: 60px; font-size: 18px; }
       .next-button { min-height: 60px; font-size: 20px; }
-      .option-explainer .component-photo.catalog.compact { height: min(78vw, 350px); }
+      .option-grid[data-carousel="true"] .option-explainer .component-photo.catalog.compact { height: min(58vw, 245px); }
+      .option-grid[data-carousel="true"] .option-explainer .component-photo.mattress { height: auto; aspect-ratio: 16 / 9; }
+      .option-grid[data-carousel="true"] .option-explainer { padding-top: 13px; }
       .option-explainer .component-photo.split { height: auto; }
       .product-gallery { grid-template-columns: 1fr; }
       .product-gallery img { aspect-ratio: 4 / 3; }
@@ -604,23 +627,22 @@
       <div class="progress-track"><span class="progress-fill" id="progressFill"></span></div>
     </div>
 
-    <section class="step-section" id="step-product" data-step="1">
-      <div class="step-head"><div><span class="step-number">MY BED 01</span><h2>먼저, 마베드와 슈브를 비교해 보세요.</h2><p class="step-help">풀세트 사진으로 전체 분위기를 먼저 살펴본 뒤, 마음에 드는 제품을 선택해 주세요.</p></div></div>
-      <div class="option-grid product-grid" id="productChoices"></div>
-    </section>
-
-    <section class="bed-guide" id="bed-guide" data-step="2">
+    <section class="bed-guide" id="bed-guide" data-step="1">
       <div class="section-purpose">
-        <span class="section-purpose-number">02</span>
-        <div><strong>선택한 침대를 알아보는 곳입니다</strong></div>
+        <span class="section-purpose-number">01</span>
+        <div><strong>먼저 침대의 구성을 알아보세요</strong></div>
       </div>
       <div class="bed-guide-heading">
-        <p class="eyebrow">MY BED 02 · BED GUIDE</p>
+        <p class="eyebrow">MY BED 01 · BED GUIDE</p>
         <h2>침대의 각 부분을 사진으로 알아보세요.</h2>
-        <p>버튼을 누르거나 사진을 오른쪽에서 왼쪽으로 쓸어 넘기면 프레임부터 무드등까지 차례로 볼 수 있습니다.</p>
+        <p>마베드와 슈브를 탭으로 바꿔 보고, 사진이나 설명을 옆으로 넘기며 각 부분을 살펴보세요.</p>
+        <div class="guide-model-tabs" id="guideModelTabs" aria-label="가이드 제품 선택">
+          <button class="guide-model-tab selected" type="button" data-guide-model="mabed" aria-pressed="true">마베드</button>
+          <button class="guide-model-tab" type="button" data-guide-model="shuve" aria-pressed="false">슈브</button>
+        </div>
       </div>
       <div class="guide-stage-buttons" id="guideStageButtons" aria-label="침대 구성 안내"></div>
-      <div class="guide-layout">
+      <div class="guide-layout" id="guideCarousel">
         <div class="guide-visual-panel" id="guideVisualPanel">
           <span class="guide-counter" id="guideCounter">1 / 7</span>
           <div class="guide-slide-track" id="guideSlideTrack"></div>
@@ -635,15 +657,20 @@
           <ul id="guidePoints"></ul>
         </div>
       </div>
-      <div class="next-row"><button class="next-button full-width" type="button" data-next="step-frame">프레임 선택하기</button></div>
+      <div class="next-row"><button class="next-button full-width" type="button" data-next="step-product">제품 선택하기</button></div>
+    </section>
+
+    <section class="step-section" id="step-product" data-step="2">
+      <div class="step-head"><div><span class="step-number">MY BED 02 · 제품 선택</span><h2>마베드와 슈브를 비교해 보세요.</h2><p class="step-help">풀세트 사진으로 전체 분위기를 살펴본 뒤 마음에 드는 침대를 선택해 주세요.</p></div></div>
+      <div class="option-grid product-grid" id="productChoices" data-carousel="true"></div>
     </section>
 
     <section class="step-section" id="step-frame" data-step="3">
-      <div class="step-head"><div><span class="step-number">MY BED 03</span><h2>프레임의 사이즈와 색상을 골라보세요.</h2><p class="step-help">사용할 인원과 침실 크기에 맞는 규격, 원하는 컬러·패브릭을 선택하면 견적에 담깁니다.</p></div></div>
-      <div class="subhead">사이즈</div>
+      <div class="step-head"><div><span class="step-number">MY BED 03 · 프레임 선택</span><h2>사이즈와 색상을 골라보세요.</h2><p class="step-help">사용할 인원과 침실 크기에 맞는 규격, 원하는 컬러·패브릭을 선택하면 견적에 담깁니다.</p></div></div>
+      <div class="subhead" id="sizeSubhead">사이즈</div>
       <div class="compact-grid" id="sizeChoices"></div>
       <div class="size-visual" id="sizeSelectionVisual" hidden></div>
-      <div class="subhead">컬러 · 패브릭</div>
+      <div class="subhead" id="finishSubhead">컬러 · 패브릭</div>
       <div class="compact-grid" id="finishChoices"></div>
       <div class="finish-selection-visual" id="finishSelectionVisual" hidden></div>
       <details class="custom-fabric-panel" id="customFabricPanel" hidden>
@@ -660,28 +687,28 @@
     </section>
 
     <section class="step-section" id="step-mattress" data-step="4">
-      <div class="step-head"><div><span class="step-number">MY BED 04</span><h2>몸이 닿는 느낌까지 내게 맞게</h2><p class="step-help">탄력 있는 스프링, 단단한 라텍스폼, 부드러운 라텍스폼 중 평소 편안하다고 느끼는 사용감을 골라보세요.</p></div></div>
-      <div class="option-grid" id="mattressChoices"></div>
+      <div class="step-head"><div><span class="step-number">MY BED 04 · 매트리스 선택</span><h2>몸이 닿는 느낌을 골라보세요.</h2><p class="step-help">균형 잡힌 스프링, 탄탄한 하드, 푹신한 미디움 중 편안한 사용감을 선택해 주세요.</p></div></div>
+      <div class="option-grid" id="mattressChoices" data-carousel="true"></div>
     </section>
 
     <section class="step-section" id="step-head" data-step="5">
-      <div class="step-head"><div><span class="step-number">MY BED 05</span><h2>기대고, 가까이 두는 편안함</h2><p class="step-help">헤드는 앉아서 쉬는 시간을 편안하게 만들고, 협탁은 휴대전화·안경·책처럼 자주 쓰는 물건을 손이 닿는 곳에 두게 해줍니다.</p></div></div>
-      <div class="option-grid" id="headChoices"></div>
+      <div class="step-head"><div><span class="step-number">MY BED 05 · 헤드·협탁 선택</span><h2>기대고, 가까이 두는 편안함</h2><p class="step-help">헤드는 편안하게 기대도록 돕고, 협탁은 자주 쓰는 물건을 손이 닿는 곳에 둡니다.</p></div></div>
+      <div class="option-grid" id="headChoices" data-carousel="true"></div>
     </section>
 
     <section class="step-section" id="step-table" data-step="6">
-      <div class="step-head"><div><span class="step-number">MY BED 06</span><h2>침대 위 시간이 더 편해지는 테이블</h2><p class="step-help">식사, 독서, 노트북 사용처럼 침대에서 보내는 시간을 생각해 수동형과 자동형 중 필요한 방식을 고를 수 있습니다.</p></div></div>
-      <div class="option-grid three" id="tableChoices"></div>
+      <div class="step-head"><div><span class="step-number">MY BED 06 · 테이블 선택</span><h2>침대 위 시간을 더 편하게</h2><p class="step-help">식사·독서·노트북 사용에 맞춰 수동형과 자동형 중 선택해 주세요.</p></div></div>
+      <div class="option-grid three" id="tableChoices" data-carousel="true"></div>
       <p class="availability-note" id="tableAvailabilityNote" hidden></p>
     </section>
 
     <section class="step-section" id="step-light" data-step="7">
-      <div class="step-head"><div><span class="step-number">MY BED 07</span><h2>밤에도 발밑을 부드럽게</h2><p class="step-help">프레임 하부 측판의 인체감지 조명이 움직임을 알아차리고 바닥을 밝혀, 잠결에도 주변을 편안하게 확인할 수 있습니다.</p></div></div>
-      <div class="option-grid three" id="lightChoices"></div>
+      <div class="step-head"><div><span class="step-number">MY BED 07 · 무드등 선택</span><h2>밤에도 발밑을 부드럽게</h2><p class="step-help">인체감지 조명이 움직임을 알아차리고 프레임 아래 바닥을 밝혀줍니다.</p></div></div>
+      <div class="option-grid three" id="lightChoices" data-carousel="true"></div>
     </section>
 
     <section class="step-section" id="step-delivery" data-step="8">
-      <div class="step-head"><div><span class="step-number">MY BED 08</span><h2>마지막으로 설치 지역을 알려주세요.</h2><p class="step-help">지금까지 고른 침대 구성에 설치 지역의 배송비를 더해 예상 금액을 안내합니다.</p></div></div>
+      <div class="step-head"><div><span class="step-number">MY BED 08 · 배송지역 선택</span><h2>설치 지역을 알려주세요.</h2><p class="step-help">선택한 구성에 지역별 배송비를 더해 예상 금액을 안내합니다.</p></div></div>
       <div class="option-grid" id="deliveryChoices"></div>
     </section>
 
@@ -735,8 +762,8 @@
   <aside class="quick-nav" id="quickNav" aria-label="옵션 바로가기">
     <button class="quick-nav-toggle" id="quickNavToggle" type="button" aria-expanded="false" aria-controls="quickNavMenu">☰ 옵션 바로가기</button>
     <nav class="quick-nav-menu" id="quickNavMenu" aria-label="옵션 단계 바로가기">
-      <button type="button" data-jump="step-product">01 제품</button>
-      <button type="button" data-jump="bed-guide">02 가이드</button>
+      <button type="button" data-jump="bed-guide">01 가이드</button>
+      <button type="button" data-jump="step-product">02 제품</button>
       <button type="button" data-jump="step-frame">03 프레임</button>
       <button type="button" data-jump="step-mattress">04 매트리스</button>
       <button type="button" data-jump="step-head">05 헤드·협탁</button>
@@ -764,8 +791,8 @@
     const SIZE_ORDER = ['SS', 'Q', 'S+S 커플', 'SS+SS 커플'];
     const MODEL_LABEL = { mabed: '마베드', shuve: '슈브' };
     const STEP_TEXT = {
-      1: '1 / 8 · 침대 선택',
-      2: '2 / 8 · 침대 알아보기',
+      1: '1 / 8 · 침대 알아보기',
+      2: '2 / 8 · 제품 선택',
       3: '3 / 8 · 프레임',
       4: '4 / 8 · 매트리스',
       5: '5 / 8 · 헤드·협탁',
@@ -953,6 +980,7 @@
     let lastFocusedElement = null;
     let hasCopiedQuote = false;
     let activeGuideStage = 0;
+    let activeGuideModel = 'mabed';
 
     const $ = id => document.getElementById(id);
     const items = () => Array.isArray(catalog.items) ? catalog.items : [];
@@ -975,7 +1003,7 @@
 
     function choiceNextStep(key, value) {
       if (value == null) return null;
-      if (key === 'model') return 'bed-guide';
+      if (key === 'model') return 'step-frame';
       if ((key === 'size' || key === 'finish') && isFrameComplete()) return 'step-mattress';
       return {
         mattress: 'step-head',
@@ -1180,6 +1208,68 @@
     function renderOptionGrid(id, choices, current, onSelect, className = '') {
       const root = $(id); root.innerHTML = ''; root.className = `option-grid ${className}`.trim();
       choices.forEach(choice => root.appendChild(optionCard(choice, current, onSelect)));
+      setupOptionCarousel(root);
+    }
+
+    function setupOptionCarousel(root) {
+      if (root.dataset.carousel !== 'true') return;
+      let controls = root.nextElementSibling;
+      if (!controls?.classList.contains('carousel-controls')) {
+        controls = document.createElement('div');
+        controls.className = 'carousel-controls';
+        controls.innerHTML = `<button class="carousel-arrow prev" type="button" aria-label="이전 선택지">‹</button><span class="carousel-status" aria-live="polite"></span><button class="carousel-arrow next" type="button" aria-label="다음 선택지">›</button>`;
+        root.insertAdjacentElement('afterend', controls);
+      }
+      const cards = () => [...root.querySelectorAll('.option-card')];
+      const cardLeft = card => card.getBoundingClientRect().left - root.getBoundingClientRect().left + root.scrollLeft;
+      const currentIndex = () => {
+        const list = cards();
+        if (!list.length) return 0;
+        return list.reduce((best, card, index) => Math.abs(cardLeft(card) - root.scrollLeft) < best.distance
+          ? { index, distance: Math.abs(cardLeft(card) - root.scrollLeft) }
+          : best, { index: 0, distance: Infinity }).index;
+      };
+      const update = () => {
+        const list = cards();
+        controls.hidden = list.length < 2;
+        controls.querySelector('.carousel-status').textContent = list.length ? `${currentIndex() + 1} / ${list.length} · 옆으로 넘겨보세요` : '';
+      };
+      const move = delta => {
+        const list = cards();
+        if (!list.length) return;
+        const targetIndex = (currentIndex() + delta + list.length) % list.length;
+        root.scrollTo({ left: cardLeft(list[targetIndex]), behavior: 'smooth' });
+        window.setTimeout(update, 360);
+      };
+      if (root.dataset.carouselBound !== 'true') {
+        root.dataset.carouselBound = 'true';
+        controls.querySelector('.prev').addEventListener('click', () => move(-1));
+        controls.querySelector('.next').addEventListener('click', () => move(1));
+        let startX = null;
+        let startIndex = 0;
+        root.addEventListener('touchstart', event => {
+          startX = event.touches[0]?.clientX ?? null;
+          startIndex = currentIndex();
+        }, { passive: true });
+        root.addEventListener('touchend', event => {
+          if (startX == null) return;
+          const endX = event.changedTouches[0]?.clientX ?? startX;
+          const distance = endX - startX;
+          const list = cards();
+          if (Math.abs(distance) > 42 && list.length > 1) {
+            if (startIndex === list.length - 1 && distance < 0) root.scrollTo({ left: cardLeft(list[0]), behavior: 'smooth' });
+            if (startIndex === 0 && distance > 0) root.scrollTo({ left: cardLeft(list[list.length - 1]), behavior: 'smooth' });
+          }
+          startX = null;
+          window.setTimeout(update, 360);
+        }, { passive: true });
+        let scrollTimer = null;
+        root.addEventListener('scroll', () => {
+          clearTimeout(scrollTimer);
+          scrollTimer = window.setTimeout(update, 90);
+        }, { passive: true });
+      }
+      requestAnimationFrame(update);
     }
     function renderCompact(id, choices, current, onSelect) {
       const root = $(id); root.innerHTML = '';
@@ -1195,7 +1285,12 @@
 
     function renderBedGuide() {
       const stage = BED_GUIDE_STAGES[activeGuideStage] || BED_GUIDE_STAGES[0];
-      const guideModel = state.model === 'shuve' ? 'shuve' : 'mabed';
+      const guideModel = activeGuideModel === 'shuve' ? 'shuve' : 'mabed';
+      document.querySelectorAll('[data-guide-model]').forEach(button => {
+        const selected = button.dataset.guideModel === guideModel;
+        button.classList.toggle('selected', selected);
+        button.setAttribute('aria-pressed', selected ? 'true' : 'false');
+      });
       const buttons = $('guideStageButtons');
       buttons.innerHTML = '';
       BED_GUIDE_STAGES.forEach((item, index) => {
@@ -1245,37 +1340,40 @@
       renderOptionGrid('productChoices', [
         { value: 'mabed', label: '마베드', type: '우드 모션베드', tag: '단정한 우드', summary: '실용적인 구성 · 가성비', image: 'assets/mabed-white-full.png', imageAlt: '화이트 마베드 풀세트', priceText: `${money(minPrice('mabed'))}부터`, detailKey: 'product:mabed', inlineVisual: false, clickWholeCard: true, showSelectButton: true },
         { value: 'shuve', label: '슈브', type: '패브릭 모션베드', tag: '포근한 패브릭', summary: '프리미엄 패브릭 · 국내 최고급 품질', image: 'assets/shuve-full-auto.png', imageAlt: '슈브 풀세트와 자동레일', priceText: `${money(minPrice('shuve'))}부터`, detailKey: 'product:shuve', inlineVisual: false, clickWholeCard: true, showSelectButton: true },
-      ], state.model, value => { if (state.model !== value) choose('model', value); }, 'product-grid');
+      ], state.model, value => {
+        activeGuideModel = value;
+        if (state.model !== value) choose('model', value);
+      }, 'product-grid');
 
       if (!state.model) {
-        const previewSizes = [...new Set(bySection('frames').filter(item => item.size !== 'S').map(item => item.size))]
-          .sort((a,b) => SIZE_ORDER.indexOf(a) - SIZE_ORDER.indexOf(b));
-        renderCompact('sizeChoices', previewSizes.map(size => {
-          const mabed = minimumSalePrice('frames', item => modelMatches(item, 'mabed') && item.size === size);
-          const shuve = minimumSalePrice('frames', item => modelMatches(item, 'shuve') && item.size === size);
-          return { value: size, label: size, note: `마베드 ${money(mabed)}부터 · 슈브 ${money(shuve)}부터` };
-        }), state.size, value => choose('size', value));
-        const previewFinishes = [
-          { value: 'mabed|화이트', label: '마베드 · 화이트', swatch: SWATCH['화이트'] },
-          { value: 'mabed|그레이', label: '마베드 · 그레이', swatch: SWATCH['그레이'] },
-          { value: 'mabed|내추럴', label: '마베드 · 내추럴', swatch: SWATCH['내추럴'] },
-          { value: 'shuve|보에르 - Fog(아이보리)', label: '슈브 · 보에르 Fog', swatch: SWATCH['보에르 - Fog(아이보리)'], note: '기본 패브릭' },
-        ];
-        renderCompact('finishChoices', previewFinishes, '', value => {
-          const separator = value.indexOf('|');
-          choosePreviewFrame(value.slice(0, separator), value.slice(separator + 1));
-        });
+        const goToProduct = () => scrollToStep('step-product');
+        $('sizeSubhead').hidden = false;
+        $('finishSubhead').hidden = false;
+        renderCompact('sizeChoices', SIZE_ORDER.map(size => ({
+          value: size,
+          label: size,
+          note: '제품 먼저 선택',
+        })), null, goToProduct);
+        renderCompact('finishChoices', [
+          { value: '화이트', label: '화이트', swatch: SWATCH['화이트'], note: '제품 먼저 선택' },
+          { value: '그레이', label: '그레이', swatch: SWATCH['그레이'], note: '제품 먼저 선택' },
+          { value: '내추럴', label: '내추럴', swatch: SWATCH['내추럴'], note: '제품 먼저 선택' },
+          { value: '보에르 Fog', label: '보에르 Fog', swatch: SWATCH['보에르 - Fog(아이보리)'], note: '제품 먼저 선택' },
+        ], null, goToProduct);
         renderCompact('customFabricChoices', [], state.finish, () => {});
         $('customFabricPanel').hidden = true;
         $('customFabricPanel').open = false;
         $('sizeSelectionVisual').hidden = true;
         $('finishSelectionVisual').hidden = true;
         $('finishSelectionVisual').innerHTML = '';
-        $('frameRequirement').textContent = '제품·사이즈·컬러를 선택하면 정확한 프레임 가격이 계산됩니다.';
+        $('frameRequirement').textContent = '제품 먼저 선택';
         $('frameRequirement').classList.remove('complete');
         $('frameRequirement').disabled = false;
         return;
       }
+
+      $('sizeSubhead').hidden = false;
+      $('finishSubhead').hidden = false;
 
       const sizes = [...new Set(bySection('frames').filter(item => modelMatches(item) && item.size !== 'S').map(item => item.size))]
         .sort((a,b) => SIZE_ORDER.indexOf(a) - SIZE_ORDER.indexOf(b));
@@ -1755,19 +1853,24 @@
     }
 
     document.querySelectorAll('[data-next]').forEach(button => button.addEventListener('click', () => scrollToStep(button.dataset.next)));
+    document.querySelectorAll('[data-guide-model]').forEach(button => button.addEventListener('click', () => {
+      activeGuideModel = button.dataset.guideModel === 'shuve' ? 'shuve' : 'mabed';
+      activeGuideStage = 0;
+      renderBedGuide();
+    }));
     $('guidePrev').addEventListener('click', () => moveGuide(-1));
     $('guideNext').addEventListener('click', () => moveGuide(1));
     let guideStartX = null;
     let guideLastX = null;
     let guidePointerId = null;
-    $('guideVisualPanel').addEventListener('pointerdown', event => {
+    $('guideCarousel').addEventListener('pointerdown', event => {
       if (event.target.closest('button')) return;
       guideStartX = guideLastX = event.clientX;
       guidePointerId = event.pointerId;
       $('guideSlideTrack').classList.add('dragging');
-      $('guideVisualPanel').setPointerCapture?.(event.pointerId);
+      $('guideCarousel').setPointerCapture?.(event.pointerId);
     });
-    $('guideVisualPanel').addEventListener('pointermove', event => {
+    $('guideCarousel').addEventListener('pointermove', event => {
       if (guideStartX === null || event.pointerId !== guidePointerId) return;
       guideLastX = event.clientX;
       const panelWidth = $('guideVisualPanel').clientWidth || 1;
@@ -1775,7 +1878,7 @@
       if ((activeGuideStage === 0 && distance > 0) || (activeGuideStage === BED_GUIDE_STAGES.length - 1 && distance < 0)) distance *= .28;
       $('guideSlideTrack').style.transform = `translate3d(${(-activeGuideStage * panelWidth) + distance}px,0,0)`;
     });
-    $('guideVisualPanel').addEventListener('pointerup', event => {
+    $('guideCarousel').addEventListener('pointerup', event => {
       if (guideStartX === null || event.pointerId !== guidePointerId) return;
       const distance = event.clientX - guideStartX;
       const threshold = Math.min(90, Math.max(45, $('guideVisualPanel').clientWidth * .16));
@@ -1784,7 +1887,7 @@
       if (Math.abs(distance) >= threshold) moveGuide(distance < 0 ? 1 : -1);
       else renderBedGuide();
     });
-    $('guideVisualPanel').addEventListener('pointercancel', () => {
+    $('guideCarousel').addEventListener('pointercancel', () => {
       guideStartX = guideLastX = guidePointerId = null;
       $('guideSlideTrack').classList.remove('dragging');
       renderBedGuide();
