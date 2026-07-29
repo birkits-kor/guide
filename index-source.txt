@@ -491,7 +491,7 @@
       .guide-arrow { width: 48px; height: 48px; font-size: 30px; }
       .guide-arrow.prev { left: 8px; }
       .guide-arrow.next { right: 8px; }
-      .guide-copy-panel { padding: 23px 18px 26px; border-top: 1px solid var(--line); border-radius: 0; }
+      .guide-copy-panel { padding: 23px 18px 26px; border-top: 0; border-radius: 0; }
       .guide-copy-panel h3 { font-size: 28px; }
       .guide-kicker { font-size: 15px; }
       .guide-copy-panel > p:not(.guide-caption) { font-size: 19px; }
@@ -653,6 +653,8 @@
         <div class="guide-visual-panel" id="guideVisualPanel">
           <span class="guide-counter" id="guideCounter">1 / 7</span>
           <div class="guide-slide-track" id="guideSlideTrack"></div>
+          <button class="guide-arrow prev" id="guidePrev" type="button" aria-label="이전 구성 보기">‹</button>
+          <button class="guide-arrow next" id="guideNext" type="button" aria-label="다음 구성 보기">›</button>
           <span class="guide-change" id="guideChange">상체와 다리 각도를 움직이는 기본 구조</span>
         </div>
         <div class="guide-copy-panel">
@@ -661,8 +663,6 @@
           <p id="guideDescription"></p>
           <ul id="guidePoints"></ul>
         </div>
-        <button class="guide-arrow prev" id="guidePrev" type="button" aria-label="이전 구성 보기">‹</button>
-        <button class="guide-arrow next" id="guideNext" type="button" aria-label="다음 구성 보기">›</button>
       </div>
       <div class="next-row"><button class="next-button full-width" type="button" data-next="step-product">제품 선택하기</button></div>
     </section>
@@ -1328,8 +1328,8 @@
         buttons.scrollTo({ left: Math.max(0, target), behavior: 'smooth' });
       });
       $('guideCounter').textContent = `${activeGuideStage + 1} / ${BED_GUIDE_STAGES.length}`;
-      $('guidePrev').disabled = activeGuideStage === 0;
-      $('guideNext').disabled = activeGuideStage === BED_GUIDE_STAGES.length - 1;
+      $('guidePrev').disabled = false;
+      $('guideNext').disabled = false;
       $('guideChange').textContent = stage.change;
       $('guideKicker').textContent = `${stage.kicker} · ${MODEL_LABEL[guideModel]}`;
       $('guideTitle').textContent = stage.title;
@@ -1338,8 +1338,13 @@
     }
 
     function moveGuide(delta) {
-      activeGuideStage = Math.max(0, Math.min(BED_GUIDE_STAGES.length - 1, activeGuideStage + delta));
+      const length = BED_GUIDE_STAGES.length;
+      const nextStage = (activeGuideStage + delta + length) % length;
+      const wrapped = Math.abs(nextStage - activeGuideStage) > 1;
+      if (wrapped) $('guideSlideTrack').classList.add('dragging');
+      activeGuideStage = nextStage;
       renderBedGuide();
+      if (wrapped) requestAnimationFrame(() => $('guideSlideTrack').classList.remove('dragging'));
     }
 
     function renderProducts() {
@@ -1881,8 +1886,7 @@
       if (guideStartX === null || event.pointerId !== guidePointerId) return;
       guideLastX = event.clientX;
       const panelWidth = $('guideVisualPanel').clientWidth || 1;
-      let distance = guideLastX - guideStartX;
-      if ((activeGuideStage === 0 && distance > 0) || (activeGuideStage === BED_GUIDE_STAGES.length - 1 && distance < 0)) distance *= .28;
+      const distance = guideLastX - guideStartX;
       $('guideSlideTrack').style.transform = `translate3d(${(-activeGuideStage * panelWidth) + distance}px,0,0)`;
     });
     $('guideCarousel').addEventListener('pointerup', event => {
