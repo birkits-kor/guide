@@ -370,7 +370,7 @@
     .guide-stage-buttons { display: flex; gap: 8px; margin: 25px 0 20px; padding-bottom: 4px; overflow-x: auto; scroll-behavior: smooth; scrollbar-width: thin; }
     .guide-stage-button { flex: 0 0 auto; min-height: 48px; padding: 11px 15px; border: 1px solid var(--line); border-radius: 999px; color: #6d6258; background: white; cursor: pointer; font-size: 15px; font-weight: 850; }
     .guide-stage-button.selected { border-color: #9b816b; color: white; background: #8b7561; box-shadow: 0 7px 18px rgba(103,80,60,.16); }
-    .guide-layout { display: grid; grid-template-columns: minmax(0,1.28fr) minmax(300px,.72fr); gap: 24px; align-items: stretch; touch-action: pan-y; }
+    .guide-layout { position: relative; display: grid; grid-template-columns: minmax(0,1.28fr) minmax(300px,.72fr); gap: 24px; align-items: stretch; touch-action: pan-y; }
     .guide-visual-panel { position: relative; display: grid; place-items: center; height: 390px; min-height: 390px; overflow: hidden; border: 1px solid #eee7df; border-radius: 22px; background: white; touch-action: pan-y; user-select: none; cursor: grab; }
     .guide-visual-panel:active { cursor: grabbing; }
     .guide-slide-track { position: absolute; inset: 0; display: flex; width: 100%; height: 100%; will-change: transform; transition: transform .42s cubic-bezier(.22,.75,.28,1); }
@@ -484,14 +484,14 @@
       .bed-guide { padding: 24px 16px; border-radius: 22px; }
       .bed-guide-heading > p:last-child { font-size: 19px; line-height: 1.65; }
       .guide-stage-button { min-height: 52px; padding: 12px 16px; font-size: 17px; }
-      .guide-layout { grid-template-columns: 1fr; }
-      .guide-visual-panel { height: 300px; min-height: 300px; }
+      .guide-layout { grid-template-columns: 1fr; gap: 0; overflow: hidden; border: 1px solid var(--line); border-radius: 20px; background: white; }
+      .guide-visual-panel { height: 300px; min-height: 300px; border: 0; border-radius: 0; }
       .guide-stage-buttons { position: static; z-index: auto; top: auto; margin-inline: -4px; padding: 7px 4px; background: transparent; backdrop-filter: none; }
       .guide-stage-image { padding: 14px; }
       .guide-arrow { width: 48px; height: 48px; font-size: 30px; }
       .guide-arrow.prev { left: 8px; }
       .guide-arrow.next { right: 8px; }
-      .guide-copy-panel { padding: 23px 18px; }
+      .guide-copy-panel { padding: 23px 18px 26px; border-top: 1px solid var(--line); border-radius: 0; }
       .guide-copy-panel h3 { font-size: 28px; }
       .guide-kicker { font-size: 15px; }
       .guide-copy-panel > p:not(.guide-caption) { font-size: 19px; }
@@ -524,6 +524,7 @@
       .option-grid, .option-grid.three, .product-grid { grid-template-columns: 1fr; }
       .option-grid[data-carousel="true"] {
         display: flex;
+        align-items: flex-start;
         gap: 12px;
         margin-inline: -2px;
         padding: 2px 42px 8px 2px;
@@ -534,7 +535,7 @@
         scrollbar-width: none;
       }
       .option-grid[data-carousel="true"]::-webkit-scrollbar { display: none; }
-      .option-grid[data-carousel="true"] > .option-card { flex: 0 0 calc(100% - 34px); scroll-snap-align: start; scroll-snap-stop: always; }
+      .option-grid[data-carousel="true"] > .option-card { flex: 0 0 calc(100% - 2px); align-self: flex-start; scroll-snap-align: start; scroll-snap-stop: always; }
       .option-grid[data-carousel="true"] > .option-card:hover { transform: none; }
       .carousel-controls { display: grid; grid-template-columns: 54px 1fr 54px; align-items: center; gap: 8px; margin-top: 10px; }
       .carousel-arrow { min-height: 48px; border: 1px solid #cbbdaf; border-radius: 12px; color: #5d4c3f; background: white; cursor: pointer; font-size: 28px; font-weight: 900; line-height: 1; }
@@ -547,11 +548,17 @@
       .option-card-action { min-height: 58px; font-size: 20px; }
       #mattressChoices .option-select { min-height: 235px; }
       .product-grid .option-select { min-height: 170px; }
+      .product-grid .option-select { display: flex; flex-direction: column; align-items: flex-start; }
+      .product-grid .option-summary { min-height: 60px; }
+      .product-grid .option-price { margin-top: auto; }
+      .product-grid .option-card-action { width: 100%; }
       .product-type { font-size: 19px; }
       .option-explainer { margin: 0 15px 17px; font-size: 19px; }
       .component-caption { font-size: 17px; }
       .component-caption span { font-size: 15px; }
       .compact-choice { min-height: 60px; font-size: 18px; }
+      #sizeChoices, #finishChoices, #customFabricChoices { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 9px; }
+      #sizeChoices .compact-choice, #finishChoices .compact-choice, #customFabricChoices .compact-choice { width: 100%; min-width: 0; }
       .next-button { min-height: 60px; font-size: 20px; }
       .option-grid[data-carousel="true"] .option-explainer .component-photo.catalog.compact { height: min(58vw, 245px); }
       .option-grid[data-carousel="true"] .option-explainer .component-photo.mattress { height: auto; aspect-ratio: 16 / 9; }
@@ -646,8 +653,6 @@
         <div class="guide-visual-panel" id="guideVisualPanel">
           <span class="guide-counter" id="guideCounter">1 / 7</span>
           <div class="guide-slide-track" id="guideSlideTrack"></div>
-          <button class="guide-arrow prev" id="guidePrev" type="button" aria-label="이전 구성 보기">‹</button>
-          <button class="guide-arrow next" id="guideNext" type="button" aria-label="다음 구성 보기">›</button>
           <span class="guide-change" id="guideChange">상체와 다리 각도를 움직이는 기본 구조</span>
         </div>
         <div class="guide-copy-panel">
@@ -656,6 +661,8 @@
           <p id="guideDescription"></p>
           <ul id="guidePoints"></ul>
         </div>
+        <button class="guide-arrow prev" id="guidePrev" type="button" aria-label="이전 구성 보기">‹</button>
+        <button class="guide-arrow next" id="guideNext" type="button" aria-label="다음 구성 보기">›</button>
       </div>
       <div class="next-row"><button class="next-button full-width" type="button" data-next="step-product">제품 선택하기</button></div>
     </section>
@@ -938,31 +945,31 @@
       },
       'light:one': {
         title: '인체감지 무드등 한쪽',
-        paragraphs: ['프레임 하부 좌우 중 한 곳에 설치합니다. 설치 위치는 현장에서 기사님과 협의해 선택하며, 움직임을 감지하면 바닥을 은은하게 밝힙니다.'],
+        paragraphs: [],
         keywords: ['프레임 하부 측판', '움직임 자동 감지', '설치 방향 상담'],
       },
       'light:two': {
         title: '인체감지 무드등 양쪽',
-        paragraphs: ['프레임 하부 좌우에 모두 설치합니다. 어느 방향으로 내려가도 움직임을 감지해 바닥을 부드럽게 밝힙니다.'],
+        paragraphs: [],
         keywords: ['프레임 하부 측판', '움직임 자동 감지', '양쪽 설치'],
       },
       'mattress:MH': {
         title: '하루끝 스프링 매트리스 | 균형',
-        paragraphs: ['일반 스프링 매트리스는 모션베드와 함께 사용할 수 없지만, 하루끝은 움직이는 프레임을 자연스럽게 따라가도록 새롭게 개발한 모션베드 전용 스프링 매트리스입니다. 탄력과 안정적인 지지감이 균형을 이루는 미디움하드 타입입니다.'],
+        paragraphs: ['탄력과 안정적인 지지감이 균형을 이루는 미디움하드 타입입니다.'],
         heading: '추천 대상',
         bullets: ['탄력과 지지감의 균형을 원하는 분', '미디움하드를 선호하는 분', '가성비를 중요하게 보는 분'],
         keywords: ['균형', '미디움하드', '가성비'],
       },
       'mattress:H': {
         title: '라텍스폼 하드 | 탄탄',
-        paragraphs: ['몸이 깊게 꺼지는 느낌을 줄이고 단단하게 받쳐주는 고밀도 폼 타입입니다. 안정적인 지지감을 중요하게 보는 분께 맞습니다. 위에 누잠 토퍼와 같은 솜 토퍼를 함께 사용하시면 더욱 이상적인 수면을 누리실 수 있습니다.'],
+        paragraphs: ['누잠 토퍼와 같은 솜 토퍼를 함께 사용하시면 더욱 이상적인 수면을 누리실 수 있습니다.'],
         heading: '추천 대상',
         bullets: ['단단한 매트리스를 선호하는 분', '꺼지는 느낌을 싫어하는 분', '안정적인 지지가 중요한 분'],
         keywords: ['탄탄', '꺼짐 적음', '안정적인 지지'],
       },
       'mattress:M': {
         title: '라텍스폼 미디움 | 푹신',
-        paragraphs: ['부드러운 쿠션감으로 몸을 편안하게 감싸면서 필요한 지지감도 유지하는 폼 타입입니다. 푹신한 사용감을 원하는 분께 맞습니다.'],
+        paragraphs: ['부드러운 쿠션감으로 몸을 편안하게 감싸면서 필요한 지지감도 유지하는 폼 타입입니다.'],
         heading: '추천 대상',
         bullets: ['푹신한 매트리스를 선호하는 분', '부드러운 쿠션감을 원하는 분', '편안한 감싸임을 좋아하는 분'],
         keywords: ['푹신', '부드러운 쿠션', '편안한 감싸임'],
@@ -1463,8 +1470,8 @@
     function renderLights() {
       const ready = isFrameComplete();
       renderOptionGrid('lightChoices', [
-        { value: 1, label: '무드등 한쪽', summary: '프레임 하부 좌우 중 한 곳에 설치 · 현장에서 기사님과 위치 협의', price: moodItem(1)?.salePrice || 0, priceText: plusMoney(moodItem(1)?.salePrice || 0), detailKey: 'light:one', frameGate: !ready, showSelectButton: true },
-        { value: 2, label: '무드등 양쪽', summary: '프레임 하부 좌우에 모두 설치', price: moodItem(2)?.salePrice || 0, priceText: plusMoney(moodItem(2)?.salePrice || 0), detailKey: 'light:two', frameGate: !ready, showSelectButton: true },
+        { value: 1, label: '무드등 한쪽', summary: '', price: moodItem(1)?.salePrice || 0, priceText: plusMoney(moodItem(1)?.salePrice || 0), detailKey: 'light:one', frameGate: !ready, showSelectButton: true },
+        { value: 2, label: '무드등 양쪽', summary: '', price: moodItem(2)?.salePrice || 0, priceText: plusMoney(moodItem(2)?.salePrice || 0), detailKey: 'light:two', frameGate: !ready, showSelectButton: true },
       ], state.moodLights, value => { const number = Number(value); choose('moodLights', state.moodLights === number ? null : number); });
     }
 
@@ -1662,10 +1669,10 @@
           <figure><img src="assets/mabed-white-full.png" alt="화이트 마베드 풀세트"><figcaption>화이트</figcaption></figure>
           <figure><img src="assets/mabed-gray-full.png" alt="그레이 마베드 풀세트"><figcaption>그레이</figcaption></figure>
           <figure><img src="assets/mabed-natural-full.png" alt="내추럴 마베드 풀세트"><figcaption>내추럴</figcaption></figure>
-        </div><p class="component-caption">같은 마베드라도 컬러에 따라 침실의 인상이 달라집니다.</p></div>`;
+        </div></div>`;
       }
       if (key === 'product:shuve') {
-        return `<div class="component-visual"><div class="component-photo plain"><img src="assets/shuve-full-auto.png" alt="자동레일이 포함된 슈브 풀세트"></div><p class="component-caption">부드러운 패브릭 프레임에 헤드, 양쪽 협탁과 테이블을 더한 슈브 풀세트입니다. 테이블 아래에는 자동레일이 설치되어 있습니다.</p></div>`;
+        return `<div class="component-visual"><div class="component-photo plain"><img src="assets/shuve-full-auto.png" alt="자동레일이 포함된 슈브 풀세트"></div><p class="component-caption">헤드·협탁·테이블을 갖춘 슈브 풀세트입니다.</p></div>`;
       }
       const shuve = state.model === 'shuve';
       const optionImages = shuve ? {
@@ -1691,8 +1698,8 @@
         'table:manual': { image: optionImages.manual, alt: `${shuve ? '슈브' : '마베드'} 수동 테이블`, caption: '손으로 밀고 당겨 원하는 위치에 맞추는 수동형입니다.', plain: true, direct: true, badge: '수동 테이블' },
         'table:auto': { image: optionImages.auto, alt: `${shuve ? '슈브' : '마베드'} 자동 테이블`, caption: '버튼으로 앞뒤 위치를 조절하는 자동형입니다.', plain: true, direct: true, badge: '하부 자동레일 포함' },
         'light:none': { image: 'assets/bed-frame.png', alt: '하부 무드등이 없는 프레임 모습', caption: '프레임 하부에 별도의 무드등을 더하지 않은 모습입니다.' },
-        'light:one': { image: 'assets/guide-mood-light.png', alt: '침대 하부에 켜진 인체감지 무드등', caption: '프레임 하부 좌우 중 한 곳에 설치하며, 설치 위치는 현장에서 기사님과 협의해 선택합니다.', catalog: true, focus: 'center 37%', badge: '한쪽 하부 설치' },
-        'light:two': { image: 'assets/guide-mood-light.png', alt: '침대 하부에 켜진 인체감지 무드등', caption: '프레임 하부 좌우에 모두 설치합니다.', catalog: true, focus: 'center 37%', badge: '양쪽 하부 설치' },
+        'light:one': { image: 'assets/guide-mood-light.png', alt: '침대 하부에 켜진 인체감지 무드등', caption: '', catalog: true, focus: 'center 37%', badge: '한쪽 하부 설치' },
+        'light:two': { image: 'assets/guide-mood-light.png', alt: '침대 하부에 켜진 인체감지 무드등', caption: '', catalog: true, focus: 'center 37%', badge: '양쪽 하부 설치' },
         'mattress:MH': { image: 'assets/mattress-harukkkeut.png', alt: '하루끝 스프링 매트리스', caption: '모션베드의 움직임을 따라가도록 새롭게 개발한 전용 스프링 매트리스입니다.', plain: true, mattress: true },
         'mattress:H': { image: 'assets/mattress-latex-v2.png', alt: '라텍스폼 하드 매트리스', caption: '몸이 깊게 꺼지지 않도록 단단하게 받쳐주는 탄탄 타입입니다.', plain: true, mattress: true, focus: 'center 58%' },
         'mattress:M': { image: 'assets/mattress-latex-v2.png', alt: '라텍스폼 미디움 매트리스', caption: '부드러운 쿠션감으로 몸을 편안하게 감싸는 푹신 타입입니다.', plain: true, mattress: true, focus: 'center 58%' },
@@ -1702,7 +1709,7 @@
       if (!visual) return '';
       const photoClass = `component-photo${visual.catalog ? ' catalog' : ''}${visual.plain ? ' plain' : ''}${visual.mattress ? ' mattress' : ''}${visual.catalog && compact ? ' compact' : ''}${visual.split ? ` split ${visual.split}` : ''}`;
       const focus = visual.focus ? ` style="--focus:${visual.focus}"` : '';
-      return `<div class="component-visual"><div class="${photoClass}"${focus}>${visual.badge ? `<span class="visual-badge">${visual.badge}</span>` : ''}<img src="${visual.image}" alt="${visual.alt}"></div><p class="component-caption">${visual.caption}${visual.catalog || visual.split || visual.direct ? '' : '<br><span>제품의 색상과 마감은 선택한 모델에 따라 달라질 수 있습니다.</span>'}</p></div>`;
+      return `<div class="component-visual"><div class="${photoClass}"${focus}>${visual.badge ? `<span class="visual-badge">${visual.badge}</span>` : ''}<img src="${visual.image}" alt="${visual.alt}"></div>${visual.caption ? `<p class="component-caption">${visual.caption}</p>` : ''}</div>`;
     }
 
     function openSheet({ title, body, actionLabel, onAction, hideAction = false }) {
