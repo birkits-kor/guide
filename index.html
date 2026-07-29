@@ -43,8 +43,8 @@
     .container { width: min(920px, calc(100% - 32px)); margin: 0 auto; }
 
     .topbar {
-      position: sticky;
-      top: 0;
+      position: relative;
+      top: auto;
       z-index: 60;
       border-bottom: 1px solid rgba(221,216,207,.78);
       background: rgba(244,241,235,.9);
@@ -65,7 +65,7 @@
 
     .progress-panel {
       position: sticky;
-      top: 82px;
+      top: 10px;
       z-index: 45;
       margin-bottom: 18px;
       padding: 13px 16px;
@@ -82,7 +82,7 @@
     .progress-fill { display: block; width: 14.285%; height: 100%; border-radius: inherit; background: var(--accent); transition: width .25s ease; }
 
     .step-section, .receipt {
-      scroll-margin-top: 150px;
+      scroll-margin-top: 96px;
       margin-bottom: 18px;
       padding: 25px;
       border: 1px solid rgba(221,216,207,.9);
@@ -304,7 +304,7 @@
     .selected-plus { flex: 0 0 auto; color: #9b8a7c; font-size: 14px; font-weight: 900; }
     .selected-empty { color: var(--muted); font-size: 14px; }
     .bar-summary strong { display: block; font-size: 24px; letter-spacing: -.035em; }
-    .bar-dimension { display: block; color: var(--accent-dark); font-size: 14px; font-weight: 800; }
+    .bar-dimension { display: none; }
     .bar-open-hint { display: grid; place-items: center; min-height: 52px; padding: 11px 17px; border: 1px solid var(--accent); border-radius: 11px; color: var(--accent-dark); background: white; font-size: 16px; font-weight: 900; transition: .18s ease; }
     .bar-button { min-height: 52px; padding: 12px 15px; border: 1px solid var(--line); border-radius: 11px; background: white; cursor: pointer; font-size: 16px; font-weight: 850; }
     .bar-button.primary { color: white; border-color: var(--accent); background: var(--accent); }
@@ -359,7 +359,7 @@
     .hero-visual img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: center; }
     .hero-visual span { position: absolute; left: 22px; bottom: 20px; padding: 8px 12px; border-radius: 999px; color: #6b5849; background: rgba(255,255,255,.9); box-shadow: 0 6px 20px rgba(65,49,37,.08); font-size: 14px; font-weight: 850; }
 
-    .bed-guide { margin: 0 0 34px; padding: 38px; border: 1px solid var(--line); border-radius: 30px; background: #fcfaf7; box-shadow: var(--shadow); }
+    .bed-guide { margin: 0 0 34px; padding: 38px; scroll-margin-top: 96px; border: 1px solid var(--line); border-radius: 30px; background: #fcfaf7; box-shadow: var(--shadow); }
     .bed-guide-heading { max-width: 790px; }
     .bed-guide-heading h2 { font-size: clamp(31px, 4.8vw, 48px); line-height: 1.18; }
     .bed-guide-heading > p:last-child { margin: 13px 0 0; color: var(--muted); font-size: 18px; }
@@ -466,7 +466,7 @@
     footer { padding-top: 25px; font-size: 14px; }
 
     @media (max-width: 720px) {
-      :root { --bar-height: 142px; }
+      :root { --bar-height: 88px; }
       body { font-size: 18px; }
       .container { width: min(100% - 22px, 920px); }
       .topbar-inner { height: 64px; }
@@ -506,8 +506,12 @@
       .quick-nav.open .quick-nav-toggle { min-height: 40px; font-size: 13px; }
       .quick-nav-menu { gap: 5px; }
       .quick-nav-menu button { min-height: 39px; padding: 6px 4px; font-size: 12px; }
-      .progress-panel { top: 72px; }
-      .step-section, .receipt { padding: 18px 15px; border-radius: 18px; }
+      .progress-panel { top: 6px; margin-bottom: 12px; padding: 7px 10px 8px; border-radius: 11px; }
+      .progress-copy { margin-bottom: 5px; }
+      .progress-copy strong { overflow: hidden; font-size: 15px; line-height: 1.25; text-overflow: ellipsis; white-space: nowrap; }
+      .progress-track { height: 4px; }
+      .step-section, .receipt { padding: 18px 15px; scroll-margin-top: 64px; border-radius: 18px; }
+      .bed-guide { scroll-margin-top: 64px; }
       .step-head { margin-bottom: 15px; }
       h2 { font-size: 30px; line-height: 1.28; }
       .step-number { font-size: 16px; }
@@ -550,14 +554,16 @@
       .store-contact-note { padding: 19px 18px; font-size: 20px; line-height: 1.65; }
       .account-copy-card { align-items: stretch; flex-direction: column; }
       .account-copy-button { width: 100%; }
-      .quote-bar-inner { grid-template-columns: minmax(0,1fr) auto; }
-      .bar-summary { display: grid; grid-template-columns: minmax(0,1fr) auto; align-items: end; min-width: 0; }
-      .selected-chips { grid-column: 1 / -1; }
-      .selected-chip { font-size: 14px; }
-      .bar-dimension { grid-column: 1 / -1; margin-top: 2px; }
-      .bar-summary strong { font-size: 19px; }
+      .fixed-quote-bar { min-height: var(--bar-height); padding: 6px max(8px, env(safe-area-inset-right)) calc(6px + env(safe-area-inset-bottom)) max(8px, env(safe-area-inset-left)); }
+      .quote-bar-inner { grid-template-columns: minmax(0,1fr) auto; gap: 7px; }
+      .bar-summary { min-width: 0; }
+      .selected-chips { gap: 4px; padding: 0 0 3px; }
+      .selected-chip { padding: 3px 6px; border-radius: 6px; font-size: 11px; }
+      .selected-plus { display: none; }
+      .selected-empty { font-size: 12px; }
+      .bar-summary strong { font-size: 18px; line-height: 1.15; }
       .bar-button { width: 100%; }
-      .bar-open-hint { min-height: 52px; padding: 9px 12px; font-size: 15px; }
+      .bar-open-hint { min-height: 36px; padding: 6px 8px; border-radius: 8px; font-size: 12px; white-space: nowrap; }
     }
 
     @media print {
@@ -594,7 +600,7 @@
     </button>
 
     <div class="progress-panel" aria-live="polite">
-      <div class="progress-copy"><strong id="progressText">1 / 8 · 제품을 선택해 주세요</strong><span>이전 단계는 언제든 수정할 수 있어요</span></div>
+      <div class="progress-copy"><strong id="progressText">1 / 8 · 침대 선택</strong></div>
       <div class="progress-track"><span class="progress-fill" id="progressFill"></span></div>
     </div>
 
@@ -713,7 +719,7 @@
   <div class="fixed-quote-bar" id="fixedQuoteBar">
     <div class="quote-bar-inner" id="completeButton" role="button" tabindex="0" aria-label="선택한 사양과 최종 견적 보기">
       <div class="bar-summary"><div class="selected-chips" id="selectedCount"><span class="selected-empty">침대를 알아보는 중</span></div><strong id="fixedTotal">구성을 골라보세요</strong><span class="bar-dimension" id="barDimension"></span></div>
-      <span class="bar-open-hint">선택 사양 보기 ›</span>
+      <span class="bar-open-hint">사양 보기 ›</span>
     </div>
   </div>
 
@@ -758,14 +764,14 @@
     const SIZE_ORDER = ['SS', 'Q', 'S+S 커플', 'SS+SS 커플'];
     const MODEL_LABEL = { mabed: '마베드', shuve: '슈브' };
     const STEP_TEXT = {
-      1: '1 / 8 · 마베드와 슈브를 비교해 보세요',
-      2: '2 / 8 · 선택한 침대의 각 부분을 살펴보세요',
-      3: '3 / 8 · 프레임 사이즈와 색상을 골라보세요',
-      4: '4 / 8 · 내 몸에 편안한 매트리스를 골라보세요',
-      5: '5 / 8 · 헤드와 협탁 구성을 살펴보세요',
-      6: '6 / 8 · 침대 위 테이블이 필요한지 생각해보세요',
-      7: '7 / 8 · 밤길을 밝혀줄 무드등을 살펴보세요',
-      8: '8 / 8 · 설치 지역을 알려주세요',
+      1: '1 / 8 · 침대 선택',
+      2: '2 / 8 · 침대 알아보기',
+      3: '3 / 8 · 프레임',
+      4: '4 / 8 · 매트리스',
+      5: '5 / 8 · 헤드·협탁',
+      6: '6 / 8 · 테이블',
+      7: '7 / 8 · 무드등',
+      8: '8 / 8 · 배송지역',
     };
     const SWATCH = { '화이트': '#f7f5ed', '그레이': '#5c5b58', '내추럴': '#d3ac77', '보에르 - Fog(아이보리)': '#ddd6c7' };
     function fabricSwatch(description = '') {
@@ -1837,3 +1843,4 @@
   </script>
 </body>
 </html>
+
