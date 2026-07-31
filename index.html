@@ -450,19 +450,6 @@
     .custom-fabric-panel[open] > summary { position: sticky; top: 76px; z-index: 42; border-bottom: 1px solid var(--line); border-radius: 15px 15px 0 0; background: rgba(252,250,247,.97); box-shadow: 0 8px 18px rgba(61,48,38,.08); backdrop-filter: blur(10px); }
     .custom-fabric-panel summary small { display: block; margin-top: 3px; color: var(--muted); font-size: 14px; font-weight: 650; }
     .custom-fabric-content { padding: 0 18px 19px; border-top: 1px solid var(--line); }
-    .custom-fabric-lead { margin: 16px 0; color: var(--muted); font-size: 16px; line-height: 1.6; }
-    .fabric-family-grid { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 9px; margin: 18px 0; }
-    .fabric-family { overflow: hidden; padding: 0 14px 14px; border: 1px solid #eee7df; border-radius: 12px; background: white; }
-    .fabric-thumb { height: 92px; margin: 0 -14px 13px; background-color: #ede8e1; background-image: url('assets/fabric-custom-guide.png'); background-repeat: no-repeat; background-size: 100% auto; }
-    .fabric-thumb.boaire { background-position: center 15%; }
-    .fabric-thumb.suerin { background-position: center 38%; }
-    .fabric-thumb.mellow { background-position: center 58%; }
-    .fabric-thumb.goleather { background-position: center 80%; }
-    .fabric-thumb.linoa { display: grid; place-items: center; color: #685a4f; background: linear-gradient(135deg,#d8c8b3 0 48%,#eee7dc 48% 100%); font-size: 14px; font-weight: 900; }
-    .fabric-family strong { display: block; font-size: 17px; }
-    .fabric-family span { display: block; margin-top: 4px; color: var(--muted); font-size: 14px; line-height: 1.5; }
-    .custom-fabric-subhead { margin: 20px 0 10px; font-size: 18px; }
-    .fabric-guide-full { display: block; width: min(100%, 460px); height: auto; margin: 18px auto 24px; border: 1px solid #eee7df; border-radius: 14px; background: white; }
     .custom-fabric-close { width: 100%; min-height: 58px; margin-top: 22px; padding: 13px 18px; border: 2px solid #8b7561; border-radius: 13px; color: #66513f; background: white; cursor: pointer; font-size: 18px; font-weight: 900; }
     .custom-fabric-close:hover { color: white; background: #8b7561; }
     .custom-fabric-close:focus-visible { outline: 3px solid rgba(139,117,97,.34); outline-offset: 3px; }
@@ -717,9 +704,6 @@
       <details class="custom-fabric-panel" id="customFabricPanel" hidden>
         <summary>다른 패브릭 색상 보기<small>기본 Fog 외 커스텀 패브릭을 원하는 경우에만 펼쳐보세요.</small></summary>
         <div class="custom-fabric-content">
-          <p class="custom-fabric-lead">슈브는 공간 분위기와 생활 방식에 맞춰 패브릭을 바꿀 수 있습니다. 소재와 색상에 따라 추가 금액이 적용됩니다.</p>
-          <img class="fabric-guide-full" src="assets/fabric-custom-guide.png" alt="보에르, 스웨린, 멜로루프, 고레더 커스텀 패브릭의 질감, 기능과 색상 안내">
-          <h3 class="custom-fabric-subhead">원하는 패브릭 선택</h3>
           <div class="compact-grid" id="customFabricChoices"></div>
           <button class="custom-fabric-close" id="customFabricCloseButton" type="button">↑ 다른 패브릭 색상 접기</button>
         </div>
