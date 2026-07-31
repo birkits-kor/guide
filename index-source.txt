@@ -711,13 +711,9 @@
     </section>
 
     <section class="step-section" id="step-frame" data-step="2">
-      <div class="step-head"><div><span class="step-number">MY BED 02 · 프레임 선택</span><h2>사이즈와 색상을 골라보세요.</h2><p class="step-help">사용할 인원과 침실 크기에 맞는 규격, 원하는 컬러·패브릭을 선택하면 견적에 담깁니다.</p></div></div>
-      <div class="subhead" id="sizeSubhead">사이즈</div>
-      <div class="compact-grid" id="sizeChoices"></div>
-      <div class="size-visual" id="sizeSelectionVisual" hidden></div>
+      <div class="step-head"><div><span class="step-number">MY BED 02 · 프레임 선택</span><h2>색상과 사이즈를 골라보세요.</h2><p class="step-help">원하는 컬러·패브릭을 먼저 살펴본 뒤, 사용할 인원과 침실 크기에 맞는 규격을 선택해 주세요.</p></div></div>
       <div class="subhead" id="finishSubhead">컬러 · 패브릭</div>
       <div class="compact-grid" id="finishChoices"></div>
-      <div class="finish-selection-visual" id="finishSelectionVisual" hidden></div>
       <details class="custom-fabric-panel" id="customFabricPanel" hidden>
         <summary>다른 패브릭 색상 보기<small>기본 Fog 외 커스텀 패브릭을 원하는 경우에만 펼쳐보세요.</small></summary>
         <div class="custom-fabric-content">
@@ -728,6 +724,10 @@
           <button class="custom-fabric-close" id="customFabricCloseButton" type="button">↑ 다른 패브릭 색상 접기</button>
         </div>
       </details>
+      <div class="finish-selection-visual" id="finishSelectionVisual" hidden></div>
+      <div class="subhead" id="sizeSubhead">사이즈</div>
+      <div class="compact-grid" id="sizeChoices"></div>
+      <div class="size-visual" id="sizeSelectionVisual" hidden></div>
       <button class="frame-requirement" id="frameRequirement" type="button">제품·사이즈·컬러를 선택하면 정확한 프레임 가격이 계산됩니다.</button>
     </section>
 
@@ -851,11 +851,46 @@
     function fabricSwatch(description = '') {
       const swatches = [
         ['Moonstone', '#7a7d7d'], ['Shadow', '#232426'], ['Forest', '#294d43'], ['Rosé', '#c792b3'], ['Aqua', '#68b9c8'],
+        ['Slate', '#626362'], ['Teddy', '#b8afa5'], ['Butter', '#d9b950'], ['Vanilla', '#eadfc4'], ['Cloud', '#d9d0c1'],
+        ['Air', '#a9c9dc'], ['Marine', '#4779a4'], ['Peacock', '#278a8b'], ['Blossom', '#c73170'], ['Peony', '#dfa9bf'],
         ['스웨린', 'linear-gradient(135deg,#777 0 33%,#d2cfc8 33% 66%,#d5b324 66%)'],
         ['Knowing Black', '#242627'], ['Taupe Coffee', '#74685c'], ['Lamb Milk', '#e8e1d4'],
         ['화이트', '#f4f2ed'], ['블랙', '#232323'], ['샌드', '#d0b99a'], ['크림', '#ece2cf'],
       ];
       return swatches.find(([name]) => description.includes(name))?.[1] || '#d9d2c7';
+    }
+    const SUERIN_VARIANTS = Object.freeze([
+      'Slate', 'Teddy', 'Butter', 'Vanilla', 'Cloud', 'Air', 'Marine', 'Peacock', 'Blossom', 'Peony',
+    ].map(color => ({ value: `스웨린 Suerin - ${color}`, label: `스웨린 ${color}` })));
+    const SHUVE_FRAME_IMAGE_RULES = Object.freeze([
+      ['보에르 - Fog', 'assets/guide-shuve-frame-new.png'],
+      ['Moonstone', 'assets/frame-shuve-boer-moonstone.webp'],
+      ['Shadow', 'assets/frame-shuve-boer-shadow.webp'],
+      ['Forest', 'assets/frame-shuve-boer-forest.webp'],
+      ['Rosé', 'assets/frame-shuve-boer-rose.webp'],
+      ['Aqua', 'assets/frame-shuve-boer-aqua.webp'],
+      ['Suerin - Slate', 'assets/frame-shuve-suerin-slate.webp'],
+      ['Suerin - Teddy', 'assets/frame-shuve-suerin-teddy.webp'],
+      ['Suerin - Butter', 'assets/frame-shuve-suerin-butter.webp'],
+      ['Suerin - Vanilla', 'assets/frame-shuve-suerin-vanilla.webp'],
+      ['Suerin - Cloud', 'assets/frame-shuve-suerin-cloud.webp'],
+      ['Suerin - Air', 'assets/frame-shuve-suerin-air.webp'],
+      ['Suerin - Marine', 'assets/frame-shuve-suerin-marine.webp'],
+      ['Suerin - Peacock', 'assets/frame-shuve-suerin-peacock.webp'],
+      ['Suerin - Blossom', 'assets/frame-shuve-suerin-blossom.webp'],
+      ['Suerin - Peony', 'assets/frame-shuve-suerin-peony.webp'],
+      ['Knowing Black', 'assets/frame-shuve-mellow-knowing-black.webp'],
+      ['Taupe Coffee', 'assets/frame-shuve-mellow-taupe-coffee.webp'],
+      ['Lamb Milk', 'assets/frame-shuve-mellow-lamb-milk.webp'],
+      ['GoLeather™  - 블랙', 'assets/frame-shuve-goleather-black.webp'],
+      ['GoLeather™  - 화이트', 'assets/frame-shuve-goleather-white.webp'],
+    ]);
+    function shuveFramePreview(finish = '') {
+      if (!finish) return null;
+      const match = SHUVE_FRAME_IMAGE_RULES.find(([token]) => finish.includes(token));
+      return match
+        ? { image: match[1], exact: true }
+        : { image: 'assets/guide-shuve-frame-new.png', exact: false };
     }
     const BED_GUIDE_STAGES = [
       {
@@ -1027,7 +1062,6 @@
     let lastFocusedElement = null;
     let hasCopiedQuote = false;
     let activeGuideModel = 'mabed';
-    let autoAdvanceTimer = null;
 
     const $ = id => document.getElementById(id);
     const items = () => Array.isArray(catalog.items) ? catalog.items : [];
@@ -1048,21 +1082,7 @@
       });
     }
 
-    function choiceNextStep(key, value) {
-      if (value == null) return null;
-      if (key === 'model') return 'step-frame';
-      if ((key === 'size' || key === 'finish') && isFrameComplete()) return 'step-mattress';
-      return {
-        mattress: 'step-head',
-        headConfig: 'step-table',
-        table: 'step-light',
-        moodLights: 'step-delivery',
-        delivery: 'receipt',
-      }[key] || null;
-    }
-
-    function choose(key, value, autoAdvance = true) {
-      if (autoAdvanceTimer) { clearTimeout(autoAdvanceTimer); autoAdvanceTimer = null; }
+    function choose(key, value) {
       state[key] = value;
       hasCopiedQuote = false;
       if (key === 'model') {
@@ -1077,21 +1097,6 @@
       }
       if (key === 'size' && value === 'SS+SS 커플') state.table = null;
       saveState(); render();
-      const nextStep = autoAdvance ? choiceNextStep(key, value) : null;
-      if (nextStep) autoAdvanceTimer = window.setTimeout(() => { autoAdvanceTimer = null; scrollToStep(nextStep); }, 550);
-    }
-    function choosePreviewFrame(model, finish) {
-      const retainedSize = state.size;
-      state.model = model;
-      state.size = retainedSize;
-      state.finish = finish;
-      state.headConfig = null; state.table = null; state.moodLights = null; state.mattress = null; state.delivery = null;
-      hasCopiedQuote = false;
-      saveState(); render();
-      if (isFrameComplete()) {
-        if (autoAdvanceTimer) clearTimeout(autoAdvanceTimer);
-        autoAdvanceTimer = window.setTimeout(() => { autoAdvanceTimer = null; scrollToStep('step-mattress'); }, 550);
-      }
     }
 
     function frameItem() {
@@ -1101,7 +1106,27 @@
     function isFrameComplete() { return Boolean(state.model && state.size && state.finish && frameItem()); }
     function fabricItem() {
       if (state.model !== 'shuve' || state.finish === '보에르 - Fog(아이보리)') return null;
+      if (state.finish?.startsWith('스웨린 Suerin - ')) {
+        return bySection('shuveFabrics').find(item => item.description.includes('스웨린 Suerin')) || null;
+      }
       return bySection('shuveFabrics').find(item => item.description === state.finish) || null;
+    }
+    function shuveCustomFinishChoices() {
+      return bySection('shuveFabrics').flatMap(item => {
+        if (item.description.includes('스웨린 Suerin')) {
+          return SUERIN_VARIANTS.map(variant => ({
+            ...variant,
+            swatch: fabricSwatch(variant.value),
+            note: item.salePrice ? plusMoney(item.salePrice) : '추가 없음',
+          }));
+        }
+        return [{
+          value: item.description,
+          label: item.description,
+          swatch: fabricSwatch(item.description),
+          note: item.salePrice ? plusMoney(item.salePrice) : '추가 없음',
+        }];
+      });
     }
     function mattressKind(item) {
       if (item.description.includes('하루끝')) return 'MH';
@@ -1194,7 +1219,7 @@
       const frame = frameItem();
       if (frame) lines.push({ label: `${MODEL_LABEL[state.model]} ${state.size} 프레임`, detail: state.finish, price: frame.salePrice });
       const fabric = fabricItem();
-      if (fabric) lines.push({ label: '커스텀 패브릭', detail: fabric.description, price: fabric.salePrice });
+      if (fabric) lines.push({ label: '커스텀 패브릭', detail: state.finish, price: fabric.salePrice });
       const mattress = state.mattress === 'none' ? null : mattressItems().get(state.mattress);
       if (mattress) {
         const label = state.mattress === 'MH' ? '하루끝 스프링 매트리스' : state.mattress === 'H' ? '라텍스폼 하드' : '라텍스폼 미디움';
@@ -1381,7 +1406,7 @@
         button.innerHTML = `<strong>${selected ? '✓ ' : ''}${product.label}</strong><span>${product.type}</span><small>${product.summary}<br>${money(minPrice(product.value))}부터</small>`;
         button.addEventListener('click', () => {
           activeGuideModel = product.value;
-          if (state.model !== product.value) choose('model', product.value, false);
+          if (state.model !== product.value) choose('model', product.value);
           else render();
         });
         productRoot.appendChild(button);
@@ -1426,11 +1451,9 @@
       if (state.size && !sizes.includes(state.size)) state.size = null;
       renderCompact('sizeChoices', sizes.map(size => ({ value: size, label: size, note: size.includes('+') ? '커플' : size === 'Q' ? '퀸' : '슈퍼싱글' })), state.size, value => choose('size', value));
       const sizeVisual = $('sizeSelectionVisual');
-      sizeVisual.hidden = !state.size?.includes('+');
-      if (!sizeVisual.hidden) {
-        const image = state.model === 'shuve' ? 'assets/guide-shuve-twin.png' : 'assets/guide-mabed-twin.png';
-        sizeVisual.innerHTML = `<img src="${image}" alt="${MODEL_LABEL[state.model]} 싱글과 트윈 확장 구조"><strong>혼자 쓰다가, 두 사람이 함께 쓰는 트윈 구조</strong><p>각 침대를 따로 움직일 수 있으며 필요에 따라 나란히 배치해 사용할 수 있습니다.</p>`;
-      }
+      const sizeVisualImage = state.model === 'shuve' ? 'assets/guide-shuve-twin.png' : 'assets/guide-mabed-twin.png';
+      sizeVisual.hidden = false;
+      sizeVisual.innerHTML = `<img src="${sizeVisualImage}" alt="${MODEL_LABEL[state.model]} 싱글과 트윈 확장 구조"><strong>싱글로 사용하고, 필요하면 트윈으로 확장</strong><p>각 침대를 따로 움직일 수 있으며 두 대를 나란히 배치해 함께 사용할 수도 있습니다.</p>`;
 
       let finishes;
       let primaryFinishes;
@@ -1440,7 +1463,7 @@
         primaryFinishes = finishes;
       } else {
         primaryFinishes = [{ value: '보에르 - Fog(아이보리)', label: '보에르 Fog', swatch: SWATCH['보에르 - Fog(아이보리)'], note: '가장 많이 선택하는 기본 패브릭' }];
-        customFinishes = bySection('shuveFabrics').map(item => ({ value: item.description, label: item.description, swatch: fabricSwatch(item.description), note: item.salePrice ? plusMoney(item.salePrice) : '추가 없음' }));
+        customFinishes = shuveCustomFinishChoices();
         finishes = primaryFinishes.concat(customFinishes);
       }
       if (state.finish && !finishes.some(item => item.value === state.finish)) state.finish = null;
@@ -1462,11 +1485,18 @@
         '그레이': 'assets/frame-color-gray.png',
         '내추럴': 'assets/frame-color-natural.png',
       };
-      const selectedFrameImage = state.model === 'mabed' ? frameColorImages[state.finish] : null;
+      const shuvePreview = state.model === 'shuve' ? shuveFramePreview(state.finish) : null;
+      const selectedFrameImage = state.model === 'mabed' ? frameColorImages[state.finish] : shuvePreview?.image;
       finishVisual.hidden = !selectedFrameImage;
-      finishVisual.innerHTML = selectedFrameImage
-        ? `<img src="${selectedFrameImage}" alt="${state.finish} 색상의 마베드 모션베드 프레임"><strong>${state.finish} 마베드 프레임</strong><p>선택한 색상의 프레임 모습을 확인해 보세요. 화면과 실제 제품은 조명에 따라 색감이 조금 다르게 보일 수 있습니다.</p>`
-        : '';
+      if (selectedFrameImage) {
+        const exactPreview = state.model === 'mabed' || shuvePreview?.exact;
+        const previewText = exactPreview
+          ? '선택한 색상·패브릭이 프레임에 적용된 모습을 확인해 보세요. 실제 색감은 조명과 화면에 따라 조금 다르게 보일 수 있습니다.'
+          : '슈브 패브릭 프레임의 형태 예시입니다. 선택한 패브릭의 정확한 색감과 질감은 위 패브릭 안내에서 확인해 주세요.';
+        finishVisual.innerHTML = `<img src="${selectedFrameImage}" alt="${state.finish} ${MODEL_LABEL[state.model]} 모션베드 프레임 예시"><strong>${state.finish} ${MODEL_LABEL[state.model]} 프레임</strong><p>${previewText}</p>`;
+      } else {
+        finishVisual.innerHTML = '';
+      }
       const configuredFrame = frameItem();
       const ready = isFrameComplete();
       $('frameRequirement').textContent = ready
@@ -1610,7 +1640,7 @@
       const finishOptions = state.model === 'mabed'
         ? ['화이트', '그레이', '내추럴'].map(value => ({ value, label: value }))
         : state.model === 'shuve'
-          ? [{ value: '보에르 - Fog(아이보리)', label: '보에르 Fog(기본)' }, ...bySection('shuveFabrics').map(item => ({ value: item.description, label: item.description }))]
+          ? [{ value: '보에르 - Fog(아이보리)', label: '보에르 Fog(기본)' }, ...shuveCustomFinishChoices().map(item => ({ value: item.value, label: item.label }))]
           : [];
       const mattressMap = mattressItems();
       const tableRows = tableItems();
@@ -1661,7 +1691,7 @@
         select.classList.toggle('is-empty', select.value === '');
         select.addEventListener('change', () => {
           const value = select.value === '' ? null : field.key === 'moodLights' ? Number(select.value) : select.value;
-          choose(field.key, value, false);
+          choose(field.key, value);
         });
         wrapper.append(label, select);
         root.appendChild(wrapper);
@@ -1918,8 +1948,7 @@
     document.querySelectorAll('[data-next]').forEach(button => button.addEventListener('click', () => scrollToStep(button.dataset.next)));
     document.querySelectorAll('[data-skip-next]').forEach(button => button.addEventListener('click', () => {
       const key = button.dataset.skipKey;
-      if (key && state[key] != null) choose(key, null, false);
-      if (autoAdvanceTimer) { clearTimeout(autoAdvanceTimer); autoAdvanceTimer = null; }
+      if (key && state[key] != null) choose(key, null);
       scrollToStep(button.dataset.skipNext);
     }));
     document.querySelectorAll('[data-guide-model]').forEach(button => button.addEventListener('click', () => {
@@ -1974,7 +2003,7 @@
     $('imageSaveButton').addEventListener('click', saveQuoteImage);
     const customerFieldIds = ['customerName', 'customerPhone', 'customerPostcode', 'customerAddress', 'customerAddressDetail', 'deliveryRequest'];
     customerFieldIds.forEach(id => $(id).addEventListener('input', () => { hasCopiedQuote = false; $('talkButton').disabled = true; }));
-    $('resetButton').addEventListener('click', () => { if (autoAdvanceTimer) { clearTimeout(autoAdvanceTimer); autoAdvanceTimer = null; } state = { ...DEFAULT_STATE }; hasCopiedQuote = false; customerFieldIds.forEach(id => { $(id).value = ''; }); saveState(); render(); window.scrollTo({ top: 0, behavior: 'smooth' }); showToast('선택을 초기화했습니다.'); });
+    $('resetButton').addEventListener('click', () => { state = { ...DEFAULT_STATE }; hasCopiedQuote = false; customerFieldIds.forEach(id => { $(id).value = ''; }); saveState(); render(); window.scrollTo({ top: 0, behavior: 'smooth' }); showToast('선택을 초기화했습니다.'); });
     $('receiptDate').textContent = new Date().toLocaleDateString('ko-KR');
 
     render(); setupProgressObserver(); loadLiveCatalog();
