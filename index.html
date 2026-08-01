@@ -1078,7 +1078,9 @@
       return bySection('shuveFabrics').find(item => item.description === state.finish) || null;
     }
     function shuveCustomFinishChoices() {
-      return bySection('shuveFabrics').flatMap(item => {
+      return bySection('shuveFabrics')
+        .filter(item => !/리노아|linoa/i.test(item.description))
+        .flatMap(item => {
         if (item.description.includes('스웨린 Suerin')) {
           return SUERIN_VARIANTS.map(variant => ({
             ...variant,
@@ -1092,7 +1094,7 @@
           swatch: fabricSwatch(item.description),
           note: item.salePrice ? plusMoney(item.salePrice) : '추가 없음',
         }];
-      });
+        });
     }
     function mattressKind(item) {
       if (item.description.includes('하루끝')) return 'MH';
@@ -1430,7 +1432,9 @@
         finishes = primaryFinishes.concat(customFinishes);
         if (!state.finish) state.finish = '보에르 - Fog(아이보리)';
       }
-      if (state.finish && !finishes.some(item => item.value === state.finish)) state.finish = null;
+      if (state.finish && !finishes.some(item => item.value === state.finish)) {
+        state.finish = state.model === 'shuve' ? '보에르 - Fog(아이보리)' : null;
+      }
       const selectFinish = value => {
         choose('finish', value);
         requestAnimationFrame(() => {
