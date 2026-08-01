@@ -1550,16 +1550,13 @@
     function sizeSummaryHtml() {
       const dimensions = calculatedDimensions();
       if (!dimensions) return '<div class="quote-blocker">제품·규격·컬러를 선택해 프레임을 먼저 확정해 주세요.</div>';
-      const { guide, width, depth, mattress } = dimensions;
+      const { width, depth, mattress } = dimensions;
       const mattressText = !state.mattress
         ? '아직 선택하지 않음'
         : state.mattress === 'none'
         ? '매트리스 미포함'
         : mattress ? `${mattress.width} × ${mattress.depth} × 높이 ${mattress.height}cm` : '규격 확인 필요';
-      const heightText = guide.deckHeight
-        ? `프레임 상판 ${guide.deckHeight}cm · 상체 올림 시 최대 약 ${guide.raisedHeight}cm`
-        : `상체 올림 시 최대 약 ${guide.raisedHeight}cm`;
-      return `<strong>예상 설치 크기</strong><span>가로 ${width} × 세로 ${depth}cm</span><br><span>${heightText}</span><br><span>매트리스: ${mattressText}</span>`;
+      return `<strong>예상 설치 크기</strong><span>가로 ${width} × 세로 ${depth}cm</span><br><span>높이: 프레임 31cm</span><br><span>매트리스: ${mattressText}</span><br><span>프레임+매트리스 포함 높이: 31 + 15 = 46cm</span>`;
     }
 
     function renderSizeSummary() {
@@ -1794,7 +1791,7 @@
       const dimensions = calculatedDimensions();
       const mattress = dimensions.mattress;
       const mattressText = !state.mattress ? '선택하지 않음' : state.mattress === 'none' ? '미포함' : mattress ? `${mattress.width}×${mattress.depth}×높이 ${mattress.height}cm` : '규격 확인 필요';
-      return ['모션베드 예상 견적서', `작성일: ${new Date().toLocaleDateString('ko-KR')}`, customer ? `고객명: ${customer}` : '', phone ? `연락처: ${phone}` : '', address ? `주소: ${address}` : '', deliveryRequest ? `배송 요청사항: ${deliveryRequest}` : '', '', ...lines.map((line, index) => `${index + 1}. ${line.label} / ${line.detail} / ${money(line.price)}`), '', `예상 설치 크기: 가로 ${dimensions.width} × 세로 ${dimensions.depth}cm`, `상체 올림 시 최대 높이: 약 ${dimensions.guide.raisedHeight}cm`, `매트리스 크기: ${mattressText}`, '', `총 견적: ${money(total)}`, '', '※ 실제 설치에는 벽, 콘센트, 이동 동선을 위한 여유 공간이 추가로 필요합니다.', '※ 가격표 판매가 기준 예상 견적이며 주문 전 최종 상담 확인이 필요합니다.'].filter((line, index, array) => line !== '' || array[index - 1] !== '').join('\n');
+      return ['모션베드 예상 견적서', `작성일: ${new Date().toLocaleDateString('ko-KR')}`, customer ? `고객명: ${customer}` : '', phone ? `연락처: ${phone}` : '', address ? `주소: ${address}` : '', deliveryRequest ? `배송 요청사항: ${deliveryRequest}` : '', '', ...lines.map((line, index) => `${index + 1}. ${line.label} / ${line.detail} / ${money(line.price)}`), '', `예상 설치 크기: 가로 ${dimensions.width} × 세로 ${dimensions.depth}cm`, '높이: 프레임 31cm', `매트리스 크기: ${mattressText}`, '프레임+매트리스 포함 높이: 31 + 15 = 46cm', '', `총 견적: ${money(total)}`, '', '※ 실제 설치에는 벽, 콘센트, 이동 동선을 위한 여유 공간이 추가로 필요합니다.', '※ 가격표 판매가 기준 예상 견적이며 주문 전 최종 상담 확인이 필요합니다.'].filter((line, index, array) => line !== '' || array[index - 1] !== '').join('\n');
     }
     async function writeClipboard(value) {
       try { await navigator.clipboard.writeText(value); }
