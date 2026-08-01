@@ -825,6 +825,21 @@
       ];
       return swatches.find(([name]) => description.includes(name))?.[1] || '#d9d2c7';
     }
+    function shuveFabricDescription(finish = '') {
+      if (/보에르/i.test(finish)) {
+        return '우아한 트위드 질감에 강력한 방수·발수·방오 기능과 친환경 인증을 더한 패브릭입니다.';
+      }
+      if (/스웨린|Suerin/i.test(finish)) {
+        return '천연 스웨이드처럼 부드럽고 반려동물 발톱에 강하며 발수·방오 관리가 편한 패브릭입니다.';
+      }
+      if (/멜로\s*루프|멜로루프|Mellow\s*Loop/i.test(finish)) {
+        return '포근하고 풍성한 부클레 질감에 먼지 발생을 줄이고 발수 기능을 더한 패브릭입니다.';
+      }
+      if (/고레더|GoLeather/i.test(finish)) {
+        return '부드러운 촉감과 뛰어난 내구성을 갖춘 실리콘 레더로, 안전하고 깨끗하게 관리하기 좋습니다.';
+      }
+      return '선택한 패브릭의 색감과 질감을 프레임 예시에서 확인해 보세요.';
+    }
     const SUERIN_VARIANTS = Object.freeze([
       'Slate', 'Teddy', 'Butter', 'Vanilla', 'Cloud', 'Air', 'Marine', 'Peacock', 'Blossom', 'Peony',
     ].map(color => ({ value: `스웨린 Suerin - ${color}`, label: `스웨린 ${color}` })));
@@ -1453,10 +1468,9 @@
       const selectedFrameImage = state.model === 'mabed' ? frameColorImages[state.finish] : shuvePreview?.image;
       finishVisual.hidden = !selectedFrameImage;
       if (selectedFrameImage) {
-        const exactPreview = state.model === 'mabed' || shuvePreview?.exact;
-        const previewText = exactPreview
-          ? '선택한 색상·패브릭이 프레임에 적용된 모습을 확인해 보세요. 실제 색감은 조명과 화면에 따라 조금 다르게 보일 수 있습니다.'
-          : '슈브 패브릭 프레임의 형태 예시입니다. 선택한 패브릭의 정확한 색감과 질감은 위 패브릭 안내에서 확인해 주세요.';
+        const previewText = state.model === 'shuve'
+          ? shuveFabricDescription(state.finish)
+          : '선택한 색상이 프레임에 적용된 모습을 확인해 보세요. 실제 색감은 조명과 화면에 따라 조금 다르게 보일 수 있습니다.';
         finishVisual.innerHTML = `<img src="${selectedFrameImage}" alt="${state.finish} ${MODEL_LABEL[state.model]} 모션베드 프레임 예시"><strong>${state.finish} ${MODEL_LABEL[state.model]} 프레임</strong><p>${previewText}</p><button class="finish-reselect-button" type="button">↑ 색상·패브릭 다시 고르기</button>`;
         finishVisual.querySelector('.finish-reselect-button').addEventListener('click', () => {
           $('finishSubhead').scrollIntoView({ behavior: 'smooth', block: 'start' });
