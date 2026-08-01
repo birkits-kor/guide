@@ -158,6 +158,9 @@
     .size-visual strong, .finish-selection-visual strong { display: block; margin-top: 11px; font-size: 20px; }
     .size-visual p, .finish-selection-visual p { margin: 4px 0 0; color: var(--muted); font-size: 17px; }
     .finish-selection-visual img { aspect-ratio: 4 / 3; max-height: 520px; }
+    .finish-reselect-button { width: 100%; min-height: 54px; margin-top: 15px; padding: 12px 16px; border: 2px solid #8b7561; border-radius: 13px; color: #66513f; background: white; cursor: pointer; font: inherit; font-size: 17px; font-weight: 900; }
+    .finish-reselect-button:hover { color: white; background: #8b7561; }
+    .finish-reselect-button:focus-visible { outline: 3px solid rgba(139,117,97,.34); outline-offset: 3px; }
 
     .compact-grid { display: flex; flex-wrap: wrap; gap: 8px; }
     .compact-choice { position: relative; min-width: 108px; min-height: 56px; padding: 14px 17px; border: 1px solid var(--line); border-radius: 12px; background: var(--paper); cursor: pointer; text-align: center; font-size: 17px; font-weight: 800; }
@@ -422,7 +425,7 @@
     .guide-product-button.selected { border-color: #8b7561; color: white; background: #8b7561; box-shadow: 0 8px 22px rgba(103,80,60,.18); }
     .guide-product-button.selected span, .guide-product-button.selected small { color: rgba(255,255,255,.88); }
     .guide-product-status { min-height: 24px; margin: 15px 0 0; color: #6d5a49; font-size: 15px; font-weight: 850; text-align: center; }
-    .guide-review-button { width: 100%; min-height: 52px; margin-bottom: 19px; padding: 11px 16px; border: 2px solid #b8a795; border-radius: 13px; color: #66513f; background: #fffaf6; cursor: pointer; font-size: 17px; font-weight: 900; }
+    .guide-review-button { width: 100%; min-height: 52px; margin: 20px 0 19px; padding: 11px 16px; border: 2px solid #b8a795; border-radius: 13px; color: #66513f; background: #fffaf6; cursor: pointer; font-size: 17px; font-weight: 900; }
     .guide-review-button:hover { border-color: #8b7561; background: #f7f1eb; }
     .guide-review-button:focus-visible { outline: 3px solid rgba(139,117,97,.34); outline-offset: 3px; }
     .next-button:disabled { cursor: not-allowed; opacity: .45; }
@@ -440,19 +443,6 @@
     .choice-intro .eyebrow { display: block; margin-bottom: 7px; }
     .choice-intro-title { font-size: clamp(29px,4vw,40px); font-weight: 900; line-height: 1.15; letter-spacing: -.035em; }
     .choice-start-label { display: grid; place-items: center; min-height: 58px; padding: 14px 20px; border-radius: 13px; color: white; background: #8b7561; font-size: 18px; font-weight: 900; white-space: nowrap; }
-
-    .custom-fabric-panel { margin-top: 15px; border: 1px solid #d9cec2; border-radius: 16px; background: #fcfaf7; }
-    .custom-fabric-panel[hidden] { display: none; }
-    .custom-fabric-panel summary { position: relative; min-height: 62px; padding: 17px 52px 17px 18px; cursor: pointer; list-style: none; font-size: 18px; font-weight: 900; }
-    .custom-fabric-panel summary::-webkit-details-marker { display: none; }
-    .custom-fabric-panel summary::after { content: "+"; position: absolute; top: 50%; right: 18px; transform: translateY(-50%); font-size: 27px; font-weight: 500; }
-    .custom-fabric-panel[open] summary::after { content: "−"; }
-    .custom-fabric-panel[open] > summary { position: sticky; top: 76px; z-index: 42; border-bottom: 1px solid var(--line); border-radius: 15px 15px 0 0; background: rgba(252,250,247,.97); box-shadow: 0 8px 18px rgba(61,48,38,.08); backdrop-filter: blur(10px); }
-    .custom-fabric-panel summary small { display: block; margin-top: 3px; color: var(--muted); font-size: 14px; font-weight: 650; }
-    .custom-fabric-content { padding: 0 18px 19px; border-top: 1px solid var(--line); }
-    .custom-fabric-close { width: 100%; min-height: 58px; margin-top: 22px; padding: 13px 18px; border: 2px solid #8b7561; border-radius: 13px; color: #66513f; background: white; cursor: pointer; font-size: 18px; font-weight: 900; }
-    .custom-fabric-close:hover { color: white; background: #8b7561; }
-    .custom-fabric-close:focus-visible { outline: 3px solid rgba(139,117,97,.34); outline-offset: 3px; }
 
     .quick-nav { position: fixed; z-index: 75; right: 18px; bottom: calc(var(--bar-height) + 18px); }
     .quick-nav.open { display: flex; flex-direction: column; width: 162px; max-height: calc(100vh - var(--bar-height) - 36px); overflow-y: auto; padding: 10px; border: 1px solid #d8cbbb; border-radius: 17px; background: rgba(255,255,255,.97); box-shadow: 0 14px 38px rgba(61,48,38,.18); backdrop-filter: blur(12px); }
@@ -539,7 +529,6 @@
       .guide-product-button span { font-size: 14px; }
       .guide-product-button small { font-size: 12px; }
       .guide-review-button { min-height: 56px; font-size: 18px; }
-      .custom-fabric-panel[open] > summary { top: 56px; }
       .section-purpose { align-items: flex-start; padding: 14px; }
       .section-purpose strong { font-size: 21px; }
       .choice-intro { margin-top: 32px; padding: 23px 18px; }
@@ -602,8 +591,8 @@
       .component-caption { font-size: 17px; }
       .component-caption span { font-size: 15px; }
       .compact-choice { min-height: 60px; font-size: 18px; }
-      #sizeChoices, #finishChoices, #customFabricChoices { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 9px; }
-      #sizeChoices .compact-choice, #finishChoices .compact-choice, #customFabricChoices .compact-choice { width: 100%; min-width: 0; }
+      #sizeChoices, #finishChoices { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 9px; }
+      #sizeChoices .compact-choice, #finishChoices .compact-choice { width: 100%; min-width: 0; }
       .next-button { min-height: 60px; font-size: 20px; }
       .skip-button { min-height: 58px; font-size: 18px; }
       .option-grid[data-carousel="true"] .option-explainer .component-photo.catalog.compact { height: min(58vw, 245px); }
@@ -687,8 +676,8 @@
         </div>
       </div>
       <div class="guide-list" id="guideList"></div>
+      <button class="guide-review-button" id="guideReviewButton" type="button">↑ 가이드 처음부터 다시 보기</button>
       <div class="guide-product-choice" id="guideProductChoice">
-        <button class="guide-review-button" id="guideReviewButton" type="button">↑ 가이드 처음부터 다시 보기</button>
         <h3>이제 구성할 침대를 선택해 주세요.</h3>
         <p>가이드에서 살펴본 제품 중 실제 견적에 담을 침대를 선택합니다.</p>
         <div class="guide-product-buttons" id="productChoices"></div>
@@ -701,13 +690,6 @@
       <div class="step-head"><div><span class="step-number">MY BED 02 · 프레임 선택</span><h2>색상과 사이즈를 골라보세요.</h2><p class="step-help">원하는 컬러·패브릭을 먼저 살펴본 뒤, 사용할 인원과 침실 크기에 맞는 규격을 선택해 주세요.</p></div></div>
       <div class="subhead" id="finishSubhead">컬러 · 패브릭</div>
       <div class="compact-grid" id="finishChoices"></div>
-      <details class="custom-fabric-panel" id="customFabricPanel" hidden>
-        <summary>다른 패브릭 색상 보기<small>기본 Fog 외 커스텀 패브릭을 원하는 경우에만 펼쳐보세요.</small></summary>
-        <div class="custom-fabric-content">
-          <div class="compact-grid" id="customFabricChoices"></div>
-          <button class="custom-fabric-close" id="customFabricCloseButton" type="button">↑ 다른 패브릭 색상 접기</button>
-        </div>
-      </details>
       <div class="finish-selection-visual" id="finishSelectionVisual" hidden></div>
       <div class="subhead" id="sizeSubhead">사이즈</div>
       <div class="compact-grid" id="sizeChoices"></div>
@@ -1415,9 +1397,6 @@
           { value: '내추럴', label: '내추럴', swatch: SWATCH['내추럴'], note: '제품 먼저 선택' },
           { value: '보에르 Fog', label: '보에르 Fog', swatch: SWATCH['보에르 - Fog(아이보리)'], note: '제품 먼저 선택' },
         ], null, goToProduct);
-        renderCompact('customFabricChoices', [], state.finish, () => {});
-        $('customFabricPanel').hidden = true;
-        $('customFabricPanel').open = false;
         $('sizeSelectionVisual').hidden = true;
         $('finishSelectionVisual').hidden = true;
         $('finishSelectionVisual').innerHTML = '';
@@ -1449,20 +1428,17 @@
         primaryFinishes = [{ value: '보에르 - Fog(아이보리)', label: '보에르 Fog', swatch: SWATCH['보에르 - Fog(아이보리)'], note: '가장 많이 선택하는 기본 패브릭' }];
         customFinishes = shuveCustomFinishChoices();
         finishes = primaryFinishes.concat(customFinishes);
+        if (!state.finish) state.finish = '보에르 - Fog(아이보리)';
       }
       if (state.finish && !finishes.some(item => item.value === state.finish)) state.finish = null;
-      renderCompact('finishChoices', primaryFinishes, state.finish, value => choose('finish', value));
-      const customFabricPanel = $('customFabricPanel');
-      if (state.model === 'shuve') {
-        const keepFabricPanelOpen = customFabricPanel.open;
-        customFabricPanel.hidden = false;
-        renderCompact('customFabricChoices', primaryFinishes.concat(customFinishes), state.finish, value => choose('finish', value));
-        customFabricPanel.open = keepFabricPanelOpen || customFinishes.some(item => item.value === state.finish);
-      } else {
-        customFabricPanel.hidden = true;
-        customFabricPanel.open = false;
-        renderCompact('customFabricChoices', [], state.finish, () => {});
-      }
+      const selectFinish = value => {
+        choose('finish', value);
+        requestAnimationFrame(() => {
+          const preview = $('finishSelectionVisual');
+          if (preview && !preview.hidden) preview.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        });
+      };
+      renderCompact('finishChoices', finishes, state.finish, selectFinish);
       const finishVisual = $('finishSelectionVisual');
       const frameColorImages = {
         '화이트': 'assets/frame-color-white.png',
@@ -1477,7 +1453,10 @@
         const previewText = exactPreview
           ? '선택한 색상·패브릭이 프레임에 적용된 모습을 확인해 보세요. 실제 색감은 조명과 화면에 따라 조금 다르게 보일 수 있습니다.'
           : '슈브 패브릭 프레임의 형태 예시입니다. 선택한 패브릭의 정확한 색감과 질감은 위 패브릭 안내에서 확인해 주세요.';
-        finishVisual.innerHTML = `<img src="${selectedFrameImage}" alt="${state.finish} ${MODEL_LABEL[state.model]} 모션베드 프레임 예시"><strong>${state.finish} ${MODEL_LABEL[state.model]} 프레임</strong><p>${previewText}</p>`;
+        finishVisual.innerHTML = `<img src="${selectedFrameImage}" alt="${state.finish} ${MODEL_LABEL[state.model]} 모션베드 프레임 예시"><strong>${state.finish} ${MODEL_LABEL[state.model]} 프레임</strong><p>${previewText}</p><button class="finish-reselect-button" type="button">↑ 색상·패브릭 다시 고르기</button>`;
+        finishVisual.querySelector('.finish-reselect-button').addEventListener('click', () => {
+          $('finishSubhead').scrollIntoView({ behavior: 'smooth', block: 'start' });
+        });
       } else {
         finishVisual.innerHTML = '';
       }
@@ -1962,11 +1941,6 @@
     $('frameRequirement').addEventListener('click', () => {
       const target = state.model ? $('step-frame') : $('guideProductChoice');
       target.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    });
-    $('customFabricCloseButton').addEventListener('click', () => {
-      const panel = $('customFabricPanel');
-      panel.open = false;
-      panel.querySelector('summary').scrollIntoView({ behavior: 'smooth', block: 'center' });
     });
     $('completeButton').addEventListener('click', event => {
       if (!event.target.closest('.selected-chip')) scrollToStep('receipt');
