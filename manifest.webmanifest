@@ -3,7 +3,7 @@
   "short_name": "버킷츠",
   "description": "버킷츠 매출·손익·광고·점포·온라인 채널 대시보드",
   "lang": "ko-KR",
-  "start_url": "./?appv=20260803-mobile-month-4",
+  "start_url": "./",
   "scope": "./",
   "display": "standalone",
   "background_color": "#f3f5f7",

@@ -14,18 +14,21 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="default">
   <meta name="mobile-web-app-capable" content="yes">
   <title>버킷츠 대시보드</title>
-  <link rel="manifest" href="manifest.webmanifest?appv=20260803-mobile-month-4">
+  <link rel="manifest" href="manifest.webmanifest?appv=20260803-hero-month-5">
   <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
   <link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png">
   <link rel="icon" href="favicon.ico">
   <script>
     (function() {
-      if (!/^https?:$/.test(window.location.protocol)) return;
-      const build = '20260803-mobile-month-4';
-      const url = new URL(window.location.href);
-      if (url.searchParams.get('appv') === build) return;
-      url.searchParams.set('appv', build);
-      window.location.replace(url.toString());
+      if (!('serviceWorker' in navigator) || !/^https?:$/.test(window.location.protocol)) return;
+      window.addEventListener('load', function() {
+        navigator.serviceWorker.register('./service-worker.js?v=20260803-hero-month-5', {
+          scope: './',
+          updateViaCache: 'none'
+        }).then(function(registration) {
+          registration.update();
+        }).catch(function() {});
+      });
     })();
   </script>
   <style>
@@ -150,51 +153,54 @@
     .hero-tags { display: flex; flex-wrap: wrap; gap: 7px; margin-top: 18px; }
     .hero-tag { padding: 7px 10px; border-radius: 999px; background: rgba(255,255,255,.11); font-size: 12px; }
     .hero > * { position: relative; z-index: 1; }
-    .overview-filter { display: grid; gap: 13px; padding: 15px 17px; }
-    .overview-filter-heading { display: flex; align-items: center; gap: 8px; }
-    .overview-feature-badge { padding: 4px 7px; border-radius: 999px; background: var(--blue-soft); color: var(--blue); font-size: 10px; font-weight: 850; }
+    .hero-top { display: flex; align-items: flex-start; justify-content: space-between; gap: 8px; }
+    .hero-top .hero-label { min-width: 0; padding-top: 10px; }
     .overview-period-control {
       display: grid;
-      grid-template-columns: 46px minmax(0, 1fr) 46px;
+      grid-template-columns: 34px 106px 34px;
       align-items: center;
-      gap: 8px;
-      width: 100%;
+      gap: 5px;
+      flex: 0 0 auto;
     }
     .overview-period-select {
       width: 100%;
       min-width: 0;
-      height: 46px;
-      border: 1px solid var(--line);
-      border-radius: 12px;
-      padding: 10px 12px;
-      background: var(--surface-soft);
-      color: var(--text);
-      font-size: 14px;
+      height: 36px;
+      border: 1px solid rgba(255,255,255,.25);
+      border-radius: 10px;
+      padding: 0 5px;
+      background: rgba(255,255,255,.13);
+      color: #fff;
+      font-size: 12px;
       font-weight: 800;
       outline: none;
     }
-    .overview-period-select:focus { border-color: var(--blue); box-shadow: 0 0 0 3px var(--blue-soft); }
+    .overview-period-select option { background: #fff; color: var(--text); }
+    .overview-period-select:focus { border-color: rgba(255,255,255,.75); box-shadow: 0 0 0 3px rgba(255,255,255,.12); }
     .overview-period-arrow {
       display: grid;
       place-items: center;
-      width: 46px;
-      height: 46px;
-      border: 1px solid var(--line);
-      border-radius: 12px;
-      background: var(--surface-soft);
-      color: var(--blue);
-      font-size: 27px;
+      width: 34px;
+      height: 36px;
+      border: 1px solid rgba(255,255,255,.25);
+      border-radius: 10px;
+      background: rgba(255,255,255,.13);
+      color: #fff;
+      font-size: 23px;
       font-weight: 850;
       line-height: 1;
       cursor: pointer;
       -webkit-tap-highlight-color: transparent;
     }
-    .overview-period-arrow:active { transform: scale(.96); background: var(--blue-soft); }
-    .overview-period-arrow:focus-visible { outline: 3px solid var(--blue-soft); border-color: var(--blue); }
-    .overview-period-arrow:disabled { opacity: .3; color: var(--muted); cursor: default; transform: none; }
+    .overview-period-arrow:active { transform: scale(.96); background: rgba(255,255,255,.22); }
+    .overview-period-arrow:focus-visible { outline: 3px solid rgba(255,255,255,.12); border-color: rgba(255,255,255,.75); }
+    .overview-period-arrow:disabled { opacity: .28; cursor: default; transform: none; }
 
-    @media (max-width: 699px) {
-      .overview-filter { border: 2px solid #bfdbfe; background: #f8fbff; box-shadow: 0 10px 24px rgba(37,99,235,.1); }
+    @media (max-width: 359px) {
+      .hero { padding-left: 15px; padding-right: 15px; }
+      .overview-period-control { grid-template-columns: 32px 92px 32px; gap: 4px; }
+      .overview-period-arrow { width: 32px; }
+      .overview-period-select { font-size: 11px; }
     }
 
     .section {
@@ -532,7 +538,8 @@
 
     @media (min-width: 700px) {
       .shell { padding-left: 22px; padding-right: 22px; }
-      .overview-filter { grid-template-columns: minmax(0, 1fr) 330px; align-items: center; }
+      .overview-period-control { grid-template-columns: 38px 124px 38px; gap: 6px; }
+      .overview-period-arrow { width: 38px; }
       .kpi-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); }
       .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
       .store-cards { grid-template-columns: repeat(2, minmax(0, 1fr)); }
@@ -787,13 +794,8 @@
       const alerts = buildAlerts(selected, selectedAd, selectedStore);
 
       return [
-        '<section class="section overview-filter">',
-          '<div><div class="overview-filter-heading"><h2 class="section-title">요약 기준 월</h2><span class="overview-feature-badge">모바일 월 선택</span></div><div class="section-note">드롭다운 또는 좌우 화살표로 검토할 월을 선택하세요</div></div>',
-          overviewPeriodSelect(availableMonths, selectedPeriod),
-        '</section>',
-
         '<section class="hero">',
-          '<div class="hero-label">' + escapeHtml(selected.label) + ' 매출</div>',
+          '<div class="hero-top"><div class="hero-label">' + escapeHtml(selected.label) + ' 매출</div>' + overviewPeriodSelect(availableMonths, selectedPeriod) + '</div>',
           '<div class="hero-value">' + shortWon(selected.revenue) + '</div>',
           '<div class="hero-sub">손익 <strong class="' + signClass(selected.profit) + '">' + signedWon(selected.profit) + '</strong> · 판매 ' + formatNumber(selected.units) + '세트</div>',
           '<div class="hero-tags">',
@@ -1329,7 +1331,8 @@
       return '<div class="overview-period-control">' +
         overviewPeriodArrow('이전 월', '‹', olderMonth) +
         '<select class="overview-period-select" data-filter="overviewPeriod" aria-label="요약 기준 월">' + months.map(function(item) {
-          return '<option value="' + escapeHtml(item.period) + '" ' + (item.period === selected ? 'selected' : '') + '>' + escapeHtml(item.label) + '</option>';
+          const compactLabel = item.year && item.month ? item.year + '. ' + item.month + '월' : item.label;
+          return '<option value="' + escapeHtml(item.period) + '" ' + (item.period === selected ? 'selected' : '') + '>' + escapeHtml(compactLabel) + '</option>';
         }).join('') + '</select>' +
         overviewPeriodArrow('다음 월', '›', newerMonth) +
       '</div>';
