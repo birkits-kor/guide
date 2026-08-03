@@ -137,22 +137,46 @@
     .hero-tags { display: flex; flex-wrap: wrap; gap: 7px; margin-top: 18px; }
     .hero-tag { padding: 7px 10px; border-radius: 999px; background: rgba(255,255,255,.11); font-size: 12px; }
     .hero > * { position: relative; z-index: 1; }
-    .hero-top { display: flex; align-items: flex-start; justify-content: space-between; gap: 14px; }
-    .overview-period-control { display: grid; gap: 4px; flex: 0 0 auto; color: rgba(255,255,255,.66); font-size: 10px; font-weight: 700; }
+    .overview-filter { display: grid; gap: 13px; padding: 15px 17px; }
+    .overview-period-control {
+      display: grid;
+      grid-template-columns: 46px minmax(0, 1fr) 46px;
+      align-items: center;
+      gap: 8px;
+      width: 100%;
+    }
     .overview-period-select {
-      min-width: 124px;
-      border: 1px solid rgba(255,255,255,.26);
+      width: 100%;
+      min-width: 0;
+      height: 46px;
+      border: 1px solid var(--line);
       border-radius: 12px;
-      padding: 9px 10px;
-      background: rgba(255,255,255,.12);
-      color: #fff;
-      font: inherit;
-      font-size: 13px;
+      padding: 10px 12px;
+      background: var(--surface-soft);
+      color: var(--text);
+      font-size: 14px;
       font-weight: 800;
       outline: none;
     }
-    .overview-period-select:focus { border-color: rgba(255,255,255,.7); box-shadow: 0 0 0 3px rgba(255,255,255,.13); }
-    .overview-period-select option { background: #fff; color: #111827; }
+    .overview-period-select:focus { border-color: var(--blue); box-shadow: 0 0 0 3px var(--blue-soft); }
+    .overview-period-arrow {
+      display: grid;
+      place-items: center;
+      width: 46px;
+      height: 46px;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      background: var(--surface-soft);
+      color: var(--blue);
+      font-size: 27px;
+      font-weight: 850;
+      line-height: 1;
+      cursor: pointer;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .overview-period-arrow:active { transform: scale(.96); background: var(--blue-soft); }
+    .overview-period-arrow:focus-visible { outline: 3px solid var(--blue-soft); border-color: var(--blue); }
+    .overview-period-arrow:disabled { opacity: .3; color: var(--muted); cursor: default; transform: none; }
 
     .section {
       padding: 17px;
@@ -489,6 +513,7 @@
 
     @media (min-width: 700px) {
       .shell { padding-left: 22px; padding-right: 22px; }
+      .overview-filter { grid-template-columns: minmax(0, 1fr) 330px; align-items: center; }
       .kpi-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); }
       .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
       .store-cards { grid-template-columns: repeat(2, minmax(0, 1fr)); }
@@ -675,7 +700,7 @@
       state.adYear = state.adYear || first(payload.ads.years);
       state.storeYear = state.storeYear || first(payload.stores.years);
       state.onlineYear = state.onlineYear || first(payload.online.years);
-      const overviewMonths = payload.profit.monthly.filter(function(item) { return item.status === 'actual'; });
+      const overviewMonths = getOverviewMonths(payload.profit);
       const overviewFallback = payload.profit.latestActual || first(overviewMonths) || payload.profit.snapshot;
       if (!state.overviewPeriod || !overviewMonths.some(function(item) { return item.period === state.overviewPeriod; })) {
         state.overviewPeriod = overviewFallback ? overviewFallback.period : '';
@@ -725,11 +750,7 @@
 
     function renderOverviewPage() {
       const profit = state.data.profit;
-      const availableMonths = profit.monthly.filter(function(item) {
-        return item.status === 'actual';
-      }).sort(function(a, b) {
-        return String(b.period).localeCompare(String(a.period));
-      });
+      const availableMonths = getOverviewMonths(profit);
       const fallback = profit.latestActual || profit.snapshot || first(availableMonths) || {};
       const selected = availableMonths.find(function(item) {
         return item.period === state.overviewPeriod;
@@ -747,8 +768,13 @@
       const alerts = buildAlerts(selected, selectedAd, selectedStore);
 
       return [
+        '<section class="section overview-filter">',
+          '<div><h2 class="section-title">요약 기준 월</h2><div class="section-note">검토할 월을 선택하세요</div></div>',
+          overviewPeriodSelect(availableMonths, selectedPeriod),
+        '</section>',
+
         '<section class="hero">',
-          '<div class="hero-top"><div class="hero-label">' + escapeHtml(selected.label) + ' 매출</div>' + overviewPeriodSelect(availableMonths, selectedPeriod) + '</div>',
+          '<div class="hero-label">' + escapeHtml(selected.label) + ' 매출</div>',
           '<div class="hero-value">' + shortWon(selected.revenue) + '</div>',
           '<div class="hero-sub">손익 <strong class="' + signClass(selected.profit) + '">' + signedWon(selected.profit) + '</strong> · 판매 ' + formatNumber(selected.units) + '세트</div>',
           '<div class="hero-tags">',
@@ -1277,10 +1303,37 @@
     }
 
     function overviewPeriodSelect(months, selected) {
-      if (!months || !months.length) return '';
-      return '<label class="overview-period-control"><span>기준 월</span><select class="overview-period-select" data-filter="overviewPeriod" aria-label="요약 기준 월">' + months.map(function(item) {
-        return '<option value="' + escapeHtml(item.period) + '" ' + (item.period === selected ? 'selected' : '') + '>' + escapeHtml(item.label) + '</option>';
-      }).join('') + '</select></label>';
+      if (!months || !months.length) return '<div class="overview-period-control"><button class="overview-period-arrow" type="button" disabled aria-label="이전 월">‹</button><select class="overview-period-select" aria-label="요약 기준 월" disabled><option>월 데이터 없음</option></select><button class="overview-period-arrow" type="button" disabled aria-label="다음 월">›</button></div>';
+      const selectedIndex = Math.max(0, months.findIndex(function(item) { return item.period === selected; }));
+      const olderMonth = months[selectedIndex + 1] || null;
+      const newerMonth = selectedIndex > 0 ? months[selectedIndex - 1] : null;
+      return '<div class="overview-period-control">' +
+        overviewPeriodArrow('이전 월', '‹', olderMonth) +
+        '<select class="overview-period-select" data-filter="overviewPeriod" aria-label="요약 기준 월">' + months.map(function(item) {
+          return '<option value="' + escapeHtml(item.period) + '" ' + (item.period === selected ? 'selected' : '') + '>' + escapeHtml(item.label) + '</option>';
+        }).join('') + '</select>' +
+        overviewPeriodArrow('다음 월', '›', newerMonth) +
+      '</div>';
+    }
+
+    function overviewPeriodArrow(label, symbol, month) {
+      return '<button class="overview-period-arrow" type="button" aria-label="' + label + '"' +
+        (month ? ' data-overview-period="' + escapeHtml(month.period) + '"' : ' disabled') +
+        '><span aria-hidden="true">' + symbol + '</span></button>';
+    }
+
+    function getOverviewMonths(profit) {
+      const data = profit || {};
+      const months = (data.monthly || []).filter(function(item) {
+        return item.status === 'actual' || Number(item.revenue || 0) > 0;
+      });
+      const fallback = data.latestActual || data.snapshot;
+      if (fallback && fallback.period && !months.some(function(item) { return item.period === fallback.period; })) {
+        months.push(fallback);
+      }
+      return months.sort(function(a, b) {
+        return String(b.period).localeCompare(String(a.period));
+      });
     }
 
     function splitBar(name, ratio, value, extraClass) {
@@ -1507,6 +1560,12 @@
     }
 
     content.addEventListener('click', function(event) {
+      const periodButton = event.target.closest('[data-overview-period]');
+      if (periodButton) {
+        state.overviewPeriod = periodButton.dataset.overviewPeriod;
+        render();
+        return;
+      }
       const point = event.target.closest('[data-chart-point]');
       if (point) selectChartPoint(point);
     });
