@@ -167,6 +167,14 @@
     .compact-choice.selected { border-color: var(--accent); color: var(--accent-dark); background: var(--accent-soft); box-shadow: inset 0 0 0 1px var(--accent); }
     .compact-choice small { display: block; margin-top: 4px; color: var(--muted); font-size: 14px; font-weight: 650; }
     .swatch { display: inline-block; width: 18px; height: 18px; margin-right: 7px; border: 1px solid rgba(0,0,0,.16); border-radius: 50%; vertical-align: -3px; }
+    .size-picker-panel { margin-top: 13px; padding: 16px; border: 1px solid var(--line); border-radius: 15px; background: #fcfaf7; }
+    .size-picker-panel[hidden] { display: none; }
+    .size-picker-title { display: block; margin-bottom: 11px; font-size: 18px; font-weight: 900; }
+    .couple-size-pickers { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+    .couple-size-side { padding: 14px; border: 1px solid #e6ddd4; border-radius: 13px; background: white; }
+    .couple-size-side .compact-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); }
+    .couple-size-side .compact-choice { width: 100%; min-width: 0; padding-inline: 8px; }
+    .couple-size-hint { margin: 12px 0 0; color: var(--muted); font-size: 16px; line-height: 1.55; }
 
     .direction-panel { margin-top: 14px; padding: 16px; border-radius: 14px; background: #f1ede6; }
     .direction-panel strong { display: block; font-size: 19px; }
@@ -595,8 +603,11 @@
       .component-caption { font-size: 17px; }
       .component-caption span { font-size: 15px; }
       .compact-choice { min-height: 60px; font-size: 18px; }
-      #sizeChoices, #finishChoices { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 9px; }
-      #sizeChoices .compact-choice, #finishChoices .compact-choice { width: 100%; min-width: 0; }
+      #sizeModeChoices, #sizeChoices, #finishChoices { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 9px; }
+      #sizeModeChoices .compact-choice, #sizeChoices .compact-choice, #finishChoices .compact-choice { width: 100%; min-width: 0; }
+      .couple-size-pickers { grid-template-columns: 1fr; }
+      .size-picker-panel { padding: 13px; }
+      .couple-size-side { padding: 12px; }
       .next-button { min-height: 60px; font-size: 20px; }
       .skip-button { min-height: 58px; font-size: 18px; }
       .option-grid[data-carousel="true"] .option-explainer .component-photo.catalog.compact { height: min(58vw, 245px); }
@@ -696,8 +707,25 @@
       <div class="subhead" id="finishSubhead">컬러 · 패브릭</div>
       <div class="compact-grid" id="finishChoices"></div>
       <div class="finish-selection-visual" id="finishSelectionVisual" hidden></div>
-      <div class="subhead" id="sizeSubhead">사이즈</div>
-      <div class="compact-grid" id="sizeChoices"></div>
+      <div class="subhead" id="sizeSubhead">사용 형태</div>
+      <div class="compact-grid" id="sizeModeChoices"></div>
+      <div class="size-picker-panel" id="singleSizePanel" hidden>
+        <strong class="size-picker-title">1인용 사이즈를 선택해 주세요.</strong>
+        <div class="compact-grid" id="sizeChoices"></div>
+      </div>
+      <div class="size-picker-panel" id="coupleSizePanel" hidden>
+        <div class="couple-size-pickers">
+          <div class="couple-size-side">
+            <strong class="size-picker-title">첫 번째 침대</strong>
+            <div class="compact-grid" id="coupleFirstSizeChoices"></div>
+          </div>
+          <div class="couple-size-side">
+            <strong class="size-picker-title">두 번째 침대</strong>
+            <div class="compact-grid" id="coupleSecondSizeChoices"></div>
+          </div>
+        </div>
+        <p class="couple-size-hint" id="coupleSizeHint">두 침대의 크기를 각각 선택하면 커플 구성이 완성됩니다.</p>
+      </div>
       <div class="size-visual" id="sizeSelectionVisual" hidden></div>
       <button class="frame-requirement" id="frameRequirement" type="button">제품·사이즈·컬러를 선택하면 정확한 프레임 가격이 계산됩니다.</button>
     </section>
@@ -804,10 +832,13 @@
     };
 
     const DEFAULT_STATE = Object.freeze({
-      model: null, size: null, finish: null,
+      model: null, size: null, sizeMode: null, coupleFirstSize: null, coupleSecondSize: null, finish: null,
       headConfig: null, table: null, moodLights: null, mattress: null, delivery: null,
     });
     const SIZE_ORDER = ['SS', 'Q', 'S+S 커플', 'S+SS 커플', 'S+Q 커플', 'SS+SS 커플', 'SS+Q 커플', 'Q+Q 커플'];
+    const SINGLE_SIZE_ORDER = ['SS', 'Q'];
+    const COUPLE_UNIT_SIZE_ORDER = ['S', 'SS', 'Q'];
+    const UNIT_SIZE_LABEL = Object.freeze({ S: '싱글', SS: '슈퍼싱글', Q: '퀸' });
     const SINGLE_MATTRESS_WIDTHS = Object.freeze({ S: 90, SS: 110, Q: 150 });
     const MODEL_LABEL = { mabed: '마베드', shuve: '슈브' };
     const STEP_TEXT = {
@@ -1100,15 +1131,58 @@
       hasCopiedQuote = false;
       if (key === 'model') {
         if (value) activeGuideModel = value;
-        state.size = null; state.finish = null; state.headConfig = null;
+        state.size = null; state.sizeMode = null; state.coupleFirstSize = null; state.coupleSecondSize = null;
+        state.finish = null; state.headConfig = null;
         state.table = null; state.moodLights = null; state.mattress = null; state.delivery = null;
         if (value === 'shuve') state.finish = '보에르 - Fog(아이보리)';
+      }
+      if (key === 'size') {
+        const parts = sizeParts(value);
+        if (parts.length === 2) {
+          state.sizeMode = 'couple';
+          state.coupleFirstSize = parts[0];
+          state.coupleSecondSize = parts[1];
+        } else if (value) {
+          state.sizeMode = 'single';
+          state.coupleFirstSize = null;
+          state.coupleSecondSize = null;
+        }
       }
       if (key === 'size' || key === 'finish') {
         state.headConfig = null; state.table = null;
         state.moodLights = null; state.mattress = null; state.delivery = null;
       }
       if (key === 'size' && !tableAvailableForSize(value)) state.table = null;
+      saveState(); render();
+    }
+
+    function clearSelectionsAfterSizeChange() {
+      state.headConfig = null; state.table = null;
+      state.moodLights = null; state.mattress = null; state.delivery = null;
+      hasCopiedQuote = false;
+    }
+
+    function chooseSizeMode(mode) {
+      state.sizeMode = mode;
+      state.size = null;
+      state.coupleFirstSize = null;
+      state.coupleSecondSize = null;
+      clearSelectionsAfterSizeChange();
+      saveState(); render();
+    }
+
+    function canonicalCoupleSize(first, second) {
+      const rank = { S: 0, SS: 1, Q: 2 };
+      return `${[first, second].sort((a, b) => rank[a] - rank[b]).join('+')} 커플`;
+    }
+
+    function chooseCoupleUnit(slot, value) {
+      state[slot] = value;
+      state.size = state.coupleFirstSize && state.coupleSecondSize
+        ? canonicalCoupleSize(state.coupleFirstSize, state.coupleSecondSize)
+        : null;
+      clearSelectionsAfterSizeChange();
+      if (state.size && !tableAvailableForSize(state.size)) state.table = null;
       saveState(); render();
     }
 
@@ -1480,11 +1554,15 @@
         const goToProduct = () => scrollToStep('guideProductChoice');
         $('sizeSubhead').hidden = false;
         $('finishSubhead').hidden = false;
-        renderCompact('sizeChoices', SIZE_ORDER.map(size => ({
-          value: size,
-          label: size,
-          note: '제품 먼저 선택',
-        })), null, goToProduct);
+        renderCompact('sizeModeChoices', [
+          { value: 'single', label: '1인용', note: '제품 먼저 선택' },
+          { value: 'couple', label: '커플', note: '제품 먼저 선택' },
+        ], null, goToProduct);
+        renderCompact('sizeChoices', [], null, goToProduct);
+        renderCompact('coupleFirstSizeChoices', [], null, goToProduct);
+        renderCompact('coupleSecondSizeChoices', [], null, goToProduct);
+        $('singleSizePanel').hidden = true;
+        $('coupleSizePanel').hidden = true;
         renderCompact('finishChoices', [
           { value: '화이트', label: '화이트', swatch: SWATCH['화이트'], note: '제품 먼저 선택' },
           { value: '그레이', label: '그레이', swatch: SWATCH['그레이'], note: '제품 먼저 선택' },
@@ -1503,9 +1581,34 @@
       $('sizeSubhead').hidden = false;
       $('finishSubhead').hidden = false;
 
-      const sizes = [...SIZE_ORDER];
-      if (state.size && !sizes.includes(state.size)) state.size = null;
-      renderCompact('sizeChoices', sizes.map(size => ({ value: size, label: size, note: sizeOptionNote(size) })), state.size, value => choose('size', value));
+      if (state.size && !SIZE_ORDER.includes(state.size)) state.size = null;
+      renderCompact('sizeModeChoices', [
+        { value: 'single', label: '1인용', note: '한 분이 사용' },
+        { value: 'couple', label: '커플', note: '두 침대를 조합' },
+      ], state.sizeMode, chooseSizeMode);
+
+      const singleSizePanel = $('singleSizePanel');
+      const coupleSizePanel = $('coupleSizePanel');
+      singleSizePanel.hidden = state.sizeMode !== 'single';
+      coupleSizePanel.hidden = state.sizeMode !== 'couple';
+      renderCompact('sizeChoices', SINGLE_SIZE_ORDER.map(size => ({
+        value: size,
+        label: size,
+        note: UNIT_SIZE_LABEL[size],
+      })), state.sizeMode === 'single' ? state.size : null, value => choose('size', value));
+      renderCompact('coupleFirstSizeChoices', COUPLE_UNIT_SIZE_ORDER.map(size => ({
+        value: size,
+        label: size,
+        note: UNIT_SIZE_LABEL[size],
+      })), state.coupleFirstSize, value => chooseCoupleUnit('coupleFirstSize', value));
+      renderCompact('coupleSecondSizeChoices', COUPLE_UNIT_SIZE_ORDER.map(size => ({
+        value: size,
+        label: size,
+        note: UNIT_SIZE_LABEL[size],
+      })), state.coupleSecondSize, value => chooseCoupleUnit('coupleSecondSize', value));
+      $('coupleSizeHint').textContent = state.size
+        ? `선택한 커플 구성 · ${state.coupleFirstSize} + ${state.coupleSecondSize}`
+        : '두 침대의 크기를 각각 선택하면 커플 구성이 완성됩니다.';
       const sizeVisual = $('sizeSelectionVisual');
       const sizeVisualImage = state.model === 'shuve' ? 'assets/guide-shuve-twin.png' : 'assets/guide-mabed-twin.png';
       sizeVisual.hidden = false;
