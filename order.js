@@ -61,7 +61,9 @@
     try {
       const result = await api.request('guideSubmitOrder', data);
       submitted = data; form.hidden = true; $('success').hidden = false; $('orderNumber').textContent = '주문번호 · ' + result.orderId;
-      $('successText').textContent = result.emailSent ? '입력하신 이메일로 신청 내역을 보내드렸습니다.' : '신청은 접수되었습니다. 안내 메일 발송이 지연되고 있습니다. 아래 버튼으로 다시 받아 주세요.';
+      const hasEmail = Boolean(data.customer.email?.trim());
+      $('successText').textContent = result.emailSent ? (hasEmail ? '입력하신 이메일로 신청 내역을 보내드렸습니다.' : '문의 시 위 주문번호를 알려주세요.') : (hasEmail ? '신청은 접수되었습니다. 안내 메일 발송이 지연되고 있습니다. 아래 버튼으로 다시 받아 주세요.' : '신청은 접수되었습니다. 접수 알림이 지연되고 있습니다. 아래 버튼으로 다시 요청해 주세요.');
+      $('retryMail').textContent = hasEmail ? '안내 메일 다시 받기' : '접수 알림 다시 요청';
       $('retryMail').hidden = result.emailSent; status(''); $('success').scrollIntoView({ behavior: 'smooth', block: 'start' });
     } catch (error) { status(error.message || '접수를 확인하지 못했습니다. 같은 화면에서 다시 눌러 주세요.', true); }
     finally { form.dataset.busy = ''; button.disabled = false; $('retryMail').disabled = false; button.textContent = '구매 신청하기'; }
