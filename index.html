@@ -932,6 +932,8 @@ h2, .bed-guide-heading h2 { font-size: clamp(29px, 3.15vw, 42px); line-height: 1
   .receipt-wheel-helper { display: block; margin: 0; color: var(--muted); font-size: 12px; line-height: 1.6; }
 }
 
+  
+.quote-bar-inner[hidden] { display: none !important; }
   </style>
 </head>
 <body>
@@ -1067,9 +1069,9 @@ h2, .bed-guide-heading h2 { font-size: clamp(29px, 3.15vw, 42px); line-height: 1
   </main>
 
   <div class="fixed-quote-bar" id="fixedQuoteBar">
-    <nav class="deck-navigation container" aria-label="장 이동"><button id="pagePrevious" type="button">← 이전</button><div class="deck-position"><strong id="pagePosition" aria-live="polite">01 / 09 · 구매 가이드</strong><small>아래로 읽기 · 오른쪽으로 쓸어 다음 장</small></div><button class="page-next" id="pageNext" type="button">다음 →</button></nav>
-    <div class="quote-bar-inner" id="completeButton" role="button" tabindex="0" aria-label="선택한 사양과 최종 견적 보기">
-      <div class="bar-summary"><div class="selected-chips" id="selectedCount"><span class="selected-empty">침대를 알아보는 중</span></div><strong id="fixedTotal">구성을 골라보세요</strong><span class="bar-dimension" id="barDimension"></span></div>
+    <nav class="deck-navigation container" aria-label="장 이동"><button id="pagePrevious" type="button">← 이전</button><div class="deck-position"><strong id="pagePosition" aria-live="polite">01 / 09 · 구매 가이드</strong></div><button class="page-next" id="pageNext" type="button">다음 →</button></nav>
+    <div class="quote-bar-inner" hidden id="completeButton" role="button" tabindex="0" aria-label="선택한 사양과 최종 견적 보기">
+      <div class="bar-summary"><div class="selected-chips" id="selectedCount"><span class="selected-empty">침대를 알아보는 중</span></div><strong id="fixedTotal"></strong><span class="bar-dimension" id="barDimension"></span></div>
       <span class="bar-open-hint">사양 보기 ›</span>
     </div>
   </div>
@@ -2310,7 +2312,7 @@ h2, .bed-guide-heading h2 { font-size: clamp(29px, 3.15vw, 42px); line-height: 1
         $('receiptLines').innerHTML = '<div class="quote-blocker">제품·규격·컬러를 모두 선택해야 견적이 표시됩니다.</div>';
         $('receiptDimensions').innerHTML = '';
         $('receiptTotal').textContent = '—';
-        $('fixedTotal').textContent = '구성을 골라보세요';
+        $('fixedTotal').textContent = '';
         $('headerTotal').textContent = '천천히 하나씩 살펴보세요';
         renderSelectedChips(selectedOptionLabels());
         return;
