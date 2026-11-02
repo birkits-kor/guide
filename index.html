@@ -887,6 +887,37 @@ h2, .bed-guide-heading h2 { font-size: clamp(29px, 3.15vw, 42px); line-height: 1
   #receipt { display: block !important; height: auto; overflow: visible; padding: 0; }
 }
 
+  
+.receipt-mobile-help, .receipt-wheel, .receipt-wheel-helper { display: none; }
+@media (max-width: 760px) {
+  #receiptEditorGrid { grid-template-columns: minmax(0, 1fr); gap: 24px; }
+  .receipt-desktop-help, .receipt-editor-field select { display: none; }
+  .receipt-mobile-help { display: inline; }
+  .receipt-editor-field { gap: 8px; }
+  .receipt-editor-field > label { font-size: 15px; color: var(--ink); }
+  .receipt-wheel { position: relative; display: block; min-width: 0; border: 1px solid var(--line); border-radius: 6px; background: #f6f4ef; isolation: isolate; }
+  .receipt-wheel-window { position: absolute; z-index: -1; left: 30%; right: 30%; top: 7px; bottom: 7px; border: 1px solid #cec2b0; border-radius: 4px; background: var(--paper); pointer-events: none; }
+  .receipt-wheel-track { position: relative; display: flex; align-items: stretch; width: 100%; min-width: 0; height: 108px; padding: 0 30%; overflow-x: auto; overflow-y: hidden; scroll-snap-type: x mandatory; overscroll-behavior-x: contain; touch-action: pan-x pan-y pinch-zoom; scrollbar-width: none; border-radius: 6px; cursor: grab; -webkit-overflow-scrolling: touch; }
+  .receipt-wheel-track::-webkit-scrollbar { display: none; }
+  .receipt-wheel-track:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+  .receipt-wheel-track.is-dragging { scroll-snap-type: none; cursor: grabbing; user-select: none; }
+  .receipt-wheel-option { display: flex; flex: 0 0 100%; min-width: 0; align-items: center; justify-content: center; padding: 10px 9px; margin: 0; border: 0; background: transparent; color: #aaa195; font: inherit; font-size: 16px; font-weight: 400; line-height: 1.45; text-align: center; white-space: normal; overflow-wrap: anywhere; word-break: keep-all; scroll-snap-align: center; cursor: inherit; user-select: none; -webkit-user-select: none; }
+  .receipt-wheel-option[aria-selected="true"] { color: var(--ink); font-size: 18px; font-weight: 500; }
+  .receipt-wheel-option[aria-selected="true"][data-empty="true"] { color: var(--muted); font-size: 16px; font-weight: 400; }
+  .receipt-wheel-option[data-long="true"], .receipt-wheel-option[aria-selected="true"][data-long="true"] { padding: 6px; font-size: 16px; line-height: 1.4; }
+  .receipt-wheel::before, .receipt-wheel::after { position: absolute; z-index: 2; content: ''; width: 18px; top: 1px; bottom: 1px; pointer-events: none; }
+  .receipt-wheel::before { left: 0; border-radius: 6px 0 0 6px; background: linear-gradient(90deg, #f6f4ef 10%, #f6f4ef00); }
+  .receipt-wheel::after { right: 0; border-radius: 0 6px 6px 0; background: linear-gradient(-90deg, #f6f4ef 10%, #f6f4ef00); }
+  .receipt-wheel-arrow { position: absolute; z-index: 3; top: 0; bottom: 0; display: grid; place-items: end center; width: 28px; padding: 0 0 1px; border: 0; border-radius: 3px; background: transparent; color: var(--accent); font-size: 25px; font-weight: 400; cursor: pointer; }
+  .receipt-wheel-arrow.previous { left: 1px; }
+  .receipt-wheel-arrow.next { right: 1px; }
+  .receipt-wheel-arrow:disabled { opacity: .18; cursor: default; }
+  .receipt-wheel[aria-disabled="true"] { opacity: .48; }
+  .receipt-wheel[aria-disabled="true"] .receipt-wheel-track { overflow: hidden; cursor: default; }
+  .receipt-wheel[aria-disabled="true"] .receipt-wheel-option { cursor: default; }
+  .receipt-wheel-helper { display: block; margin: 0; color: var(--muted); font-size: 12px; line-height: 1.6; }
+}
+
   </style>
 </head>
 <body>
@@ -993,7 +1024,7 @@ h2, .bed-guide-heading h2 { font-size: clamp(29px, 3.15vw, 42px); line-height: 1
       <div class="receipt-head"><div><span class="step-number">MY BED SUMMARY</span><h2 id="receiptTitle">내가 고른 침대 구성</h2></div><span class="receipt-date" id="receiptDate"></span></div>
       <div class="receipt-edit-panel">
         <h3>선택한 사양</h3>
-        <p>제품·규격·색상을 고른 뒤 필요한 옵션만 더하세요. 이곳에서 모든 구성을 바로 변경할 수 있습니다.</p>
+        <p><span class="receipt-desktop-help">제품·규격·색상을 고른 뒤 필요한 옵션만 더하세요. 이곳에서 모든 구성을 바로 변경할 수 있습니다.</span><span class="receipt-mobile-help">좌우로 돌려 가운데 항목을 선택하세요.<br>필요 없는 옵션은 ‘선택하지 않음’으로 빼실 수 있습니다.</span></p>
         <div class="receipt-editor-grid" id="receiptEditorGrid"></div>
       </div>
       <h3 class="receipt-price-heading">가격 내역</h3>
@@ -2002,9 +2033,198 @@ h2, .bed-guide-heading h2 { font-size: clamp(29px, 3.15vw, 42px); line-height: 1
       });
     }
 
+    function receiptEditorValue(field, raw) {
+      return raw === '' ? null : field.key === 'moodLights' ? Number(raw) : raw;
+    }
+    function setReceiptEditorValue(field, raw) {
+      const value = receiptEditorValue(field, raw);
+      if (state[field.key] !== value) choose(field.key, value);
+    }
+    function createReceiptWheel(field) {
+      const wheel = document.createElement('div');
+      wheel.className = 'receipt-wheel';
+      wheel.dataset.key = field.key;
+      const window = document.createElement('span');
+      window.className = 'receipt-wheel-window'; window.setAttribute('aria-hidden', 'true');
+      const track = document.createElement('div');
+      track.className = 'receipt-wheel-track'; track.id = `receipt-wheel-${field.key}`;
+      track.setAttribute('role', 'listbox'); track.setAttribute('aria-orientation', 'horizontal');
+      track.setAttribute('aria-labelledby', `receipt-label-${field.key}`);
+      const previous = document.createElement('button');
+      previous.type = 'button'; previous.className = 'receipt-wheel-arrow previous'; previous.textContent = '‹';
+      const next = document.createElement('button');
+      next.type = 'button'; next.className = 'receipt-wheel-arrow next'; next.textContent = '›';
+      wheel.append(window, track, previous, next);
+      let choices = [], current = '', disabled = false, currentField = field;
+      let signature = '', timer = null, syncing = false, syncVersion = 0;
+      let touching = false, mouse = null, draggedAt = -1000, pendingIndex = null;
+      const nearest = () => {
+        if (!track.clientWidth || !track.children.length) return 0;
+        const center = track.scrollLeft + track.clientWidth / 2;
+        let best = 0, distance = Infinity;
+        [...track.children].forEach((node, index) => {
+          const delta = Math.abs(node.offsetLeft + node.offsetWidth / 2 - center);
+          if (delta < distance) { best = index; distance = delta; }
+        });
+        return best;
+      };
+      const position = index => {
+        const node = track.children[index];
+        return node ? Math.max(0, node.offsetLeft + node.offsetWidth / 2 - track.clientWidth / 2) : 0;
+      };
+      const highlight = index => {
+        [...track.children].forEach((node, itemIndex) => node.setAttribute('aria-selected', itemIndex === index ? 'true' : 'false'));
+        if (track.children[index]) track.setAttribute('aria-activedescendant', track.children[index].id);
+        previous.disabled = disabled || index <= 0;
+        next.disabled = disabled || index >= choices.length - 1;
+      };
+      const schedule = () => { clearTimeout(timer); timer = setTimeout(commit, 150); };
+      function commit() {
+        clearTimeout(timer);
+        if (syncing || touching || mouse || disabled || !track.clientWidth) return;
+        const index = nearest();
+        const target = position(index);
+        if (Math.abs(track.scrollLeft - target) > 2) {
+          track.scrollTo({ left: target, behavior: 'smooth' }); schedule(); return;
+        }
+        pendingIndex = null;
+        highlight(index);
+        const raw = choices[index]?.value;
+        if (raw != null && raw !== current) setReceiptEditorValue(currentField, raw);
+      }
+      function align() {
+        if (!track.clientWidth || touching || mouse) return;
+        const index = Math.max(0, choices.findIndex(choice => choice.value === current));
+        clearTimeout(timer); pendingIndex = null;
+        const version = ++syncVersion; syncing = true;
+        track.scrollTo({ left: position(index), behavior: 'instant' });
+        highlight(index);
+        requestAnimationFrame(() => requestAnimationFrame(() => { if (version === syncVersion) syncing = false; }));
+      }
+      function moveTo(index) {
+        if (disabled || !track.clientWidth) return;
+        const target = Math.max(0, Math.min(choices.length - 1, index));
+        pendingIndex = target;
+        syncing = false; ++syncVersion;
+        track.scrollTo({ left: position(target), behavior: 'smooth' });
+        schedule();
+      }
+      previous.addEventListener('click', () => moveTo((pendingIndex ?? nearest()) - 1));
+      next.addEventListener('click', () => moveTo((pendingIndex ?? nearest()) + 1));
+      track.addEventListener('scroll', () => {
+        if (syncing) return;
+        highlight(nearest()); schedule();
+      }, { passive: true });
+      track.addEventListener('scrollend', commit);
+      track.addEventListener('touchstart', event => {
+        touching = event.touches.length === 1;
+        clearTimeout(timer);
+      }, { passive: true });
+      const finishTouch = () => { touching = false; schedule(); };
+      track.addEventListener('touchend', finishTouch, { passive: true });
+      track.addEventListener('touchcancel', finishTouch, { passive: true });
+      track.addEventListener('pointerdown', event => {
+        if (disabled || event.pointerType !== 'mouse' || event.button !== 0) return;
+        mouse = { id: event.pointerId, x: event.clientX, left: track.scrollLeft, moved: false };
+        clearTimeout(timer);
+      });
+      track.addEventListener('pointermove', event => {
+        if (!mouse || mouse.id !== event.pointerId) return;
+        const distance = mouse.x - event.clientX;
+        if (Math.abs(distance) > 6 && !mouse.moved) {
+          mouse.moved = true; track.classList.add('is-dragging'); track.setPointerCapture(event.pointerId);
+        }
+        if (mouse.moved) { track.scrollLeft = mouse.left + distance; event.preventDefault(); }
+      });
+      const finishMouse = event => {
+        if (!mouse || mouse.id !== event.pointerId) return;
+        const moved = mouse.moved;
+        mouse = null; track.classList.remove('is-dragging');
+        if (moved) {
+          draggedAt = performance.now();
+          if (track.hasPointerCapture(event.pointerId)) track.releasePointerCapture(event.pointerId);
+          moveTo(nearest());
+        } else schedule();
+      };
+      track.addEventListener('pointerup', finishMouse);
+      track.addEventListener('pointercancel', finishMouse);
+      track.addEventListener('pointerleave', event => { if (mouse && !mouse.moved) finishMouse(event); });
+      track.addEventListener('click', event => {
+        if (performance.now() - draggedAt < 300) { event.preventDefault(); event.stopPropagation(); return; }
+        const option = event.target.closest('.receipt-wheel-option');
+        if (option) moveTo(Number(option.dataset.index));
+      });
+      track.addEventListener('keydown', event => {
+        if (disabled || !['ArrowLeft', 'ArrowRight', 'Home', 'End', 'Enter', ' '].includes(event.key)) return;
+        event.preventDefault(); event.stopPropagation();
+        const index = pendingIndex ?? nearest();
+        if (event.key === 'Home') moveTo(0);
+        else if (event.key === 'End') moveTo(choices.length - 1);
+        else if (event.key === 'ArrowLeft' || event.key === 'ArrowRight') moveTo(index + (event.key === 'ArrowRight' ? 1 : -1));
+        else commit();
+      });
+      wheel.update = (updatedField, options, rawValue) => {
+        currentField = updatedField; disabled = Boolean(updatedField.disabled); current = rawValue;
+        wheel.setAttribute('aria-disabled', String(disabled)); track.setAttribute('aria-disabled', String(disabled));
+        track.tabIndex = disabled ? -1 : 0;
+        previous.setAttribute('aria-label', `${updatedField.label} 이전 항목`);
+        next.setAttribute('aria-label', `${updatedField.label} 다음 항목`);
+        const nextSignature = JSON.stringify(options);
+        if (signature !== nextSignature) {
+          signature = nextSignature; choices = options;
+          track.replaceChildren(...choices.map((choice, index) => {
+            const node = document.createElement('button');
+            node.type = 'button'; node.className = 'receipt-wheel-option'; node.tabIndex = -1;
+            node.id = `receipt-wheel-${field.key}-option-${index}`; node.dataset.index = String(index);
+            node.dataset.value = choice.value; node.dataset.empty = String(choice.value === '');
+            node.dataset.long = String([...choice.label].length > 16);
+            node.textContent = choice.label; node.setAttribute('role', 'option');
+            return node;
+          }));
+        }
+        if (disabled) { clearTimeout(timer); touching = false; mouse = null; track.classList.remove('is-dragging'); }
+        if (!touching && !mouse) align();
+      };
+      new ResizeObserver(align).observe(track);
+      return wheel;
+    }
+    function renderReceiptEditorFields(fields, frameReady, tableUnavailable) {
+      const root = $('receiptEditorGrid');
+      fields.forEach(field => {
+        let wrapper = root.querySelector(`[data-editor-key="${field.key}"]`);
+        if (!wrapper) {
+          wrapper = document.createElement('div'); wrapper.className = 'receipt-editor-field'; wrapper.dataset.editorKey = field.key;
+          const label = document.createElement('label'); label.id = `receipt-label-${field.key}`; label.htmlFor = `receipt-edit-${field.key}`;
+          const select = document.createElement('select'); select.id = `receipt-edit-${field.key}`;
+          select.addEventListener('change', () => setReceiptEditorValue(wrapper.currentField, select.value));
+          const wheel = createReceiptWheel(field);
+          const helper = document.createElement('p'); helper.className = 'receipt-wheel-helper'; helper.hidden = true;
+          helper.id = `receipt-wheel-hint-${field.key}`;
+          wheel.querySelector('.receipt-wheel-track').setAttribute('aria-describedby', helper.id);
+          wrapper.append(label, select, wheel, helper); root.appendChild(wrapper);
+        }
+        wrapper.currentField = field;
+        wrapper.querySelector('label').textContent = field.label;
+        const options = [{ value: '', label: field.required ? '선택해 주세요' : '선택하지 않음' }, ...field.options.map(option => ({ value: String(option.value), label: option.label }))];
+        const select = wrapper.querySelector('select');
+        const signature = JSON.stringify(options);
+        if (select.dataset.options !== signature) {
+          select.dataset.options = signature;
+          select.replaceChildren(...options.map(option => {
+            const node = document.createElement('option'); node.value = option.value; node.textContent = option.label; return node;
+          }));
+        }
+        const raw = state[field.key] == null ? '' : String(state[field.key]);
+        select.value = raw; select.disabled = Boolean(field.disabled); select.classList.toggle('is-empty', raw === '');
+        wrapper.querySelector('.receipt-wheel').update(field, options, raw);
+        const helper = wrapper.querySelector('.receipt-wheel-helper');
+        helper.hidden = !field.disabled;
+        helper.textContent = !state.model ? '제품을 먼저 선택해 주세요.' : field.key === 'table' && frameReady && tableUnavailable ? '이 커플 규격에는 테이블을 설치할 수 없습니다.' : '프레임 규격과 색상을 먼저 선택해 주세요.';
+      });
+    }
+
     function renderReceiptEditor() {
       const root = $('receiptEditorGrid');
-      root.innerHTML = '';
       const frameReady = isFrameComplete();
       const sizeOptions = state.model
         ? SIZE_ORDER.map(value => ({ value, label: value }))
@@ -2040,34 +2260,7 @@ h2, .bed-guide-heading h2 { font-size: clamp(29px, 3.15vw, 42px); line-height: 1
           { value: 'nationwide', label: '강원·경상·전라' },
         ] },
       ];
-      fields.forEach(field => {
-        const wrapper = document.createElement('div');
-        wrapper.className = 'receipt-editor-field';
-        const label = document.createElement('label');
-        label.htmlFor = `receipt-edit-${field.key}`;
-        label.textContent = field.label;
-        const select = document.createElement('select');
-        select.id = `receipt-edit-${field.key}`;
-        select.disabled = Boolean(field.disabled);
-        const empty = document.createElement('option');
-        empty.value = '';
-        empty.textContent = field.required ? '선택해 주세요' : '선택하지 않음';
-        select.appendChild(empty);
-        field.options.forEach(option => {
-          const element = document.createElement('option');
-          element.value = String(option.value);
-          element.textContent = option.label;
-          select.appendChild(element);
-        });
-        select.value = state[field.key] == null ? '' : String(state[field.key]);
-        select.classList.toggle('is-empty', select.value === '');
-        select.addEventListener('change', () => {
-          const value = select.value === '' ? null : field.key === 'moodLights' ? Number(select.value) : select.value;
-          choose(field.key, value);
-        });
-        wrapper.append(label, select);
-        root.appendChild(wrapper);
-      });
+      renderReceiptEditorFields(fields, frameReady, tableUnavailable);
     }
 
     function renderReceipt() {
@@ -2315,7 +2508,7 @@ h2, .bed-guide-heading h2 { font-size: clamp(29px, 3.15vw, 42px); line-height: 1
       if (!/^https:\/\/script\.google\.com\/macros\/s\/.+\/exec(?:\?.*)?$/.test(url)) return;
       const callback = `__motionBedCatalog_${Date.now()}`;
       const script = document.createElement('script'); let settled = false;
-      const finish = () => { if (settled) return; settled = true; delete window[callback]; script.remove(); };
+      const finish = () => { if (settled) return; settled = true; window[callback] = () => {}; script.remove(); };
       const timer = setTimeout(finish, CONFIG.jsonpTimeoutMs);
       window[callback] = payload => { clearTimeout(timer); if (payload?.ok && Array.isArray(payload.items)) { catalog = payload; hasCopiedQuote = false; render(); } finish(); };
       script.onerror = () => { clearTimeout(timer); finish(); };
@@ -2442,12 +2635,12 @@ h2, .bed-guide-heading h2 { font-size: clamp(29px, 3.15vw, 42px); line-height: 1
       $('pageNext').addEventListener('click', () => navigateGuide(1, { focus: true }));
       document.querySelectorAll('[data-quick-quote]').forEach(button => button.addEventListener('click', () => {
         scrollToStep('receipt');
-        requestAnimationFrame(() => $('receipt-edit-model').focus({ preventScroll: true }));
+        requestAnimationFrame(() => (matchMedia('(max-width: 760px)').matches ? $('receipt-wheel-model') : $('receipt-edit-model')).focus({ preventScroll: true }));
       }));
       $('startGuideButton').addEventListener('click', () => scrollToStep('bed-guide'));
       document.addEventListener('keydown', event => {
         if (event.defaultPrevented || event.altKey || event.ctrlKey || event.metaKey || event.shiftKey) return;
-        if (event.target.closest('input, textarea, select, [contenteditable="true"], [role="dialog"]') || $('sheetBackdrop').classList.contains('open')) return;
+        if (event.target.closest('input, textarea, select, .receipt-wheel, [contenteditable="true"], [role="dialog"]') || $('sheetBackdrop').classList.contains('open')) return;
         if (event.key === 'ArrowRight' || event.key === 'ArrowLeft') {
           event.preventDefault(); navigateGuide(event.key === 'ArrowRight' ? 1 : -1, { focus: true });
         }
@@ -2488,7 +2681,7 @@ h2, .bed-guide-heading h2 { font-size: clamp(29px, 3.15vw, 42px); line-height: 1
       let lastWheelPage = 0;
       deck.addEventListener('wheel', event => {
         if (event.ctrlKey || event.metaKey || Math.abs(event.deltaX) < Math.abs(event.deltaY) * 1.5 || Math.abs(event.deltaX) < 2) return;
-        if (event.target.closest('input, select, textarea')) return;
+        if (event.target.closest('input, select, textarea, .receipt-wheel')) return;
         if (event.cancelable) event.preventDefault();
         const now = performance.now();
         if (now - lastWheelTime > 180) horizontalWheel = 0;
