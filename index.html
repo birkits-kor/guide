@@ -674,7 +674,9 @@ p, h1, h2, h3 { word-break: keep-all; overflow-wrap: anywhere; }
 .topbar { flex: none; background: var(--paper); border-bottom: 1px solid var(--line); backdrop-filter: none; z-index: 60; }
 .topbar-inner { height: 68px; }
 .brand { gap: 20px; }
-.brand-wordmark { font-size: 24px; font-weight: 700; letter-spacing: .13em; color: var(--ink); }
+.brand-home { display: inline-flex; align-items: center; flex: 0 0 auto; color: var(--ink); }
+.brand-store-logo { display: block; width: 106px; height: 50px; object-fit: contain; }
+.brand-home:focus-visible { outline: 2px solid var(--accent); outline-offset: 4px; }
 .brand-copy { padding-left: 20px; border-left: 1px solid var(--line); }
 .brand-copy strong { font-size: 14px; font-weight: 500; letter-spacing: -.02em; }
 .brand-copy small { font-size: 10px; font-weight: 400; letter-spacing: .08em; }
@@ -715,6 +717,11 @@ h2, .bed-guide-heading h2 { font-size: clamp(29px, 3.15vw, 42px); line-height: 1
 .guide-product-choice { border: 0; box-shadow: none; background: transparent; margin-top: 0; padding: 0; }
 .guide-product-choice > h3, .guide-product-choice > p:not(.guide-product-status) { display: none; }
 .guide-product-buttons { gap: 25px; }
+.guide-product-card { display: flex; flex-direction: column; min-width: 0; }
+.guide-product-card .guide-product-button { width: 100%; flex: 1; }
+.product-detail-link { display: flex; align-items: center; min-height: 48px; padding: 12px 2px 2px; color: var(--accent-dark); font-size: 15px; text-decoration: underline; text-underline-offset: 4px; }
+.product-detail-link:hover, .receipt-product-detail a:hover { color: var(--ink); }
+.product-detail-link:focus-visible, .receipt-product-detail a:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
 .guide-product-button { position: relative; overflow: hidden; border: 1px solid var(--line); border-radius: 5px; padding: 0 0 25px; background: white; color: var(--ink); box-shadow: none; }
 .product-choice-image { display: block; width: 100%; height: clamp(200px, 25vh, 320px); object-fit: contain; background: #f6f4ef; margin-bottom: 22px; }
 .guide-product-button strong, .guide-product-button span, .guide-product-button small { margin-inline: 25px; }
@@ -763,6 +770,8 @@ h2, .bed-guide-heading h2 { font-size: clamp(29px, 3.15vw, 42px); line-height: 1
 .receipt-edit-panel { border: 0; border-radius: 0; padding: 0 0 28px; background: transparent; }
 .receipt-edit-panel h3 { font-size: 22px; font-weight: 500; }
 .receipt-edit-panel p { font-size: 15px; }
+.receipt-edit-panel .receipt-product-detail { margin: 16px 0 0; }
+.receipt-product-detail a { display: inline-flex; align-items: center; min-height: 44px; color: var(--accent-dark); text-decoration: underline; text-underline-offset: 4px; }
 .receipt-editor-grid { display: grid; grid-template-columns: repeat(3,minmax(0,1fr)); gap: 16px; }
 .receipt-editor-field { min-width: 0; }
 .receipt-editor-field label { font-size: 14px; font-weight: 500; }
@@ -807,7 +816,7 @@ h2, .bed-guide-heading h2 { font-size: clamp(29px, 3.15vw, 42px); line-height: 1
 @media (max-width: 760px) {
   .container { width: calc(100% - 36px); }
   .topbar-inner { height: 58px; }
-  .brand-wordmark { font-size: 20px; letter-spacing: .1em; }
+  .brand-store-logo { width: 88px; height: 42px; }
   .brand-copy { display: none; }
   .header-total { display: none; }
   .header-quick { font-size: 13px; padding: 8px 12px; min-height: 37px; }
@@ -923,7 +932,7 @@ h2, .bed-guide-heading h2 { font-size: clamp(29px, 3.15vw, 42px); line-height: 1
 <body>
   <header class="topbar">
     <div class="container topbar-inner">
-      <div class="brand"><span class="brand-wordmark">BIRKITS</span><span class="brand-copy"><strong>내 침대를 만드는 시간</strong><small>OFFICIAL PURCHASE GUIDE</small></span></div>
+      <div class="brand"><a class="brand-home" href="https://birkits.com/" aria-label="버킷츠 메인으로"><img class="brand-store-logo" src="assets/birkits-store-logo.svg" width="106" height="50" alt="버킷츠"></a><span class="brand-copy"><strong>내 침대를 만드는 시간</strong><small>OFFICIAL PURCHASE GUIDE</small></span></div>
       <div class="header-actions"><div class="header-total" id="headerTotal">내게 맞는 구성을 찾아보세요</div><button class="header-quick" type="button" data-quick-quote>빠른 견적 ↗</button></div>
     </div>
   </header>
@@ -1026,6 +1035,7 @@ h2, .bed-guide-heading h2 { font-size: clamp(29px, 3.15vw, 42px); line-height: 1
         <h3>선택한 사양</h3>
         <p><span class="receipt-desktop-help">제품·규격·색상을 고른 뒤 필요한 옵션만 더하세요. 이곳에서 모든 구성을 바로 변경할 수 있습니다.</span><span class="receipt-mobile-help">좌우로 돌려 가운데 항목을 선택하세요.<br>필요 없는 옵션은 ‘선택하지 않음’으로 빼실 수 있습니다.</span></p>
         <div class="receipt-editor-grid" id="receiptEditorGrid"></div>
+        <p class="receipt-product-detail" id="receiptProductDetailRow" hidden><a id="receiptProductDetail" href="https://birkits.com/"></a></p>
       </div>
       <h3 class="receipt-price-heading">가격 내역</h3>
       <div id="receiptLines"></div>
@@ -1102,6 +1112,10 @@ h2, .bed-guide-heading h2 { font-size: clamp(29px, 3.15vw, 42px); line-height: 1
     const UNIT_SIZE_LABEL = Object.freeze({ S: '싱글', SS: '슈퍼싱글', Q: '퀸' });
     const SINGLE_MATTRESS_WIDTHS = Object.freeze({ S: 90, SS: 110, Q: 150 });
     const MODEL_LABEL = { mabed: '마베드', shuve: '슈브' };
+    const PRODUCT_DETAIL_URL = {
+      mabed: 'https://birkits.com/product/detail.html?product_no=48',
+      shuve: 'https://birkits.com/product/detail.html?product_no=49',
+    };
     const STEP_TEXT = {
       1: '1 / 7 · 가이드·제품',
       2: '2 / 7 · 프레임',
@@ -1790,7 +1804,14 @@ h2, .bed-guide-heading h2 { font-size: clamp(29px, 3.15vw, 42px); line-height: 1
           if (state.model !== product.value) choose('model', product.value);
           else render();
         });
-        productRoot.appendChild(button);
+        const card = document.createElement('div');
+        card.className = 'guide-product-card';
+        const detail = document.createElement('a');
+        detail.className = 'product-detail-link';
+        detail.href = PRODUCT_DETAIL_URL[product.value];
+        detail.textContent = `${MODEL_LABEL[product.value]} 상세페이지 보기 →`;
+        card.append(button, detail);
+        productRoot.appendChild(card);
       });
       $('guideProductStatus').textContent = state.model
         ? `선택한 침대 · ${MODEL_LABEL[state.model]}`
@@ -2268,6 +2289,11 @@ h2, .bed-guide-heading h2 { font-size: clamp(29px, 3.15vw, 42px); line-height: 1
       const total = lines.reduce((sum, line) => sum + Number(line.price || 0), 0);
       const ready = isFrameComplete();
       renderReceiptEditor();
+      $('receiptProductDetailRow').hidden = !state.model;
+      if (state.model) {
+        $('receiptProductDetail').href = PRODUCT_DETAIL_URL[state.model];
+        $('receiptProductDetail').textContent = `${MODEL_LABEL[state.model]} 상세페이지 보기 →`;
+      }
       $('copyButton').disabled = !ready;
       $('imageSaveButton').disabled = !ready;
       $('talkButton').disabled = !ready || !hasCopiedQuote;
