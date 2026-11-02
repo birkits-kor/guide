@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <meta name="description" content="버킷츠 모션베드의 구조와 옵션을 사진으로 알아보고 내 침대 구성과 예상 견적을 직접 확인하는 공식 구매 가이드입니다.">
-  <meta name="theme-color" content="#ffffff">
+  <meta name="theme-color" content="#fcfbf8">
   <link rel="icon" href="assets/birkits-logo.jpg">
   <title>버킷츠 구매 가이드</title>
   <style>
@@ -653,46 +653,272 @@
       .receipt { border: 0; box-shadow: none; margin: 0; padding: 0; }
       .receipt::before { content: "모션베드 예상 견적서"; display: block; margin-bottom: 24px; font-size: 29px; font-weight: 900; }
     }
+  
+/* BIRKITS purchase guide — shared tone with the store and company introduction. */
+@font-face { font-family: Pretendard; src: url('assets/Pretendard-Regular.otf'); font-weight: 400; font-display: swap; }
+@font-face { font-family: Pretendard; src: url('assets/Pretendard-Medium.otf'); font-weight: 500 600; font-display: swap; }
+@font-face { font-family: Pretendard; src: url('assets/Pretendard-Bold.otf'); font-weight: 700 900; font-display: swap; }
+:root {
+  --ink: #24231f; --muted: #756f65; --faint: #958d81; --line: #dedbd3;
+  --paper: #fcfbf8; --canvas: #fcfbf8; --accent: #78634b; --accent-dark: #514330;
+  --accent-soft: #f0ece4; --warm: #78634b; --warm-soft: #f0ece4;
+  --radius: 8px; --shadow: none; --bar-height: 132px;
+}
+html { height: 100%; overflow: hidden; scroll-behavior: auto; }
+body { height: 100%; height: 100dvh; display: flex; flex-direction: column; overflow: hidden; padding: 0; background: var(--paper); font-size: 18px; font-weight: 400; }
+button, a, input, select, textarea { -webkit-tap-highlight-color: transparent; }
+button { touch-action: manipulation; }
+[hidden] { display: none !important; }
+p, h1, h2, h3 { word-break: keep-all; overflow-wrap: anywhere; }
+.container { width: min(1240px, calc(100% - 64px)); }
+.topbar { flex: none; background: var(--paper); border-bottom: 1px solid var(--line); backdrop-filter: none; z-index: 60; }
+.topbar-inner { height: 68px; }
+.brand { gap: 20px; }
+.brand-wordmark { font-size: 24px; font-weight: 700; letter-spacing: .13em; color: var(--ink); }
+.brand-copy { padding-left: 20px; border-left: 1px solid var(--line); }
+.brand-copy strong { font-size: 14px; font-weight: 500; letter-spacing: -.02em; }
+.brand-copy small { font-size: 10px; font-weight: 400; letter-spacing: .08em; }
+.header-actions { display: flex; align-items: center; gap: 22px; }
+.header-total { font-size: 13px; font-weight: 500; }
+.header-quick { padding: 10px 16px; border: 1px solid var(--accent); border-radius: 4px; color: var(--accent-dark); background: transparent; cursor: pointer; font-size: 14px; }
+.chapter-bar { flex: none; position: relative; padding: 0; border: 0; border-bottom: 1px solid var(--line); border-radius: 0; background: var(--paper); box-shadow: none; margin: 0; top: auto; z-index: 5; }
+.chapter-tabs { display: flex; gap: 25px; overflow-x: auto; scrollbar-width: none; margin-inline: auto; }
+.chapter-tabs::-webkit-scrollbar { display: none; }
+.chapter-tab { flex: 0 0 auto; min-height: 46px; border: 0; border-bottom: 2px solid transparent; padding: 10px 0; background: transparent; font-size: 13px; color: var(--muted); cursor: pointer; white-space: nowrap; }
+.chapter-tab span { margin-right: 7px; color: var(--faint); font-size: 10px; }
+.chapter-tab[aria-current="step"] { color: var(--ink); border-bottom-color: var(--accent); font-weight: 700; }
+.chapter-tabs .chapter-tab:last-child { margin-left: auto; }
+.progress-track { position: absolute; height: 2px; left: 0; right: 0; bottom: -1px; border-radius: 0; background: transparent; pointer-events: none; }
+.progress-fill { background: #c1b39c; border-radius: 0; opacity: .7; }
+.progress-copy { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); }
+main.guide-deck { position: relative; flex: 1; min-height: 0; width: 100%; overflow: hidden; margin: 0; }
+.guide-page { display: none; height: 100%; width: 100%; overflow-y: auto; overflow-x: hidden; overscroll-behavior: contain; touch-action: pan-y pinch-zoom; padding: 42px max(32px, calc((100vw - 1120px) / 2)) 50px; margin: 0; border: 0; border-radius: 0; background: var(--paper); box-shadow: none; scroll-behavior: smooth; scroll-padding-top: 24px; }
+.guide-page.is-active { display: block; animation: page-reveal .22s ease-out; }
+@keyframes page-reveal { from { opacity: .4; transform: translateX(12px); } to { opacity: 1; transform: none; } }
+.cover-page.is-active { display: grid; grid-template-columns: .95fr 1.05fr; align-items: center; gap: 60px; }
+.cover-copy { padding: 16px 0; }
+.cover-copy .eyebrow { margin-bottom: 27px; font-size: 11px; letter-spacing: .16em; color: var(--accent); font-weight: 500; }
+.cover-copy h1 { font-size: clamp(35px, 3.65vw, 54px); line-height: 1.27; font-weight: 500; letter-spacing: -.065em; }
+.cover-description { max-width: 420px; margin: 25px 0 30px; color: var(--muted); font-size: 17px; line-height: 1.8; }
+.cover-actions { display: flex; flex-wrap: wrap; gap: 10px; }
+.cover-start, .cover-quick { min-height: 49px; padding: 13px 20px; border: 1px solid var(--ink); border-radius: 3px; font-size: 15px; cursor: pointer; }
+.cover-start { color: white; background: var(--ink); }
+.cover-quick { background: transparent; color: var(--ink); }
+.cover-help { margin: 23px 0 0; color: var(--faint); font-size: 12px; line-height: 1.8; }
+.cover-image { width: 100%; height: min(57vh, 560px); min-height: 330px; object-fit: cover; object-position: center 62%; }
+.cover-photo-note { margin: 9px 0 0; color: var(--faint); font-size: 11px; letter-spacing: .04em; }
+.step-head { margin-bottom: 31px; }
+.step-number { margin-bottom: 12px; font-size: 11px; font-weight: 500; letter-spacing: .12em; color: var(--accent); }
+h2, .bed-guide-heading h2 { font-size: clamp(29px, 3.15vw, 42px); line-height: 1.3; font-weight: 500; letter-spacing: -.055em; }
+.step-help { max-width: 770px; margin-top: 15px; font-size: 17px; font-weight: 400; line-height: 1.75; }
+.page-scroll-hint { color: var(--faint); font-size: 12px; margin: 22px 0 0; }
+.guide-product-choice { border: 0; box-shadow: none; background: transparent; margin-top: 0; padding: 0; }
+.guide-product-choice > h3, .guide-product-choice > p:not(.guide-product-status) { display: none; }
+.guide-product-buttons { gap: 25px; }
+.guide-product-button { position: relative; overflow: hidden; border: 1px solid var(--line); border-radius: 5px; padding: 0 0 25px; background: white; color: var(--ink); box-shadow: none; }
+.product-choice-image { display: block; width: 100%; height: clamp(200px, 25vh, 320px); object-fit: contain; background: #f6f4ef; margin-bottom: 22px; }
+.guide-product-button strong, .guide-product-button span, .guide-product-button small { margin-inline: 25px; }
+.guide-product-button strong { font-size: 28px; font-weight: 500; letter-spacing: -.04em; }
+.guide-product-button span { font-size: 16px; font-weight: 400; margin-top: 7px; }
+.guide-product-button small { font-size: 15px; font-weight: 400; line-height: 1.75; margin-top: 14px; }
+.guide-product-button.selected { border-color: var(--accent); background: var(--accent-soft); color: var(--ink); box-shadow: inset 0 0 0 1px var(--accent); }
+.guide-product-button.selected span, .guide-product-button.selected small { color: var(--muted); }
+.guide-product-status { font-size: 15px; font-weight: 500; text-align: left; margin-top: 22px; }
+.next-row { margin-top: 25px; }
+.next-button { min-height: 49px; font-size: 16px; font-weight: 500; border-radius: 4px; }
+.chapter-visual { display: grid; grid-template-columns: 1fr 1fr; gap: 30px; align-items: center; margin: 0 0 38px; background: #f4f1eb; }
+.chapter-visual img { width: 100%; max-height: 290px; object-fit: contain; mix-blend-mode: multiply; }
+.chapter-visual figcaption { padding: 28px; }
+.chapter-visual figcaption strong { font-size: 24px; font-weight: 500; }
+.chapter-visual figcaption p { font-size: 16px; color: var(--muted); line-height: 1.75; margin-bottom: 0; }
+.subhead { margin-top: 28px; font-size: 18px; font-weight: 500; }
+.compact-choice { border-radius: 4px; font-size: 16px; font-weight: 500; background: white; }
+.compact-choice small { font-size: 13px; font-weight: 400; }
+.size-picker-panel, .couple-size-side, .size-visual, .finish-selection-visual { border-radius: 5px; background: white; }
+.size-picker-title { font-size: 17px; font-weight: 500; }
+.finish-selection-visual img, .size-visual img { max-height: 450px; border-radius: 0; }
+.finish-reselect-button { border: 1px solid var(--line); border-radius: 4px; font-size: 16px; font-weight: 500; }
+.frame-requirement { border-radius: 4px; font-size: 16px; }
+.option-grid, .option-grid.three { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 25px; overflow: visible; scroll-snap-type: none; padding: 0; }
+.option-grid .option-card { width: auto; flex: none; margin: 0; border-radius: 5px; box-shadow: none; }
+.option-card:hover { transform: none; box-shadow: none; border-color: #b6aa98; }
+.option-card.selected { background: #f5f2ec; box-shadow: inset 0 0 0 1px var(--accent); }
+.option-card.selected::after { width: 24px; height: 24px; top: 18px; right: 18px; font-size: 14px; }
+.option-select { min-height: 140px; padding: 25px 24px 16px; }
+.option-name { font-size: 23px; font-weight: 500; }
+.option-summary { font-size: 16px; font-weight: 400; min-height: 0; }
+.option-price { font-size: 19px; font-weight: 500; }
+.option-tag { font-size: 12px; font-weight: 500; border-radius: 3px; padding: 4px 8px; }
+.option-card-action { border-width: 1px; border-color: var(--line); border-radius: 3px; font-size: 16px; font-weight: 500; margin-top: 15px; min-height: 44px; }
+.option-explainer { margin: 0 24px 23px; font-size: 16px; font-weight: 400; }
+.option-explainer h3 { font-weight: 500; }
+.option-explainer .component-photo, .visual-badge { border-radius: 3px; }
+.visual-badge { font-size: 12px; font-weight: 500; }
+.carousel-controls { display: none !important; }
+.skip-button { min-height: 48px; margin-top: 10px; font-size: 16px; border-radius: 4px; background: transparent; font-weight: 500; }
+#step-delivery .option-grid { grid-template-columns: repeat(3, minmax(0,1fr)); }
+#step-delivery .option-name { font-size: 21px; line-height: 1.6; }
+.receipt-head { padding-bottom: 27px; border-bottom: 1px solid var(--line); margin-bottom: 28px; }
+.receipt-date { font-size: 13px; }
+.receipt-edit-panel { border: 0; border-radius: 0; padding: 0 0 28px; background: transparent; }
+.receipt-edit-panel h3 { font-size: 22px; font-weight: 500; }
+.receipt-edit-panel p { font-size: 15px; }
+.receipt-editor-grid { display: grid; grid-template-columns: repeat(3,minmax(0,1fr)); gap: 16px; }
+.receipt-editor-field { min-width: 0; }
+.receipt-editor-field label { font-size: 14px; font-weight: 500; }
+.receipt-editor-field select { width: 100%; min-width: 0; min-height: 48px; padding: 10px 30px 10px 12px; border-radius: 4px; font-size: 16px; font-weight: 400; background-color: white; }
+.receipt-price-heading { font-size: 22px; font-weight: 500; margin-top: 10px; }
+.receipt-line { padding: 20px 0; gap: 20px; }
+.receipt-line strong { font-size: 18px; font-weight: 500; }
+.receipt-line small { font-size: 14px; }
+.receipt-price { font-size: 18px; font-weight: 500; white-space: nowrap; }
+.receipt-total { border-radius: 0; border-top: 1px solid var(--ink); padding: 23px 0; background: transparent; }
+.receipt-total span { font-size: 18px; font-weight: 500; }
+.receipt-total strong { font-size: 34px; font-weight: 500; }
+.receipt-dimensions { border-radius: 4px; font-size: 15px; font-weight: 400; }
+.receipt-button, .account-copy-button, .address-search-button { border-radius: 4px; font-weight: 500; font-size: 16px; }
+.consultation-guide { background: var(--accent-soft); color: var(--accent-dark); border-radius: 4px; }
+.receipt-button.phone { color: var(--accent-dark); border-color: #c8bdac; background: white; }
+.account-copy-card { border-radius: 4px; }
+.field input, .field textarea { border-radius: 4px; font-size: 16px; }
+.quick-nav { display: none; }
+.fixed-quote-bar { position: relative; flex: none; width: 100%; background: var(--paper); border-top: 1px solid var(--line); box-shadow: 0 -6px 20px #24231f04; padding: 0 0 env(safe-area-inset-bottom); z-index: 60; }
+.deck-navigation { display: flex; align-items: center; justify-content: space-between; gap: 20px; height: 58px; border-bottom: 1px solid var(--line); }
+.deck-navigation button { min-width: 116px; min-height: 40px; padding: 8px 14px; border: 1px solid var(--line); border-radius: 4px; background: transparent; font-size: 14px; cursor: pointer; }
+.deck-navigation .page-next { color: white; border-color: var(--ink); background: var(--ink); }
+.deck-navigation button:disabled { opacity: .28; cursor: default; }
+.deck-position { text-align: center; }
+.deck-position strong { display: block; font-size: 13px; font-weight: 500; }
+.deck-position small { font-size: 10px; color: var(--faint); }
+.quote-bar-inner { width: min(1240px, calc(100% - 64px)); min-height: 66px; gap: 20px; padding: 9px 0; }
+.bar-summary { display: grid; grid-template-columns: minmax(0,1fr) auto; align-items: center; gap: 15px; width: 100%; }
+.selected-chips { display: flex; flex-wrap: nowrap; overflow-x: auto; gap: 4px; scrollbar-width: none; }
+.selected-chip { flex: 0 0 auto; border: 0; background: transparent; padding: 5px 7px; font-size: 12px; font-weight: 400; border-radius: 3px; }
+.selected-plus { font-size: 12px; }
+.selected-empty { font-size: 13px; color: var(--muted); }
+.bar-summary > strong { font-size: 21px; font-weight: 500; white-space: nowrap; }
+.bar-dimension { display: none; }
+.bar-open-hint { flex: 0 0 auto; font-size: 12px; color: var(--accent); }
+.quote-bar-inner .bar-open-hint { border-radius: 4px; border-color: var(--line); font-weight: 500; }
+.bottom-sheet { border-radius: 8px 8px 0 0; background: var(--paper); }
+.sheet-backdrop.open { z-index: 100; }
+.toast { z-index: 130; bottom: 145px; border-radius: 4px; font-size: 14px; }
+@media (min-width: 1500px) { .cover-page { padding-inline: max(60px, calc((100vw - 1240px) / 2)); } }
+@media (max-width: 760px) {
+  .container { width: calc(100% - 36px); }
+  .topbar-inner { height: 58px; }
+  .brand-wordmark { font-size: 20px; letter-spacing: .1em; }
+  .brand-copy { display: none; }
+  .header-total { display: none; }
+  .header-quick { font-size: 13px; padding: 8px 12px; min-height: 37px; }
+  .chapter-tabs { gap: 20px; width: 100%; padding: 0 18px; }
+  .chapter-tab { min-height: 42px; font-size: 12px; }
+  .chapter-tab span { font-size: 9px; margin-right: 5px; }
+  .guide-page { padding: 28px 20px 38px; }
+  .cover-page.is-active { grid-template-columns: 1fr; gap: 0; align-content: start; padding: 0; }
+  .cover-copy { grid-row: 2; padding: 25px 24px 32px; }
+  .cover-copy .eyebrow { margin: 0 0 15px; font-size: 10px; }
+  .cover-copy h1 { font-size: clamp(31px, 8.7vw, 42px); line-height: 1.3; }
+  .cover-description { margin: 17px 0 22px; font-size: 16px; line-height: 1.7; }
+  .cover-figure { margin: 0; }
+  .cover-image { height: min(39vh, 320px); min-height: 210px; width: 100%; object-position: center 65%; }
+  .cover-photo-note { display: none; }
+  .cover-actions { flex-wrap: nowrap; gap: 8px; }
+  .cover-start, .cover-quick { flex: 1; padding: 12px 8px; font-size: 15px; }
+  .cover-help { margin-top: 17px; font-size: 11px; }
+  .step-head { margin-bottom: 26px; }
+  .step-number { font-size: 10px; margin-bottom: 11px; }
+  h2, .bed-guide-heading h2 { font-size: 29px; }
+  .step-help { font-size: 17px; margin-top: 13px; }
+  .guide-product-buttons { grid-template-columns: 1fr; gap: 20px; }
+  .product-choice-image { height: 230px; }
+  .guide-product-button strong { font-size: 27px; }
+  .guide-product-button span { font-size: 17px; }
+  .guide-product-button small { font-size: 16px; }
+  .chapter-visual { grid-template-columns: 1fr; gap: 0; margin-bottom: 28px; }
+  .chapter-visual img { max-height: 240px; }
+  .chapter-visual figcaption { padding: 8px 22px 24px; }
+  .chapter-visual figcaption strong { font-size: 22px; }
+  .chapter-visual figcaption p { font-size: 17px; }
+  .compact-choice { min-width: 95px; font-size: 17px; }
+  .couple-size-pickers { grid-template-columns: 1fr; }
+  .couple-size-side .compact-choice { min-width: 0; }
+  .option-grid, .option-grid.three, #step-delivery .option-grid { display: grid; grid-template-columns: 1fr; gap: 22px; overflow: visible; }
+  .option-grid[data-carousel] .option-card { flex: none; width: auto; min-width: 0; }
+  .option-select { padding: 24px 22px 16px; }
+  .option-name { font-size: 24px; }
+  .option-summary, .option-explainer { font-size: 17px; }
+  .option-price { font-size: 20px; }
+  .option-card-action { font-size: 17px; }
+  .option-explainer { margin: 0 22px 24px; }
+  .option-explainer .component-photo.catalog.compact { height: auto; min-height: 0; }
+  .option-explainer .component-photo img { max-height: 380px; }
+  .receipt-head { display: block; }
+  .receipt-date { display: block; margin-top: 13px; }
+  .receipt-editor-grid { grid-template-columns: repeat(2,minmax(0,1fr)); gap: 14px 10px; }
+  .receipt-editor-field label { font-size: 14px; }
+  .receipt-editor-field select { font-size: 16px; padding-left: 10px; }
+  .receipt-line { gap: 15px; }
+  .receipt-line strong { font-size: 17px; }
+  .receipt-line small { font-size: 14px; }
+  .receipt-price { font-size: 17px; }
+  .receipt-total strong { font-size: 31px; }
+  .receipt-actions { grid-template-columns: repeat(2,minmax(0,1fr)); }
+  .receipt-actions .phone { grid-column: auto; }
+  .receipt-button { font-size: 16px; }
+  .customer-grid { grid-template-columns: 1fr; }
+  .deck-navigation { height: 54px; gap: 10px; }
+  .deck-navigation button { min-width: 74px; padding: 8px 11px; font-size: 13px; }
+  .deck-position strong { font-size: 11px; }
+  .deck-position small { font-size: 9px; }
+  .quote-bar-inner { width: calc(100% - 36px); min-height: 61px; gap: 10px; }
+  .bar-summary { gap: 6px; }
+  .bar-summary > strong { font-size: 18px; }
+  .selected-chip { font-size: 11px; padding-inline: 3px; }
+  .selected-empty { font-size: 12px; }
+  .bar-open-hint { font-size: 10px; }
+  .toast { bottom: 128px; }
+}
+@media (max-width: 350px) { .guide-page { padding-inline: 16px; } .receipt-editor-grid { grid-template-columns: 1fr; } .cover-copy { padding-inline: 20px; } .bar-summary > strong { font-size: 16px; } }
+@media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation: none !important; scroll-behavior: auto !important; transition: none !important; } }
+@media print {
+  html, body, main.guide-deck { height: auto; overflow: visible; display: block; }
+  .topbar, .chapter-bar, .fixed-quote-bar, .guide-page:not(#receipt), .quick-nav { display: none !important; }
+  #receipt { display: block !important; height: auto; overflow: visible; padding: 0; }
+}
+
   </style>
 </head>
 <body>
   <header class="topbar">
     <div class="container topbar-inner">
-      <div class="brand"><img class="brand-logo" src="assets/birkits-logo.jpg" alt="버킷츠 로고"><span class="brand-copy"><strong>버킷츠 구매 가이드</strong><small>공식 모션베드 안내</small></span></div>
-      <div class="header-total" id="headerTotal">천천히 하나씩 살펴보세요</div>
+      <div class="brand"><span class="brand-wordmark">BIRKITS</span><span class="brand-copy"><strong>내 침대를 만드는 시간</strong><small>OFFICIAL PURCHASE GUIDE</small></span></div>
+      <div class="header-actions"><div class="header-total" id="headerTotal">내게 맞는 구성을 찾아보세요</div><button class="header-quick" type="button" data-quick-quote>빠른 견적 ↗</button></div>
     </div>
   </header>
-
-  <main class="container">
-    <section class="hero">
-      <div class="hero-copy">
-        <p class="eyebrow">버킷츠 공식 구매 가이드</p>
-        <h1>침대가 달라지면,<br>하루의 끝이 달라집니다.</h1>
-      </div>
-    </section>
-
-    <div class="progress-panel" aria-live="polite">
+    <div class="progress-panel chapter-bar" aria-live="polite">
+      <nav class="chapter-tabs container" id="chapterTabs" aria-label="가이드 목차"></nav>
       <div class="progress-copy"><strong id="progressText">1 / 7 · 가이드·제품</strong></div>
       <div class="progress-track"><span class="progress-fill" id="progressFill"></span></div>
     </div>
 
-    <section class="bed-guide" id="bed-guide" data-step="1">
-      <div class="section-purpose">
-        <span class="section-purpose-number">01</span>
-        <div><strong>침대의 구성을 알아보고 제품을 선택하세요</strong></div>
+  <main class="guide-deck" id="guideDeck" aria-label="버킷츠 구매 가이드">
+    <section class="guide-page cover-page is-active" id="cover" aria-label="구매 가이드 첫 화면">
+      <div class="cover-copy">
+        <p class="eyebrow">BIRKITS · MAKE YOUR OWN COMFORT</p>
+        <h1>내 생활에 맞는 침대,<br>하나씩 골라보세요.</h1>
+        <p class="cover-description">프레임에서 매트리스, 테이블과 조명까지.<br>사진으로 살펴보고, 필요한 것만 더하세요.<br>마지막 장에서 내 침대의 견적이 완성됩니다.</p>
+        <div class="cover-actions"><button class="cover-start" id="startGuideButton" type="button">차근차근 살펴보기 →</button><button class="cover-quick" id="quickQuoteButton" type="button" data-quick-quote>빠른 견적 ↗</button></div>
+        <p class="cover-help">설명은 아래로 읽고, 오른쪽으로 쓸어 다음 장으로 이동하세요.<br>구성이 정해져 있다면 ‘빠른 견적’에서 바로 선택할 수 있습니다.</p>
       </div>
-      <div class="bed-guide-heading">
-        <p class="eyebrow">MY BED 01 · 가이드와 제품 선택</p>
-        <h2>침대의 각 부분을 사진으로 알아보세요.</h2>
-        <p>보고 싶은 제품의 가이드를 선택하고, 프레임부터 무드등까지 위에서 아래로 천천히 살펴보세요.</p>
-        <div class="guide-model-tabs" id="guideModelTabs" aria-label="가이드로 볼 제품 선택">
-          <button class="guide-model-tab selected" type="button" data-guide-model="mabed" aria-pressed="true">마베드 가이드</button>
-          <button class="guide-model-tab" type="button" data-guide-model="shuve" aria-pressed="false">슈브 가이드</button>
-          <button class="guide-skip-button" id="guideSkipButton" type="button" aria-label="가이드를 건너뛰고 제품 선택으로 이동">가이드 건너뛰기</button>
-        </div>
-      </div>
-      <div class="guide-list" id="guideList"></div>
-      <button class="guide-review-button" id="guideReviewButton" type="button">↑ 가이드 처음부터 다시 보기</button>
+      <figure class="cover-figure"><img class="cover-image" src="assets/guide-cover.jpg" alt="화이트 마베드와 테이블, 헤드와 협탁으로 구성한 침실"><figcaption class="cover-photo-note">MA BED · WHITE</figcaption></figure>
+    </section>
+
+
+
+    <section class="bed-guide guide-page" id="bed-guide" hidden data-step="1">
+      <div class="step-head"><div><span class="step-number">01 · CHOOSE YOUR BED</span><h2>어떤 편안함이 어울리시나요?</h2><p class="step-help">단정한 우드의 마베드, 포근한 패브릭의 슈브.<br>침실과 생활에 어울리는 제품을 선택해 주세요.</p></div></div>
+      <div id="guideModelTabs" hidden><button data-guide-model="mabed" type="button">마베드</button><button data-guide-model="shuve" type="button">슈브</button><button id="guideSkipButton" type="button">제품 선택</button></div><div id="guideList" hidden></div><button id="guideReviewButton" type="button" hidden>제품 다시 보기</button>
       <div class="guide-product-choice" id="guideProductChoice">
         <h3>이제 구성할 침대를 선택해 주세요.</h3>
         <p>가이드에서 살펴본 제품 중 실제 견적에 담을 침대를 선택합니다.</p>
@@ -702,8 +928,9 @@
       <div class="next-row"><button class="next-button full-width" id="guideNextButton" type="button" data-next="step-frame" disabled>다음 · 프레임 선택</button></div>
     </section>
 
-    <section class="step-section" id="step-frame" data-step="2">
+    <section class="step-section guide-page" hidden id="step-frame" data-step="2">
       <div class="step-head"><div><span class="step-number">MY BED 02 · 프레임 선택</span><h2>색상과 사이즈를 골라보세요.</h2><p class="step-help">원하는 컬러·패브릭을 먼저 살펴본 뒤, 사용할 인원과 침실 크기에 맞는 규격을 선택해 주세요.</p></div></div>
+      <div id="frameChapterIntro"></div>
       <div class="subhead" id="finishSubhead">컬러 · 패브릭</div>
       <div class="compact-grid" id="finishChoices"></div>
       <div class="finish-selection-visual" id="finishSelectionVisual" hidden></div>
@@ -728,43 +955,45 @@
       </div>
       <div class="size-visual" id="sizeSelectionVisual" hidden></div>
       <button class="frame-requirement" id="frameRequirement" type="button">제품·사이즈·컬러를 선택하면 정확한 프레임 가격이 계산됩니다.</button>
+      <div class="next-row"><button class="next-button full-width" type="button" data-next="step-mattress">다음 · 매트리스 →</button></div>
     </section>
 
-    <section class="step-section" id="step-mattress" data-step="3">
+    <section class="step-section guide-page" hidden id="step-mattress" data-step="3">
       <div class="step-head"><div><span class="step-number">MY BED 03 · 매트리스 선택</span><h2>몸이 닿는 느낌을 골라보세요.</h2><p class="step-help">균형 잡힌 스프링, 탄탄한 하드, 푹신한 미디움 중 편안한 사용감을 선택해 주세요.</p></div></div>
-      <div class="option-grid" id="mattressChoices" data-carousel="true"></div>
+      <div class="option-grid" id="mattressChoices" data-carousel="false"></div>
       <div class="skip-row"><button class="skip-button" type="button" data-skip-key="mattress" data-skip-next="step-head">선택하지 않고 다음으로</button></div>
     </section>
 
-    <section class="step-section" id="step-head" data-step="4">
+    <section class="step-section guide-page" hidden id="step-head" data-step="4">
       <div class="step-head"><div><span class="step-number">MY BED 04 · 헤드·협탁 선택</span><h2>기대고, 가까이 두는 편안함</h2><p class="step-help">헤드는 편안하게 기대도록 돕고, 협탁은 자주 쓰는 물건을 손이 닿는 곳에 둡니다.</p></div></div>
-      <div class="option-grid" id="headChoices" data-carousel="true"></div>
+      <div class="option-grid" id="headChoices" data-carousel="false"></div>
       <div class="skip-row"><button class="skip-button" type="button" data-skip-key="headConfig" data-skip-next="step-table">선택하지 않고 다음으로</button></div>
     </section>
 
-    <section class="step-section" id="step-table" data-step="5">
+    <section class="step-section guide-page" hidden id="step-table" data-step="5">
       <div class="step-head"><div><span class="step-number">MY BED 05 · 테이블 선택</span><h2>침대 위 시간을 더 편하게</h2><p class="step-help">식사·독서·노트북 사용에 맞춰 수동형과 자동형 중 선택해 주세요.</p></div></div>
-      <div class="option-grid three" id="tableChoices" data-carousel="true"></div>
+      <div class="option-grid three" id="tableChoices" data-carousel="false"></div>
       <p class="availability-note" id="tableAvailabilityNote" hidden></p>
       <div class="skip-row"><button class="skip-button" type="button" data-skip-key="table" data-skip-next="step-light">선택하지 않고 다음으로</button></div>
     </section>
 
-    <section class="step-section" id="step-light" data-step="6">
+    <section class="step-section guide-page" hidden id="step-light" data-step="6">
       <div class="step-head"><div><span class="step-number">MY BED 06 · 무드등 선택</span><h2>밤에도 발밑을 부드럽게</h2><p class="step-help">인체감지 조명이 움직임을 알아차리고 프레임 아래 바닥을 밝혀줍니다.</p></div></div>
-      <div class="option-grid three" id="lightChoices" data-carousel="true"></div>
+      <div class="option-grid three" id="lightChoices" data-carousel="false"></div>
       <div class="skip-row"><button class="skip-button" type="button" data-skip-key="moodLights" data-skip-next="step-delivery">선택하지 않고 다음으로</button></div>
     </section>
 
-    <section class="step-section" id="step-delivery" data-step="7">
+    <section class="step-section guide-page" hidden id="step-delivery" data-step="7">
       <div class="step-head"><div><span class="step-number">MY BED 07 · 배송지역 선택</span><h2>설치 지역을 알려주세요.</h2><p class="step-help">선택한 구성에 지역별 배송비를 더해 예상 금액을 안내합니다.</p></div></div>
       <div class="option-grid" id="deliveryChoices"></div>
+      <div class="next-row"><button class="next-button full-width" type="button" data-next="receipt">다음 · 최종 견적 →</button></div>
     </section>
 
-    <section class="receipt" id="receipt">
+    <section class="receipt guide-page" id="receipt" hidden>
       <div class="receipt-head"><div><span class="step-number">MY BED SUMMARY</span><h2 id="receiptTitle">내가 고른 침대 구성</h2></div><span class="receipt-date" id="receiptDate"></span></div>
       <div class="receipt-edit-panel">
         <h3>선택한 사양</h3>
-        <p>아래 목록을 눌러 사양을 바꾸거나 옵션을 추가·제외할 수 있습니다.</p>
+        <p>제품·규격·색상을 고른 뒤 필요한 옵션만 더하세요. 이곳에서 모든 구성을 바로 변경할 수 있습니다.</p>
         <div class="receipt-editor-grid" id="receiptEditorGrid"></div>
       </div>
       <h3 class="receipt-price-heading">가격 내역</h3>
@@ -779,7 +1008,7 @@
         <div class="field full"><label for="customerPostcode">주소 (선택)</label><div class="address-search-row"><input id="customerPostcode" inputmode="numeric" placeholder="우편번호" aria-label="우편번호"><button class="address-search-button" id="addressSearchButton" type="button">주소 검색</button></div><div class="address-fields"><input id="customerAddress" autocomplete="street-address" placeholder="주소를 검색하거나 직접 입력해 주세요"><input id="customerAddressDetail" placeholder="상세주소를 입력해 주세요" aria-label="상세주소"></div></div>
         <div class="field full"><label for="deliveryRequest">배송 요청사항 (선택)</label><textarea id="deliveryRequest" placeholder="설치 희망일, 공동현관 출입 방법 등 전달할 내용을 적어 주세요"></textarea></div>
       </div>
-      <p class="receipt-note">원본 가격표의 판매가를 합산한 예상 견적입니다. 설치 환경, 프로모션 및 현장 조건에 따라 최종 금액이 달라질 수 있으므로 주문 전 상담 확인이 필요합니다.</p>
+      <p class="receipt-note">선택하신 구성 기준의 예상 견적입니다. 설치 환경, 프로모션 및 현장 조건에 따라 최종 금액이 달라질 수 있으므로 주문 전 상담 확인이 필요합니다.</p>
       <p class="consultation-guide">① 견적 복사를 누른 뒤 ② 카톡 상담을 열어 내용을 붙여 넣어 주세요. 전화 상담도 바로 연결할 수 있습니다.</p>
       <div class="receipt-actions">
         <button class="receipt-button" id="copyButton" type="button">견적 복사</button>
@@ -792,6 +1021,7 @@
   </main>
 
   <div class="fixed-quote-bar" id="fixedQuoteBar">
+    <nav class="deck-navigation container" aria-label="장 이동"><button id="pagePrevious" type="button">← 이전</button><div class="deck-position"><strong id="pagePosition" aria-live="polite">01 / 09 · 구매 가이드</strong><small>아래로 읽기 · 오른쪽으로 쓸어 다음 장</small></div><button class="page-next" id="pageNext" type="button">다음 →</button></nav>
     <div class="quote-bar-inner" id="completeButton" role="button" tabindex="0" aria-label="선택한 사양과 최종 견적 보기">
       <div class="bar-summary"><div class="selected-chips" id="selectedCount"><span class="selected-empty">침대를 알아보는 중</span></div><strong id="fixedTotal">구성을 골라보세요</strong><span class="bar-dimension" id="barDimension"></span></div>
       <span class="bar-open-hint">사양 보기 ›</span>
@@ -823,7 +1053,7 @@
 
   <script src="assets/catalog-data.js"></script>
   <script src="https://t1.kakaocdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+  <script src="assets/html2canvas.min.js"></script>
   <script>
     const CONFIG = {
       // Code.gs 웹 앱의 /exec 주소를 아래에 넣으면 시트 가격을 자동으로 읽습니다.
@@ -1120,9 +1350,13 @@
     function loadState() { return { ...DEFAULT_STATE }; }
     function saveState() {}
     function scrollToStep(stepId) {
+      const target = $(stepId);
+      if (!target) return;
+      const page = target.closest('.guide-page');
+      const pageIndex = GUIDE_PAGES.findIndex(item => item.id === page?.id);
+      if (pageIndex >= 0) showGuidePage(pageIndex, { focus: target === page, scrollToTop: target === page });
       requestAnimationFrame(() => {
-        const target = $(stepId);
-        if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        if (page && target !== page) page.scrollTo({ top: target.offsetTop - page.offsetTop - 24, behavior: 'smooth' });
       });
     }
 
@@ -1361,9 +1595,15 @@
       }
       const head = headConfigItem();
       if (head) {
-        const label = state.headConfig === 'head' ? '헤드' : state.headConfig === 'one' ? '헤드 + 협탁 한쪽' : '헤드 + 협탁 양쪽';
-        const direction = state.headConfig === 'one' ? ' · 설치 방향 상담 시 결정' : '';
-        lines.push({ label, detail: `${state.finish}${direction}`, price: head.salePrice });
+        const count = state.headConfig === 'one' ? 1 : state.headConfig === 'two' ? 2 : 0;
+        const headOnly = headConfigItem('head');
+        const basePrice = count && headOnly ? Number(headOnly.salePrice) : Number(head.salePrice);
+        lines.push({ label: '헤드', detail: `${state.finish} · ${tokenSize(state.size)}`, price: basePrice });
+        if (count) {
+          const nightstandPrice = Number(head.salePrice) - basePrice;
+          const direction = count === 1 ? ' · 설치 방향 상담 시 결정' : ' · 좌우 각 1개';
+          lines.push({ label: count === 1 ? '협탁 한쪽' : '협탁 양쪽', detail: `${count}개${direction}`, price: nightstandPrice });
+        }
       }
       const table = tableItem();
       if (table) lines.push({ label: state.table === 'auto' ? '자동 테이블' : '수동 테이블', detail: state.table === 'auto' ? '전동 레일 포함' : '손으로 위치 조절', price: table.salePrice });
@@ -1396,7 +1636,7 @@
       const selectAction = choice.frameGate ? '프레임 사양 먼저 선택' : choice.disabled ? '선택 불가' : choice.value === current ? '✓ 선택됨' : '선택하기';
       select.innerHTML = `${choice.tag ? `<span class="option-tag">${choice.tag}</span>` : ''}<span class="option-name">${choice.label}</span>${choice.type ? `<span class="product-type">${choice.type}</span>` : ''}${choice.summary ? `<span class="option-summary">${choice.summary}</span>` : ''}${priceLabel ? `<span class="option-price">${priceLabel}</span>` : ''}${choice.showSelectButton ? `<span class="option-card-action">${selectAction}</span>` : ''}`;
       const activate = () => {
-        if (choice.frameGate) { $('step-frame').scrollIntoView({ behavior: 'smooth', block: 'start' }); return; }
+        if (choice.frameGate) { scrollToStep('step-frame'); return; }
         onSelect(choice.value);
       };
       select.addEventListener('click', activate);
@@ -1495,33 +1735,9 @@
     }
 
     function renderBedGuide() {
-      const guideModel = activeGuideModel === 'shuve' ? 'shuve' : 'mabed';
-      document.querySelectorAll('[data-guide-model]').forEach(button => {
-        const selected = button.dataset.guideModel === guideModel;
-        button.classList.toggle('selected', selected);
-        button.setAttribute('aria-pressed', selected ? 'true' : 'false');
-      });
-      const list = $('guideList');
-      if (list.dataset.model !== guideModel || list.children.length !== BED_GUIDE_STAGES.length) {
-        list.dataset.model = guideModel;
-        list.innerHTML = BED_GUIDE_STAGES.map((item, index) => {
-          const image = guideModel === 'shuve' ? (item.shuveImage || item.image) : (item.mabedImage || item.image);
-          const alt = guideModel === 'shuve' ? (item.shuveAlt || item.alt) : (item.mabedAlt || item.alt);
-          return `<article class="guide-list-item">
-            <div class="guide-list-visual">
-              <span class="guide-list-number">${index + 1}</span>
-              <img src="${image}" alt="${alt}" loading="${index === 0 ? 'eager' : 'lazy'}">
-              <span class="guide-list-change">${item.change}</span>
-            </div>
-            <div class="guide-list-copy">
-              <span class="guide-kicker">${item.kicker} · ${MODEL_LABEL[guideModel]}</span>
-              <h3>${item.title}</h3>
-              <p>${item.description}</p>
-              <ul>${item.points.map(point => `<li>${point}</li>`).join('')}</ul>
-            </div>
-          </article>`;
-        }).join('');
-      }
+      const model = state.model || activeGuideModel;
+      const shuve = model === 'shuve';
+      $('frameChapterIntro').innerHTML = `<figure class="chapter-visual"><img src="${shuve ? 'assets/guide-shuve-frame-new.png' : 'assets/guide-render-frame-hq.png'}" alt="${shuve ? '슈브 패브릭' : '마베드 우드'} 프레임 구조"><figcaption><strong>편안함의 바탕, 프레임</strong><p>몸의 자세에 맞춰 움직이는 모션베드의 기본 구성입니다. 컬러와 사용 형태를 선택하고, 침실에 맞는 크기를 골라보세요.</p></figcaption></figure>`;
     }
 
     function renderProducts() {
@@ -1529,15 +1745,15 @@
       const productRoot = $('productChoices');
       productRoot.innerHTML = '';
       [
-        { value: 'mabed', label: '마베드 선택', type: '우드 모션베드', summary: '단정한 우드 · 실용적인 구성 · 가성비' },
-        { value: 'shuve', label: '슈브 선택', type: '패브릭 모션베드', summary: '포근한 패브릭 · 프리미엄 품질' },
+        { value: 'mabed', label: '마베드 선택', type: '우드 모션베드', summary: '단정한 우드 디자인 · 생활에 맞춘 구성' },
+        { value: 'shuve', label: '슈브 선택', type: '패브릭 모션베드', summary: '부드러운 패브릭 · 포근한 침실 분위기' },
       ].forEach(product => {
         const selected = state.model === product.value;
         const button = document.createElement('button');
         button.type = 'button';
         button.className = `guide-product-button${selected ? ' selected' : ''}`;
         button.setAttribute('aria-pressed', selected ? 'true' : 'false');
-        button.innerHTML = `<strong>${selected ? '✓ ' : ''}${product.label}</strong><span>${product.type}</span><small>${product.summary}<br>${money(minPrice(product.value))}부터</small>`;
+        button.innerHTML = `<img class="product-choice-image" src="${product.value === 'mabed' ? 'assets/mabed-white-full.png' : 'assets/shuve-full-auto.png'}" alt="${product.value === 'mabed' ? '화이트 우드 마베드' : '패브릭 슈브'} 구성 예시"><strong>${selected ? '✓ ' : ''}${product.label.replace(' 선택', '')}</strong><span>${product.type}</span><small>${product.summary}<br>${money(minPrice(product.value))}부터</small>`;
         button.addEventListener('click', () => {
           activeGuideModel = product.value;
           if (state.model !== product.value) choose('model', product.value);
@@ -1863,7 +2079,7 @@
       $('imageSaveButton').disabled = !ready;
       $('talkButton').disabled = !ready || !hasCopiedQuote;
       if (!ready) {
-        $('receiptTitle').textContent = '프레임을 먼저 선택해 주세요';
+        $('receiptTitle').textContent = '내 침대 견적';
         $('receiptLines').innerHTML = '<div class="quote-blocker">제품·규격·컬러를 모두 선택해야 견적이 표시됩니다.</div>';
         $('receiptDimensions').innerHTML = '';
         $('receiptTotal').textContent = '—';
@@ -1954,10 +2170,10 @@
       openSheet({ title: detail.title, body: `${componentVisual(key, focusedImage)}${detailBody(detail)}`, actionLabel: `${fallbackTitle} 선택하기`, onAction: onSelect });
     }
     function openSummary() {
-      if (!isFrameComplete()) { $(state.model ? 'step-frame' : 'guideProductChoice').scrollIntoView({ behavior: 'smooth' }); showToast('프레임을 먼저 선택해 주세요.'); return; }
+      if (!isFrameComplete()) { scrollToStep(state.model ? 'step-frame' : 'guideProductChoice'); showToast('프레임을 먼저 선택해 주세요.'); return; }
       const lines = quoteLines(); const total = lines.reduce((sum, line) => sum + Number(line.price || 0), 0);
       const body = `${lines.map(line => `<div class="receipt-line"><div><strong>${line.label}</strong><small>${line.detail}</small></div><span class="receipt-price">${money(line.price)}</span></div>`).join('')}<div class="receipt-dimensions">${sizeSummaryHtml()}</div><div class="receipt-total"><span>총 견적</span><strong>${money(total)}</strong></div>`;
-      openSheet({ title: '내가 고른 침대 구성', body, actionLabel: '전체 구성과 가격 보기', onAction: () => $('receipt').scrollIntoView({ behavior: 'smooth' }) });
+      openSheet({ title: '내가 고른 침대 구성', body, actionLabel: '전체 구성과 가격 보기', onAction: () => scrollToStep('receipt') });
     }
 
     function quoteText() {
@@ -1976,7 +2192,7 @@
       catch (_) { const area = document.createElement('textarea'); area.value = value; document.body.appendChild(area); area.select(); document.execCommand('copy'); area.remove(); }
     }
     async function copyText() {
-      if (!isFrameComplete()) { $(state.model ? 'step-frame' : 'guideProductChoice').scrollIntoView({ behavior: 'smooth' }); showToast('프레임을 먼저 선택해 주세요.'); return; }
+      if (!isFrameComplete()) { scrollToStep(state.model ? 'step-frame' : 'guideProductChoice'); showToast('프레임을 먼저 선택해 주세요.'); return; }
       const text = quoteText();
       await writeClipboard(text);
       hasCopiedQuote = true;
@@ -1988,7 +2204,7 @@
       showToast('계좌 정보를 복사했습니다.');
     }
     async function saveQuoteImage() {
-      if (!isFrameComplete()) { $(state.model ? 'step-frame' : 'guideProductChoice').scrollIntoView({ behavior: 'smooth' }); showToast('프레임을 먼저 선택해 주세요.'); return; }
+      if (!isFrameComplete()) { scrollToStep(state.model ? 'step-frame' : 'guideProductChoice'); showToast('프레임을 먼저 선택해 주세요.'); return; }
       if (typeof window.html2canvas !== 'function') { showToast('이미지 저장 기능을 불러오지 못했습니다. 인터넷 연결을 확인해 주세요.'); return; }
       const button = $('imageSaveButton');
       const originalLabel = button.textContent;
@@ -2004,6 +2220,12 @@
           useCORS: true,
           logging: false,
           onclone(clonedDocument) {
+            const receiptClone = clonedDocument.getElementById('receipt');
+            const deckClone = clonedDocument.getElementById('guideDeck');
+            Object.assign(receiptClone.style, { height: 'auto', maxHeight: 'none', overflow: 'visible', scrollBehavior: 'auto', animation: 'none', opacity: '1', transform: 'none' });
+            receiptClone.scrollTop = 0;
+            if (deckClone) Object.assign(deckClone.style, { height: 'auto', overflow: 'visible', flex: 'none' });
+            Object.assign(clonedDocument.body.style, { height: 'auto', overflow: 'visible', display: 'block' });
             fieldIds.forEach(id => {
               const original = $(id);
               const cloned = clonedDocument.getElementById(id);
@@ -2112,7 +2334,7 @@
       renderBedGuide();
     }));
     $('guideSkipButton').addEventListener('click', () => scrollToStep('guideProductChoice'));
-    $('guideReviewButton').addEventListener('click', () => $('bed-guide').scrollIntoView({ behavior: 'smooth', block: 'start' }));
+    $('guideReviewButton').addEventListener('click', () => scrollToStep('bed-guide'));
     $('sheetClose').addEventListener('click', closeSheet);
     $('sheetBackdrop').addEventListener('click', event => { if (event.target === $('sheetBackdrop')) closeSheet(); });
     $('sheetAction').addEventListener('click', () => { const handler = sheetActionHandler; closeSheet(); if (handler) handler(); });
@@ -2125,7 +2347,7 @@
     };
     $('quickNavToggle').addEventListener('click', () => setQuickNavOpen(!$('quickNav').classList.contains('open')));
     document.querySelectorAll('[data-jump]').forEach(button => button.addEventListener('click', () => {
-      $(button.dataset.jump).scrollIntoView({ behavior: 'smooth', block: 'start' });
+      scrollToStep(button.dataset.jump);
       setQuickNavOpen(false);
     }));
     document.addEventListener('click', event => {
@@ -2134,7 +2356,7 @@
     document.addEventListener('keydown', event => { if (event.key === 'Escape') setQuickNavOpen(false); });
     $('frameRequirement').addEventListener('click', () => {
       const target = state.model ? $('step-frame') : $('guideProductChoice');
-      target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      scrollToStep(target.id);
     });
     $('completeButton').addEventListener('click', event => {
       if (!event.target.closest('.selected-chip')) scrollToStep('receipt');
@@ -2146,7 +2368,7 @@
       }
     });
     $('fixedQuoteBar').addEventListener('click', event => {
-      if (!event.target.closest('#completeButton') && !event.target.closest('.selected-chip')) scrollToStep('receipt');
+      if (!event.target.closest('.deck-navigation') && !event.target.closest('#completeButton') && !event.target.closest('.selected-chip')) scrollToStep('receipt');
     });
     $('copyButton').addEventListener('click', () => copyText());
     $('accountCopyButton').addEventListener('click', () => copyAccount());
@@ -2155,10 +2377,134 @@
     $('imageSaveButton').addEventListener('click', saveQuoteImage);
     const customerFieldIds = ['customerName', 'customerPhone', 'customerPostcode', 'customerAddress', 'customerAddressDetail', 'deliveryRequest'];
     customerFieldIds.forEach(id => $(id).addEventListener('input', () => { hasCopiedQuote = false; $('talkButton').disabled = true; }));
-    $('resetButton').addEventListener('click', () => { state = { ...DEFAULT_STATE }; hasCopiedQuote = false; customerFieldIds.forEach(id => { $(id).value = ''; }); saveState(); render(); window.scrollTo({ top: 0, behavior: 'smooth' }); showToast('선택을 초기화했습니다.'); });
+    $('resetButton').addEventListener('click', () => { state = { ...DEFAULT_STATE }; hasCopiedQuote = false; customerFieldIds.forEach(id => { $(id).value = ''; }); saveState(); render(); showGuidePage(0, { scrollToTop: true, focus: true }); showToast('선택을 초기화했습니다.'); });
     $('receiptDate').textContent = new Date().toLocaleDateString('ko-KR');
 
-    render(); setupProgressObserver(); loadLiveCatalog();
+    const GUIDE_PAGES = [
+      { id: 'cover', title: '구매 가이드' },
+      { id: 'bed-guide', title: '제품 선택' },
+      { id: 'step-frame', title: '프레임' },
+      { id: 'step-mattress', title: '매트리스' },
+      { id: 'step-head', title: '헤드·협탁' },
+      { id: 'step-table', title: '테이블' },
+      { id: 'step-light', title: '무드등' },
+      { id: 'step-delivery', title: '배송지역' },
+      { id: 'receipt', title: '최종 견적' },
+    ];
+    let currentGuidePage = 0;
+    const guidePageScroll = new Map();
+    function showGuidePage(index, { focus = false, scrollToTop = false } = {}) {
+      const nextIndex = Math.max(0, Math.min(GUIDE_PAGES.length - 1, index));
+      const previousPage = $(GUIDE_PAGES[currentGuidePage].id);
+      if (previousPage) guidePageScroll.set(previousPage.id, previousPage.scrollTop);
+      const nextPage = $(GUIDE_PAGES[nextIndex].id);
+      if (!nextPage) return;
+      const changing = currentGuidePage !== nextIndex;
+      currentGuidePage = nextIndex;
+      GUIDE_PAGES.forEach((page, pageIndex) => {
+        const node = $(page.id);
+        const active = pageIndex === nextIndex;
+        node.hidden = !active;
+        node.classList.toggle('is-active', active);
+        node.inert = !active;
+      });
+      document.querySelectorAll('[data-page-index]').forEach(button => {
+        const selected = Number(button.dataset.pageIndex) === nextIndex;
+        if (selected) button.setAttribute('aria-current', 'step');
+        else button.removeAttribute('aria-current');
+      });
+      $('pagePrevious').disabled = nextIndex === 0;
+      $('pageNext').disabled = nextIndex === GUIDE_PAGES.length - 1;
+      $('pageNext').textContent = nextIndex === GUIDE_PAGES.length - 2 ? '견적 보기 →' : '다음 →';
+      $('pagePosition').textContent = `${String(nextIndex + 1).padStart(2, '0')} / 09 · ${GUIDE_PAGES[nextIndex].title}`;
+      $('progressText').textContent = `${nextIndex + 1} / 9 · ${GUIDE_PAGES[nextIndex].title}`;
+      $('progressFill').style.width = `${(nextIndex + 1) / GUIDE_PAGES.length * 100}%`;
+      if (changing || scrollToTop) nextPage.scrollTop = scrollToTop ? 0 : guidePageScroll.get(nextPage.id) || 0;
+      if (focus) {
+        const heading = nextPage.querySelector('h1, h2');
+        heading?.setAttribute('tabindex', '-1');
+        heading?.focus({ preventScroll: true });
+      }
+      const tab = document.querySelector(`[data-page-index="${nextIndex}"]`);
+      if (tab) {
+        const nav = $('chapterTabs');
+        if (tab.offsetLeft < nav.scrollLeft || tab.offsetLeft + tab.offsetWidth > nav.scrollLeft + nav.clientWidth) {
+          nav.scrollTo({ left: Math.max(0, tab.offsetLeft - nav.clientWidth / 2 + tab.offsetWidth / 2), behavior: 'smooth' });
+        }
+      }
+    }
+    function navigateGuide(delta, options) { showGuidePage(currentGuidePage + delta, options); }
+    function setupGuideNavigation() {
+      const tabs = $('chapterTabs');
+      tabs.innerHTML = GUIDE_PAGES.map((page, index) => `<button class="chapter-tab" type="button" data-page-index="${index}"><span>${String(index + 1).padStart(2, '0')}</span>${page.title}</button>`).join('');
+      tabs.querySelectorAll('button').forEach(button => button.addEventListener('click', () => showGuidePage(Number(button.dataset.pageIndex), { focus: true })));
+      $('pagePrevious').addEventListener('click', () => navigateGuide(-1, { focus: true }));
+      $('pageNext').addEventListener('click', () => navigateGuide(1, { focus: true }));
+      document.querySelectorAll('[data-quick-quote]').forEach(button => button.addEventListener('click', () => {
+        scrollToStep('receipt');
+        requestAnimationFrame(() => $('receipt-edit-model').focus({ preventScroll: true }));
+      }));
+      $('startGuideButton').addEventListener('click', () => scrollToStep('bed-guide'));
+      document.addEventListener('keydown', event => {
+        if (event.defaultPrevented || event.altKey || event.ctrlKey || event.metaKey || event.shiftKey) return;
+        if (event.target.closest('input, textarea, select, [contenteditable="true"], [role="dialog"]') || $('sheetBackdrop').classList.contains('open')) return;
+        if (event.key === 'ArrowRight' || event.key === 'ArrowLeft') {
+          event.preventDefault(); navigateGuide(event.key === 'ArrowRight' ? 1 : -1, { focus: true });
+        }
+      });
+      // The requested gesture is rightward for the next chapter; vertical reading stays native.
+      let gesture = null;
+      let lastSwipe = 0;
+      const deck = $('guideDeck');
+      deck.addEventListener('touchstart', event => {
+        if (event.touches.length !== 1 || event.target.closest('input, textarea, select, a, .compact-grid, .receipt-editor-grid, .guide-model-tabs')) { gesture = null; return; }
+        const touch = event.touches[0];
+        gesture = { x: touch.clientX, y: touch.clientY, at: performance.now(), horizontal: false, vertical: false };
+      }, { passive: true });
+      deck.addEventListener('touchmove', event => {
+        if (!gesture || event.touches.length !== 1) { gesture = null; return; }
+        const dx = event.touches[0].clientX - gesture.x;
+        const dy = event.touches[0].clientY - gesture.y;
+        if (!gesture.horizontal && Math.abs(dy) > 14 && Math.abs(dy) > Math.abs(dx)) gesture.vertical = true;
+        if (!gesture.vertical && Math.abs(dx) > 20 && Math.abs(dx) > Math.abs(dy) * 1.5) gesture.horizontal = true;
+        if (gesture.horizontal && event.cancelable) event.preventDefault();
+      }, { passive: false });
+      deck.addEventListener('touchend', event => {
+        if (!gesture) return;
+        const start = gesture;
+        gesture = null;
+        if (start.vertical || !event.changedTouches.length || performance.now() - start.at > 1300) return;
+        const touch = event.changedTouches[0];
+        const dx = touch.clientX - start.x, dy = touch.clientY - start.y;
+        if (Math.abs(dx) >= 64 && Math.abs(dx) > Math.abs(dy) * 1.5 && performance.now() - lastSwipe > 300) {
+          lastSwipe = performance.now();
+          navigateGuide(dx > 0 ? 1 : -1);
+          if (event.cancelable) event.preventDefault();
+        }
+      }, { passive: false });
+      deck.addEventListener('touchcancel', () => { gesture = null; }, { passive: true });
+      let horizontalWheel = 0;
+      let lastWheelTime = 0;
+      let lastWheelPage = 0;
+      deck.addEventListener('wheel', event => {
+        if (event.ctrlKey || event.metaKey || Math.abs(event.deltaX) < Math.abs(event.deltaY) * 1.5 || Math.abs(event.deltaX) < 2) return;
+        if (event.target.closest('input, select, textarea')) return;
+        if (event.cancelable) event.preventDefault();
+        const now = performance.now();
+        if (now - lastWheelTime > 180) horizontalWheel = 0;
+        lastWheelTime = now;
+        if (now - lastWheelPage < 650) return;
+        horizontalWheel += event.deltaX;
+        if (Math.abs(horizontalWheel) > 75) {
+          navigateGuide(horizontalWheel > 0 ? 1 : -1);
+          horizontalWheel = 0;
+          lastWheelPage = now;
+        }
+      }, { passive: false });
+      showGuidePage(0, { scrollToTop: true });
+    }
+
+    render(); setupGuideNavigation(); loadLiveCatalog();
   </script>
 </body>
 </html>
