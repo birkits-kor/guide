@@ -3,6 +3,23 @@
   const $ = id => document.getElementById(id), api = window.BirkitsOrderApi;
   const token = location.hash.slice(1), form = $('orderForm');
   let quote, submitted = null;
+  const draftKey = 'birkits-purchase-draft:' + token;
+  const draftFields = ['name', 'phone', 'email', 'postcode', 'address', 'addressDetail', 'deliveryRequest', 'payerName'];
+  function saveDraft() {
+    if (submitted) return;
+    const draft = { differentPayer: $('differentPayer').checked, consent: form.elements.consent.checked, fields: {} };
+    draftFields.forEach(name => { draft.fields[name] = form.elements[name].value; });
+    try { sessionStorage.setItem(draftKey, JSON.stringify(draft)); } catch (_) {}
+  }
+  function restoreDraft() {
+    try {
+      const draft = JSON.parse(sessionStorage.getItem(draftKey) || 'null');
+      if (!draft?.fields) return;
+      draftFields.forEach(name => { if (typeof draft.fields[name] === 'string') form.elements[name].value = draft.fields[name].slice(0, form.elements[name].maxLength > 0 ? form.elements[name].maxLength : 1000); });
+      $('differentPayer').checked = draft.differentPayer === true; $('payerField').hidden = !$('differentPayer').checked; form.elements.payerName.required = $('differentPayer').checked;
+      form.elements.consent.checked = draft.consent === true;
+    } catch (_) {}
+  }
   const money = value => Math.round(Number(value) || 0).toLocaleString('ko-KR') + '원';
   function status(message, error = false) { $('formStatus').textContent = message; $('formStatus').classList.toggle('error', error); }
   function requestId() {
@@ -30,7 +47,7 @@
   async function load() {
     try {
       if (!/^[a-f0-9]{40}$/.test(token)) throw new Error('받으신 견적 링크로 접속해 주세요.');
-      const result = await api.request('guideGetQuote', { token }); showQuote(result.quote);
+      const result = await api.request('guideGetQuote', { token }); showQuote(result.quote); restoreDraft();
     } catch (error) { $('loading').hidden = true; $('error').hidden = false; $('errorText').textContent = error.message || '견적을 불러오지 못했습니다.'; }
   }
   $('copyAccount').addEventListener('click', async () => {
@@ -47,7 +64,7 @@
   $('searchAddress').addEventListener('click', () => {
     if (!window.daum?.Postcode) { status('주소 검색을 불러오지 못했습니다. 우편번호와 주소를 직접 입력해 주세요.', true); form.elements.postcode.focus(); return; }
     $('postcodeWrap').hidden = false;
-    new daum.Postcode({ width: '100%', height: '100%', oncomplete(data) { form.elements.postcode.value = data.zonecode; form.elements.address.value = data.roadAddress || data.jibunAddress; $('postcodeWrap').hidden = true; form.elements.addressDetail.focus(); } }).embed($('postcodeEmbed'));
+    new daum.Postcode({ width: '100%', height: '100%', oncomplete(data) { form.elements.postcode.value = data.zonecode; form.elements.address.value = data.roadAddress || data.jibunAddress; $('postcodeWrap').hidden = true; form.elements.addressDetail.focus(); saveDraft(); } }).embed($('postcodeEmbed'));
   });
   $('closeAddress').addEventListener('click', () => $('postcodeWrap').hidden = true);
   function payload() {
@@ -61,6 +78,7 @@
     try {
       const result = await api.request('guideSubmitOrder', data);
       submitted = data; form.hidden = true; $('success').hidden = false; $('orderNumber').textContent = '주문번호 · ' + result.orderId;
+      try { sessionStorage.removeItem(draftKey); } catch (_) {}
       const hasEmail = Boolean(data.customer.email?.trim());
       $('successText').textContent = result.emailSent ? (hasEmail ? '입력하신 이메일로 신청 내역을 보내드렸습니다.' : '문의 시 위 주문번호를 알려주세요.') : (hasEmail ? '신청은 접수되었습니다. 안내 메일 발송이 지연되고 있습니다. 아래 버튼으로 다시 받아 주세요.' : '신청은 접수되었습니다. 접수 알림이 지연되고 있습니다. 아래 버튼으로 다시 요청해 주세요.');
       $('retryMail').textContent = hasEmail ? '안내 메일 다시 받기' : '접수 알림 다시 요청';
@@ -70,6 +88,8 @@
   }
   form.addEventListener('submit', async event => { event.preventDefault(); if (quote && form.reportValidity()) await send(payload()); });
   $('retryMail').addEventListener('click', () => { if (submitted) send(submitted); });
+  form.addEventListener('input', saveDraft); form.addEventListener('change', saveDraft);
+  window.addEventListener('pagehide', saveDraft);
   window.addEventListener('hashchange', () => location.reload());
   load();
 })();

@@ -803,6 +803,7 @@ h2, .bed-guide-heading h2 { font-size: clamp(29px, 3.15vw, 42px); line-height: 1
 .deck-navigation button { min-width: 116px; min-height: 40px; padding: 8px 14px; border: 1px solid var(--line); border-radius: 4px; background: transparent; font-size: 14px; cursor: pointer; }
 .deck-navigation .page-next { color: white; border-color: var(--ink); background: var(--ink); }
 .deck-navigation button:disabled { opacity: .28; cursor: default; }
+.deck-navigation .page-reset { min-width: 0; margin-right: auto; color: var(--muted); border-color: transparent; padding-inline: 0; }
 .deck-position { text-align: center; }
 .deck-position strong { display: block; font-size: 13px; font-weight: 500; }
 .deck-position small { font-size: 10px; color: var(--faint); }
@@ -887,6 +888,12 @@ h2, .bed-guide-heading h2 { font-size: clamp(29px, 3.15vw, 42px); line-height: 1
   .customer-grid { grid-template-columns: 1fr; }
   .deck-navigation { height: 54px; gap: 10px; }
   .deck-navigation button { min-width: 74px; padding: 8px 11px; font-size: 13px; }
+  .deck-navigation { gap: 8px; }
+  .deck-navigation .page-reset { margin-right: 0; font-size: 11px; white-space: nowrap; }
+  .deck-navigation #pagePrevious { min-width: 52px; padding-inline: 5px; }
+  .deck-navigation .page-next { min-width: 61px; padding-inline: 7px; }
+  .deck-position { flex: 1; min-width: 0; }
+  .deck-position strong { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
   .deck-position strong { font-size: 11px; }
   .deck-position small { font-size: 9px; }
   .quote-bar-inner { width: calc(100% - 36px); min-height: 61px; gap: 10px; }
@@ -960,7 +967,7 @@ h2, .bed-guide-heading h2 { font-size: clamp(29px, 3.15vw, 42px); line-height: 1
         <h1>내 생활에 맞는 침대,<br>하나씩 골라보세요.</h1>
         <p class="cover-description">프레임에서 매트리스, 테이블과 조명까지.<br>사진으로 살펴보고, 필요한 것만 더하세요.<br>마지막 장에서 내 침대의 견적이 완성됩니다.</p>
         <div class="cover-actions"><button class="cover-start" id="startGuideButton" type="button">차근차근 살펴보기 →</button><button class="cover-quick" id="quickQuoteButton" type="button" data-quick-quote>빠른 견적 ↗</button></div>
-        <p class="cover-help">설명은 아래로 읽고, 오른쪽으로 쓸어 다음 장으로 이동하세요.<br>구성이 정해져 있다면 ‘빠른 견적’에서 바로 선택할 수 있습니다.</p>
+        <p class="cover-help">설명은 아래로 읽고, 왼쪽으로 쓸어 다음 장으로 이동하세요.<br>구성이 정해져 있다면 ‘빠른 견적’에서 바로 선택할 수 있습니다.</p>
       </div>
       <figure class="cover-figure"><img class="cover-image" src="assets/guide-cover.jpg" alt="화이트 마베드와 테이블, 헤드와 협탁으로 구성한 침실"><figcaption class="cover-photo-note">MA BED · WHITE</figcaption></figure>
     </section>
@@ -1065,7 +1072,7 @@ h2, .bed-guide-heading h2 { font-size: clamp(29px, 3.15vw, 42px); line-height: 1
       <div class="receipt-actions">
         <button class="receipt-button primary" id="purchaseButton" type="button">이 견적으로 구매하기</button>
         <button class="receipt-button" id="copyButton" type="button">견적 복사</button>
-        <button class="receipt-button" id="talkButton" type="button" disabled>카톡 상담</button>
+        <a class="receipt-button" id="talkButton" href="https://open.kakao.com/o/sV8F0c4c" target="_blank" rel="noopener noreferrer">카톡 상담 ↗</a>
         <a class="receipt-button phone" id="phoneButton" href="tel:050713017653" aria-label="0507-1301-7653으로 전화 상담"><span>전화 상담<small>0507-1301-7653</small></span></a>
         <button class="receipt-button" id="imageSaveButton" type="button">이미지 저장</button>
         <button class="receipt-button" id="resetButton" type="button">처음부터 다시</button>
@@ -1074,7 +1081,7 @@ h2, .bed-guide-heading h2 { font-size: clamp(29px, 3.15vw, 42px); line-height: 1
   </main>
 
   <div class="fixed-quote-bar" id="fixedQuoteBar">
-    <nav class="deck-navigation container" aria-label="장 이동"><button id="pagePrevious" type="button">← 이전</button><div class="deck-position"><strong id="pagePosition" aria-live="polite">01 / 09 · 구매 가이드</strong></div><button class="page-next" id="pageNext" type="button">다음 →</button></nav>
+    <nav class="deck-navigation container" aria-label="장 이동"><button id="pageReset" class="page-reset" type="button">처음부터 다시</button><button id="pagePrevious" type="button">← 이전</button><div class="deck-position"><strong id="pagePosition" aria-live="polite">01 / 09 · 구매 가이드</strong></div><button class="page-next" id="pageNext" type="button">다음 →</button></nav>
     <div class="quote-bar-inner" hidden id="completeButton" role="button" tabindex="0" aria-label="선택한 사양과 최종 견적 보기">
       <div class="bar-summary"><div class="selected-chips" id="selectedCount"><span class="selected-empty">침대를 알아보는 중</span></div><strong id="fixedTotal"></strong><span class="bar-dimension" id="barDimension"></span></div>
       <span class="bar-open-hint">사양 보기 ›</span>
@@ -1366,6 +1373,7 @@ h2, .bed-guide-heading h2 { font-size: clamp(29px, 3.15vw, 42px); line-height: 1
     };
 
     let catalog = window.FALLBACK_CATALOG || { items: [] };
+    const savedGuideSession = readGuideSession();
     let state = loadState();
     let sheetActionHandler = null;
     let lastFocusedElement = null;
@@ -1405,8 +1413,33 @@ h2, .bed-guide-heading h2 { font-size: clamp(29px, 3.15vw, 42px); line-height: 1
     const modelMatches = (item, model = state.model) => Boolean(model && MODEL_LABEL[model] && item.name.includes(MODEL_LABEL[model]));
     const escapeRegex = value => String(value).replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 
-    function loadState() { return { ...DEFAULT_STATE }; }
-    function saveState() {}
+    function readGuideSession() {
+      let saved;
+      try { saved = JSON.parse(sessionStorage.getItem('birkits-guide-session-v1') || 'null'); } catch (_) {}
+      if (!saved) saved = history.state?.birkitsGuide;
+      return saved && saved.version === 1 && saved.selection && typeof saved.selection === 'object' ? saved : {};
+    }
+    function loadState() {
+      const saved = readGuideSession().selection || {}, restored = { ...DEFAULT_STATE };
+      for (const key of Object.keys(restored)) {
+        const value = saved[key];
+        if (value === null || typeof value === 'string' && value.length <= 120 || key === 'moodLights' && [0, 1, 2].includes(value)) restored[key] = value;
+      }
+      return restored;
+    }
+    function saveState() {
+      const page = $(GUIDE_PAGES[currentGuidePage]?.id);
+      if (page) guidePageScroll.set(page.id, page.scrollTop);
+      const saved = { version: 1, selection: state, page: currentGuidePage, scroll: [...guidePageScroll], quote: purchaseQuote, fingerprint: purchaseFingerprint, request: purchaseRequest };
+      try { sessionStorage.setItem('birkits-guide-session-v1', JSON.stringify(saved)); } catch (_) {}
+      try { history.replaceState({ ...history.state, birkitsGuide: saved }, ''); } catch (_) {}
+    }
+    function renderOptionNextButtons() {
+      document.querySelectorAll('[data-skip-key]').forEach(button => {
+        button.textContent = state[button.dataset.skipKey] != null ? '다음으로 →' : '선택하지 않고 다음으로';
+      });
+    }
+
     function scrollToStep(stepId) {
       const target = $(stepId);
       if (!target) return;
@@ -2313,7 +2346,6 @@ h2, .bed-guide-heading h2 { font-size: clamp(29px, 3.15vw, 42px); line-height: 1
       $('copyButton').disabled = !ready;
       $('purchaseButton').disabled = !ready;
       $('imageSaveButton').disabled = !ready;
-      $('talkButton').disabled = !ready || !hasCopiedQuote;
       if (!ready) {
         $('receiptTitle').textContent = '내 침대 견적';
         $('receiptLines').innerHTML = '<div class="quote-blocker">제품·규격·컬러를 모두 선택해야 견적이 표시됩니다.</div>';
@@ -2333,7 +2365,7 @@ h2, .bed-guide-heading h2 { font-size: clamp(29px, 3.15vw, 42px); line-height: 1
     }
 
     function render() {
-      renderBedGuide(); renderProducts(); renderHeads(); renderTables(); renderLights(); renderMattresses(); renderDelivery(); renderSizeSummary(); renderReceipt(); saveState();
+      renderBedGuide(); renderProducts(); renderHeads(); renderTables(); renderLights(); renderMattresses(); renderDelivery(); renderSizeSummary(); renderReceipt(); renderOptionNextButtons(); saveState();
     }
 
     function detailBody(detail) {
@@ -2412,10 +2444,10 @@ h2, .bed-guide-heading h2 { font-size: clamp(29px, 3.15vw, 42px); line-height: 1
       openSheet({ title: '내가 고른 침대 구성', body, actionLabel: '전체 구성과 가격 보기', onAction: () => scrollToStep('receipt') });
     }
 
-    let purchaseQuote = null;
-    let purchaseFingerprint = '';
+    let purchaseQuote = savedGuideSession.quote || null;
+    let purchaseFingerprint = savedGuideSession.fingerprint || '';
     let purchasePromise = null;
-    let purchaseRequest = null;
+    let purchaseRequest = savedGuideSession.request || null;
     function currentPurchaseFingerprint() { return JSON.stringify({ state, lines: quoteLines() }); }
     function quoteText(issuedQuote = null) {
       if (!isFrameComplete()) return '';
@@ -2433,7 +2465,7 @@ h2, .bed-guide-heading h2 { font-size: clamp(29px, 3.15vw, 42px); line-height: 1
       openSheet({ title: accountOnly ? '계좌 정보 복사' : '견적 복사', body: '<p>아래 복사 버튼을 눌러 주세요. 복사가 어려우면 내용을 길게 눌러 직접 복사하실 수 있습니다.</p><textarea id="manualQuoteCopy" class="manual-quote-copy" readonly aria-label="복사할 내용"></textarea>', actionLabel: '복사하기', onAction: async () => {
         const ok = await writeClipboard(value);
         if (!ok) { showCopyFallback(value, accountOnly); $('manualQuoteCopy').focus(); $('manualQuoteCopy').select(); showToast('선택된 내용을 길게 눌러 복사해 주세요.'); return; }
-        if (!accountOnly) { hasCopiedQuote = true; $('talkButton').disabled = false; }
+        if (!accountOnly) { hasCopiedQuote = true; }
         closeSheet(); showToast(accountOnly ? '계좌 정보를 복사했습니다.' : '계좌와 구매 신청 링크를 함께 복사했습니다.');
       } });
       $('manualQuoteCopy').value = value;
@@ -2449,7 +2481,7 @@ h2, .bed-guide-heading h2 { font-size: clamp(29px, 3.15vw, 42px); line-height: 1
       purchasePromise = BirkitsOrderApi.request('guideCreateQuote', { selection, requestId: purchaseRequest.id }).then(result => {
         if (JSON.stringify(state) !== JSON.stringify(selection)) throw new Error('선택한 구성이 바뀌었습니다. 견적을 다시 복사해 주세요.');
         if (result.catalog?.items?.length) { catalog = result.catalog; render(); }
-        purchaseQuote = result.quote; purchaseFingerprint = currentPurchaseFingerprint(); return purchaseQuote;
+        purchaseQuote = result.quote; purchaseFingerprint = currentPurchaseFingerprint(); saveState(); return purchaseQuote;
       }).finally(() => { purchasePromise = null; });
       return purchasePromise;
     }
@@ -2460,10 +2492,10 @@ h2, .bed-guide-heading h2 { font-size: clamp(29px, 3.15vw, 42px); line-height: 1
       button.dataset.busy = 'true'; button.disabled = true; button.textContent = '견적 준비 중…';
       try {
         const quote = await ensurePurchaseQuote();
-        if (mode === 'buy') { location.assign(quote.url); return; }
+        if (mode === 'buy') { saveState(); location.assign(quote.url); return; }
         const value = quoteText(quote);
         if (!await writeClipboard(value)) { showCopyFallback(value); return; }
-        hasCopiedQuote = true; $('talkButton').disabled = false;
+        hasCopiedQuote = true;
         showToast('계좌와 구매 신청 링크를 함께 복사했습니다.');
       } catch (error) { showToast(error.message || '견적을 준비하지 못했습니다. 다시 눌러 주세요.'); }
       finally { button.dataset.busy = ''; button.textContent = label; button.disabled = !isFrameComplete(); }
@@ -2559,13 +2591,11 @@ h2, .bed-guide-heading h2 { font-size: clamp(29px, 3.15vw, 42px); line-height: 1
           $('customerAddress').value = `${address}${extraAddress ? ` (${extraAddress})` : ''}`;
           $('customerAddressDetail').focus();
           hasCopiedQuote = false;
-          $('talkButton').disabled = true;
         },
       }).open();
     }
     function openTalk() {
-      if (!hasCopiedQuote) { showToast('먼저 견적 복사(텍스트)를 눌러 주세요.'); return; }
-      window.open('https://open.kakao.com/o/sV8F0c4c', '_blank', 'noopener,noreferrer');
+      saveState();
     }
     function showToast(message) { const toast = $('toast'); toast.textContent = message; toast.classList.add('show'); clearTimeout(showToast.timer); showToast.timer = setTimeout(() => toast.classList.remove('show'), 1900); }
 
@@ -2598,7 +2628,7 @@ h2, .bed-guide-heading h2 { font-size: clamp(29px, 3.15vw, 42px); line-height: 1
     document.querySelectorAll('[data-next]').forEach(button => button.addEventListener('click', () => scrollToStep(button.dataset.next)));
     document.querySelectorAll('[data-skip-next]').forEach(button => button.addEventListener('click', () => {
       const key = button.dataset.skipKey;
-      if (key && state[key] != null) choose(key, null);
+      // Advancing preserves the selected option.
       scrollToStep(button.dataset.skipNext);
     }));
     document.querySelectorAll('[data-guide-model]').forEach(button => button.addEventListener('click', () => {
@@ -2649,8 +2679,8 @@ h2, .bed-guide-heading h2 { font-size: clamp(29px, 3.15vw, 42px); line-height: 1
     $('talkButton').addEventListener('click', openTalk);
     $('imageSaveButton').addEventListener('click', saveQuoteImage);
     const customerFieldIds = ['customerName', 'customerPhone', 'customerPostcode', 'customerAddress', 'customerAddressDetail', 'deliveryRequest'];
-    customerFieldIds.forEach(id => $(id).addEventListener('input', () => { hasCopiedQuote = false; $('talkButton').disabled = true; }));
-    $('resetButton').addEventListener('click', () => { state = { ...DEFAULT_STATE }; hasCopiedQuote = false; customerFieldIds.forEach(id => { $(id).value = ''; }); saveState(); render(); showGuidePage(0, { scrollToTop: true, focus: true }); showToast('선택을 초기화했습니다.'); });
+    customerFieldIds.forEach(id => $(id).addEventListener('input', () => { hasCopiedQuote = false; }));
+    $('resetButton').addEventListener('click', () => { state = { ...DEFAULT_STATE }; hasCopiedQuote = false; purchaseQuote = null; purchaseFingerprint = ''; purchaseRequest = null; guidePageScroll.clear(); customerFieldIds.forEach(id => { $(id).value = ''; }); saveState(); render(); showGuidePage(0, { scrollToTop: true, focus: true }); showToast('선택을 초기화했습니다.'); });
     $('receiptDate').textContent = new Date().toLocaleDateString('ko-KR');
 
     const GUIDE_PAGES = [
@@ -2665,15 +2695,17 @@ h2, .bed-guide-heading h2 { font-size: clamp(29px, 3.15vw, 42px); line-height: 1
       { id: 'receipt', title: '최종 견적' },
     ];
     let currentGuidePage = 0;
+    let guideHasOpened = false;
     const guidePageScroll = new Map();
     function showGuidePage(index, { focus = false, scrollToTop = false } = {}) {
       const nextIndex = Math.max(0, Math.min(GUIDE_PAGES.length - 1, index));
       const previousPage = $(GUIDE_PAGES[currentGuidePage].id);
-      if (previousPage) guidePageScroll.set(previousPage.id, previousPage.scrollTop);
+      if (previousPage && guideHasOpened) guidePageScroll.set(previousPage.id, previousPage.scrollTop);
       const nextPage = $(GUIDE_PAGES[nextIndex].id);
       if (!nextPage) return;
       const changing = currentGuidePage !== nextIndex;
       currentGuidePage = nextIndex;
+      guideHasOpened = true;
       GUIDE_PAGES.forEach((page, pageIndex) => {
         const node = $(page.id);
         const active = pageIndex === nextIndex;
@@ -2705,6 +2737,7 @@ h2, .bed-guide-heading h2 { font-size: clamp(29px, 3.15vw, 42px); line-height: 1
           nav.scrollTo({ left: Math.max(0, tab.offsetLeft - nav.clientWidth / 2 + tab.offsetWidth / 2), behavior: 'smooth' });
         }
       }
+      saveState();
     }
     function navigateGuide(delta, options) { showGuidePage(currentGuidePage + delta, options); }
     function setupGuideNavigation() {
@@ -2713,6 +2746,7 @@ h2, .bed-guide-heading h2 { font-size: clamp(29px, 3.15vw, 42px); line-height: 1
       tabs.querySelectorAll('button').forEach(button => button.addEventListener('click', () => showGuidePage(Number(button.dataset.pageIndex), { focus: true })));
       $('pagePrevious').addEventListener('click', () => navigateGuide(-1, { focus: true }));
       $('pageNext').addEventListener('click', () => navigateGuide(1, { focus: true }));
+      $('pageReset').addEventListener('click', () => $('resetButton').click());
       document.querySelectorAll('[data-quick-quote]').forEach(button => button.addEventListener('click', () => {
         scrollToStep('receipt');
         requestAnimationFrame(() => (matchMedia('(max-width: 760px)').matches ? $('receipt-wheel-model') : $('receipt-edit-model')).focus({ preventScroll: true }));
@@ -2725,7 +2759,7 @@ h2, .bed-guide-heading h2 { font-size: clamp(29px, 3.15vw, 42px); line-height: 1
           event.preventDefault(); navigateGuide(event.key === 'ArrowRight' ? 1 : -1, { focus: true });
         }
       });
-      // The requested gesture is rightward for the next chapter; vertical reading stays native.
+      // Swipe left for the next chapter and right for the previous chapter.
       let gesture = null;
       let lastSwipe = 0;
       const deck = $('guideDeck');
@@ -2751,7 +2785,7 @@ h2, .bed-guide-heading h2 { font-size: clamp(29px, 3.15vw, 42px); line-height: 1
         const dx = touch.clientX - start.x, dy = touch.clientY - start.y;
         if (Math.abs(dx) >= 64 && Math.abs(dx) > Math.abs(dy) * 1.5 && performance.now() - lastSwipe > 300) {
           lastSwipe = performance.now();
-          navigateGuide(dx > 0 ? 1 : -1);
+          navigateGuide(dx < 0 ? 1 : -1);
           if (event.cancelable) event.preventDefault();
         }
       }, { passive: false });
@@ -2774,7 +2808,12 @@ h2, .bed-guide-heading h2 { font-size: clamp(29px, 3.15vw, 42px); line-height: 1
           lastWheelPage = now;
         }
       }, { passive: false });
-      showGuidePage(0, { scrollToTop: true });
+      for (const entry of Array.isArray(savedGuideSession.scroll) ? savedGuideSession.scroll : []) {
+        if (Array.isArray(entry) && GUIDE_PAGES.some(page => page.id === entry[0]) && Number.isFinite(entry[1])) guidePageScroll.set(entry[0], Math.max(0, entry[1]));
+      }
+      showGuidePage(Number.isInteger(savedGuideSession.page) ? savedGuideSession.page : 0);
+      window.addEventListener('pagehide', saveState);
+      document.addEventListener('visibilitychange', () => { if (document.hidden) saveState(); });
     }
 
     render(); setupGuideNavigation(); loadLiveCatalog();
