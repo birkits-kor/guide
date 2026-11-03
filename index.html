@@ -158,9 +158,6 @@
     .size-visual strong, .finish-selection-visual strong { display: block; margin-top: 11px; font-size: 20px; }
     .size-visual p, .finish-selection-visual p { margin: 4px 0 0; color: var(--muted); font-size: 17px; }
     .finish-selection-visual img { aspect-ratio: 4 / 3; max-height: 520px; }
-    .finish-reselect-button { width: 100%; min-height: 54px; margin-top: 15px; padding: 12px 16px; border: 2px solid #8b7561; border-radius: 13px; color: #66513f; background: white; cursor: pointer; font: inherit; font-size: 17px; font-weight: 900; }
-    .finish-reselect-button:hover { color: white; background: #8b7561; }
-    .finish-reselect-button:focus-visible { outline: 3px solid rgba(139,117,97,.34); outline-offset: 3px; }
 
     .compact-grid { display: flex; flex-wrap: wrap; gap: 8px; }
     .compact-choice { position: relative; min-width: 108px; min-height: 56px; padding: 14px 17px; border: 1px solid var(--line); border-radius: 12px; background: var(--paper); cursor: pointer; text-align: center; font-size: 17px; font-weight: 800; }
@@ -747,7 +744,6 @@ h2, .bed-guide-heading h2 { font-size: clamp(29px, 3.15vw, 42px); line-height: 1
 .size-visual img, .finish-selection-visual img, .product-image, .component-photo, .component-photo.catalog, .component-photo.mattress { background: var(--paper); }
 .size-picker-title { font-size: 17px; font-weight: 500; }
 .finish-selection-visual img, .size-visual img { max-height: 450px; border-radius: 0; }
-.finish-reselect-button { border: 1px solid var(--line); border-radius: 4px; font-size: 16px; font-weight: 500; }
 .frame-requirement { border-radius: 4px; font-size: 16px; }
 .option-grid, .option-grid.three { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 25px; overflow: visible; scroll-snap-type: none; padding: 0; }
 .option-grid .option-card { width: auto; flex: none; margin: 0; border: 3px solid var(--paper); outline: 1px solid var(--line); outline-offset: -1px; border-radius: 5px; background: var(--paper); box-shadow: none; transition: border-color .15s ease; }
@@ -1967,10 +1963,7 @@ h2, .bed-guide-heading h2 { font-size: clamp(29px, 3.15vw, 42px); line-height: 1
         const previewText = state.model === 'shuve'
           ? shuveFabricDescription(state.finish)
           : '선택한 색상이 프레임에 적용된 모습을 확인해 보세요. 실제 색감은 조명과 화면에 따라 조금 다르게 보일 수 있습니다.';
-        finishVisual.innerHTML = `<img src="${selectedFrameImage}" alt="${state.finish} ${MODEL_LABEL[state.model]} 모션베드 프레임 예시"><strong>${state.finish} ${MODEL_LABEL[state.model]} 프레임</strong><p>${previewText}</p><button class="finish-reselect-button" type="button">↑ 색상·패브릭 다시 고르기</button>`;
-        finishVisual.querySelector('.finish-reselect-button').addEventListener('click', () => {
-          $('finishSubhead').scrollIntoView({ behavior: 'smooth', block: 'start' });
-        });
+        finishVisual.innerHTML = `<img src="${selectedFrameImage}" alt="${state.finish} ${MODEL_LABEL[state.model]} 모션베드 프레임 예시"><strong>${state.finish} ${MODEL_LABEL[state.model]} 프레임</strong><p>${previewText}</p>`;
       } else {
         finishVisual.innerHTML = '';
       }
